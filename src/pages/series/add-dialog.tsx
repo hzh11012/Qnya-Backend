@@ -13,7 +13,7 @@ import { addSeries } from '@/apis';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import AddForm from '@/pages/series/add-form';
-import { schema, type AddFormValues } from '@/pages/series/add-schema';
+import { seriesSchema, type SeriesFormValues } from '@/pages/series/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 interface AddDialogProps {
@@ -24,8 +24,8 @@ interface AddDialogProps {
 const AddDialog: React.FC<AddDialogProps> = ({ disabled, onRefresh }) => {
   const [open, setOpen] = useState(false);
 
-  const form = useForm<AddFormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<SeriesFormValues>({
+    resolver: zodResolver(seriesSchema),
     defaultValues: { name: '' },
     mode: 'onSubmit',
     reValidateMode: 'onChange'
@@ -42,7 +42,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ disabled, onRefresh }) => {
     }
   });
 
-  const handleSubmit = (values: AddFormValues) => {
+  const handleSubmit = (values: SeriesFormValues) => {
     run({ ...values });
   };
 

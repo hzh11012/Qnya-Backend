@@ -6,7 +6,6 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
 import type { Control, FieldValues, Path } from 'react-hook-form';
 
 interface FormInputProps<TFieldValues extends FieldValues = FieldValues> {
@@ -34,9 +33,7 @@ const FormInput = <TFieldValues extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          {label && (
-            <FormLabel className={cn('text-sm w-fit')}>{label}</FormLabel>
-          )}
+          {label && <FormLabel className='text-sm w-fit'>{label}</FormLabel>}
           <FormControl>
             <Input
               type='text'

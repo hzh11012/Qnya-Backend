@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@base-ui/react": "^1.4.1",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.22",
     "ahooks": "^3.9.6",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "immer": "^11.1.3",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.562.0",
@@ -23,6 +26,7 @@
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
     "react": "^19.2.0",
+    "react-aria-components": "^1.16.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.69.0",
     "react-router-dom": "^7.11.0",

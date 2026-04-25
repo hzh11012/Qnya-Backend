@@ -1,4 +1,4 @@
-import type { AnimeListItem, TagsOptionRes } from '@/apis';
+import type { AnimeListItem, SeriesOptionRes, TagsOptionRes } from '@/apis';
 import { createMap, formatDate } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
@@ -37,7 +37,11 @@ export const months = [
   { label: '十月番', value: 'october' }
 ];
 
-const getColumns = (onRefresh: () => void, tagsOption: TagsOptionRes) => {
+const getColumns = (
+  onRefresh: () => void,
+  tagsOption: TagsOptionRes,
+  seriesOption: SeriesOptionRes
+) => {
   const columns: ColumnDef<AnimeListItem>[] = [
     {
       accessorKey: 'name',
@@ -221,6 +225,8 @@ const getColumns = (onRefresh: () => void, tagsOption: TagsOptionRes) => {
           <RowActions
             row={row.original}
             onRefresh={onRefresh}
+            seriesOption={seriesOption}
+            tagsOption={tagsOption}
           />
         );
       }

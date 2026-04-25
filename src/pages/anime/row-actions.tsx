@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import { useRequest } from 'ahooks';
-import { deleteAnime, type AnimeListItem } from '@/apis';
+import {
+  deleteAnime,
+  type AnimeListItem,
+  type SeriesOptionRes,
+  type TagsOptionRes
+} from '@/apis';
 import {
   DataTableActionDialog,
   type ActionDialogProps
 } from '@/components/custom/data-table/data-table-action-dialog';
+import EditDialog from '@/pages/anime/edit-dialog';
 
-interface RowActionsProps<T> {
-  row: T;
+interface RowActionsProps {
+  row: AnimeListItem;
   onRefresh: () => void;
+  seriesOption: SeriesOptionRes;
+  tagsOption: TagsOptionRes;
 }
 
 interface DeleteDialogProps extends ActionDialogProps {}
@@ -42,17 +50,27 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id, onRefresh }) => {
   );
 };
 
-const RowActions: React.FC<RowActionsProps<AnimeListItem>> = ({
+const RowActions: React.FC<RowActionsProps> = ({
   row,
-  onRefresh
+  onRefresh,
+  seriesOption,
+  tagsOption
 }) => {
   const { id } = row;
 
   return (
-    <DeleteDialog
-      id={id}
-      onRefresh={onRefresh}
-    />
+    <div className='flex items-center gap-2'>
+      <EditDialog
+        row={row}
+        onRefresh={onRefresh}
+        seriesOption={seriesOption}
+        tagsOption={tagsOption}
+      />
+      <DeleteDialog
+        id={id}
+        onRefresh={onRefresh}
+      />
+    </div>
   );
 };
 

@@ -6,7 +6,6 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
 import type { Control, FieldValues, Path } from 'react-hook-form';
 
 interface FormTextareaProps<TFieldValues extends FieldValues = FieldValues> {
@@ -30,12 +29,10 @@ const FormTextarea = <TFieldValues extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          {label && (
-            <FormLabel className={cn('text-sm w-fit')}>{label}</FormLabel>
-          )}
+          {label && <FormLabel className='text-sm w-fit'>{label}</FormLabel>}
           <FormControl>
             <Textarea
-              className={cn('resize-none max-h-35')}
+              className='resize-none max-h-35'
               autoComplete='off'
               value={field.value}
               onChange={field.onChange}

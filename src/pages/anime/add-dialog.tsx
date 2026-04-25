@@ -9,43 +9,64 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import { useRequest } from 'ahooks';
-import { addTorrents } from '@/apis';
+import { addAnime, type SeriesOptionRes, type TagsOptionRes } from '@/apis';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
-import AddForm from '@/pages/torrents/add-form';
-import { torrentsSchema, type TorrentsFormValues } from '@/pages/torrents/form-schema';
+import AnimeForm from '@/pages/anime/anime-form';
+import { animeSchema, type AnimeFormValues } from '@/pages/anime/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface AddDialogProps {
   disabled: boolean;
   onRefresh: () => void;
+  seriesOption: SeriesOptionRes;
+  tagsOption: TagsOptionRes;
 }
 
-const AddDialog: React.FC<AddDialogProps> = ({ disabled, onRefresh }) => {
+const AddDialog: React.FC<AddDialogProps> = ({
+  disabled,
+  seriesOption,
+  tagsOption,
+  onRefresh
+}) => {
   const [open, setOpen] = useState(false);
 
-  const form = useForm<TorrentsFormValues>({
-    resolver: zodResolver(torrentsSchema),
-    defaultValues: { torrentUrl: '' },
+  const form = useForm<AnimeFormValues>({
+    resolver: zodResolver(animeSchema),
+    defaultValues: {
+      seriesId: '',
+      name: '',
+      season: 1,
+      seasonName: '',
+      remark: '',
+      description: '',
+      cover: '',
+      banner: '',
+      status: 'draft',
+      type: 'movie',
+      year: new Date().getFullYear(),
+      month: 'january',
+      tags: [],
+      director: '',
+      cv: ''
+    },
     mode: 'onSubmit',
     reValidateMode: 'onChange'
   });
 
-  const { run, loading } = useRequest(addTorrents, {
+  const { run, loading } = useRequest(addAnime, {
     manual: true,
     loadingDelay: 150,
     debounceWait: 250,
     onSuccess() {
       setOpen(false);
       form.reset();
-      // qBit会立即返回，但种子信息需要一段时间才会更新到列表，延迟一下再刷新
-      setTimeout(() => {
-        onRefresh();
-      }, 150);
+      onRefresh();
     }
   });
 
-  const handleSubmit = (values: TorrentsFormValues) => {
+  const handleSubmit = (values: AnimeFormValues) => {
     run({ ...values });
   };
 
@@ -57,15 +78,24 @@ const AddDialog: React.FC<AddDialogProps> = ({ disabled, onRefresh }) => {
       <DialogTrigger asChild>
         <Button disabled={disabled || loading}>添加</Button>
       </DialogTrigger>
-      <DialogContent aria-describedby={undefined}>
-        <DialogHeader>
+      <DialogContent
+        aria-describedby={undefined}
+        className='px-0'
+      >
+        <DialogHeader className='px-6'>
           <DialogTitle className='sm:text-left'>新增</DialogTitle>
         </DialogHeader>
-        <AddForm
-          form={form}
-          onSubmit={handleSubmit}
-        />
-        <DialogFooter className='flex gap-6'>
+        <ScrollArea className='max-h-[calc(100vh-10rem)] sm:max-h-[calc(26rem)]'>
+          <div className='px-6 pb-1'>
+            <AnimeForm
+              form={form}
+              seriesOption={seriesOption}
+              tagsOption={tagsOption}
+              onSubmit={handleSubmit}
+            />
+          </div>
+        </ScrollArea>
+        <DialogFooter className='flex gap-6 px-6'>
           <DialogClose asChild>
             <Button
               type='button'

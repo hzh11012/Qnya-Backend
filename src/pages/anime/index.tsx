@@ -126,7 +126,7 @@ const Index: React.FC = () => {
 
   const columns = getColumns(() => {
     refresh();
-  }, tagsOption);
+  }, tagsOption, seriesOption);
 
   const handleSearch = (keyword: string) => {
     resetPagination();
@@ -163,10 +163,18 @@ const Index: React.FC = () => {
       onColumnFiltersChange={setColumnFilters}
       toolbar={
         <>
-          <DataTableSearch
-            onSearch={handleSearch}
-            disabled={isLoading}
-          />
+          <div className='flex flex-1 items-center gap-6'>
+            <AddDialog
+              disabled={loading}
+              seriesOption={seriesOption}
+              tagsOption={tagsOption}
+              onRefresh={refresh}
+            />
+            <DataTableSearch
+              onSearch={handleSearch}
+              disabled={isLoading}
+            />
+          </div>
           <DataTableRefresh
             onRefresh={refresh}
             disabled={isLoading}

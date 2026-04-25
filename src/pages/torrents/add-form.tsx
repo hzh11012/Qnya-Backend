@@ -2,11 +2,11 @@ import React from 'react';
 import { Form } from '@/components/ui/form';
 import type { UseFormReturn } from 'react-hook-form';
 import FormTextarea from '@/components/custom/form/form-textarea';
-import type { AddFormValues } from '@/pages/torrents/add-schema';
+import type { TorrentsFormValues } from '@/pages/torrents/form-schema';
 
 interface AddFormProps {
-  form: UseFormReturn<AddFormValues>;
-  onSubmit: (values: AddFormValues) => void;
+  form: UseFormReturn<TorrentsFormValues>;
+  onSubmit: (values: TorrentsFormValues) => void;
 }
 
 const AddForm: React.FC<AddFormProps> = ({ form, onSubmit }) => {
