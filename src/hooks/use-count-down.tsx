@@ -1,34 +1,38 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const useCountDown = (initCount: number = 60) => {
-  //初始化定时器id
-  const timeId = useRef<{ id: number }>({ id: 0 });
-  //初始化倒计时
+  const timeId = useRef(0);
   const [count, setCount] = useState(initCount);
-  //初始化是否禁用
   const [isDisable, setIsDisable] = useState(false);
 
-  const start = () => {
-    // 每次调用前先清除定时器
-    clearInterval(timeId.current.id);
+  const start = useCallback(() => {
+    window.clearInterval(timeId.current);
     setCount(initCount);
     setIsDisable(true);
-    timeId.current.id = window.setInterval(() => {
-      setCount(count => count - 1);
+    timeId.current = window.setInterval(() => {
+      setCount(c => c - 1);
     }, 1000);
-  };
+  }, [initCount]);
 
-  //   首先清除定时器
-  useEffect(() => window.clearInterval(timeId.current.id), []);
+  useEffect(() => {
+    return () => window.clearInterval(timeId.current);
+  }, []);
 
-  //   判断是否需要清除
   useEffect(() => {
     if (count === 0) {
-      clearInterval(timeId.current.id);
-      setCount(initCount);
-      setIsDisable(false);
+      window.clearInterval(timeId.current);
     }
-  }, [count, initCount, isDisable]);
+  }, [count]);
+
+  useEffect(() => {
+    if (count === 0) {
+      const id = setTimeout(() => {
+        setCount(initCount);
+        setIsDisable(false);
+      }, 0);
+      return () => clearTimeout(id);
+    }
+  }, [count, initCount]);
 
   return { start, count, isDisable };
 };

@@ -34,6 +34,10 @@ const FormMultiSelect = <TFieldValues extends FieldValues>({
   options
 }: FormMultiSelectProps<TFieldValues>) => {
   const [open, setOpen] = React.useState(false);
+  const optionMap = React.useMemo(
+    () => new Map(options.map(o => [o.value, o.label])),
+    [options]
+  );
 
   return (
     <FormField
@@ -41,10 +45,6 @@ const FormMultiSelect = <TFieldValues extends FieldValues>({
       name={name}
       render={({ field }) => {
         const selected: string[] = field.value ?? [];
-        const optionMap = React.useMemo(
-          () => new Map(options.map(o => [o.value, o.label])),
-          [options]
-        );
 
         return (
           <FormItem>

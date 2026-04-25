@@ -17,20 +17,6 @@ export interface RequestConfig extends AxiosRequestConfig {
   showErrorToast?: boolean;
 }
 
-export class ApiError extends Error {
-  code: number;
-  status?: number;
-  data?: any;
-
-  constructor(message: string, code: number, status?: number, data?: any) {
-    super(message);
-    this.name = 'ApiError';
-    this.code = code;
-    this.status = status;
-    this.data = data;
-  }
-}
-
 class AxiosRequest {
   private instance: AxiosInstance;
   private readonly defaultTimeout = 30 * 1000;

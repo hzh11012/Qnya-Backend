@@ -16,9 +16,9 @@ import { logout } from '@/apis';
 const AppSideBar: React.FC<React.ComponentProps<typeof Sidebar>> = ({
   ...props
 }) => {
-  const name = useAuthStore(state => state.user!.name);
-  const email = useAuthStore(state => state.user!.email);
-  const avatar = useAuthStore(state => state.user!.avatar);
+  const name = useAuthStore(state => state.user?.name ?? '');
+  const email = useAuthStore(state => state.user?.email ?? '');
+  const avatar = useAuthStore(state => state.user?.avatar ?? '');
   const setUser = useAuthStore(state => state.setUser);
 
   const { run: onLogout } = useRequest(logout, {

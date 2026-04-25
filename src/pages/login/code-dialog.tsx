@@ -44,7 +44,7 @@ const CodeDialog: React.FC<CodeDialogProps> = ({
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
-    !open && setCode('');
+    if (!open) setCode('');
   };
 
   const handleComplete = async () => {
@@ -60,10 +60,7 @@ const CodeDialog: React.FC<CodeDialogProps> = ({
       open={open}
       onOpenChange={handleOpenChange}
     >
-      <DialogContent
-        className='w-85.5 sm:w-full'
-        closeClassName='top-6.5'
-      >
+      <DialogContent className='w-85.5 sm:w-full'>
         <DialogHeader>
           <DialogTitle className='text-lg'>请输入验证码</DialogTitle>
           <DialogDescription>邮箱验证码已发送至 {email}</DialogDescription>

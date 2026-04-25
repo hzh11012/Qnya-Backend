@@ -10,7 +10,7 @@ const Loading: React.FC<loadingProps> = ({ className, size = 50 }) => {
   return (
     <div
       className={cn(
-        'fixed top-0 left-0 size-full flex items-center justify-center z-',
+        'fixed top-0 left-0 size-full flex items-center justify-center z-50',
         className
       )}
     >

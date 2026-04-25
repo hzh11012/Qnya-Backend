@@ -9,20 +9,18 @@ import { useState, useEffect } from 'react';
 const useDeferredLoading = (isLoading: boolean, delay = 250): boolean => {
   const [showLoading, setShowLoading] = useState(false);
 
+  if (!isLoading && showLoading) {
+    setShowLoading(false);
+  }
+
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
+    if (!isLoading) return;
 
-    if (isLoading) {
-      timer = setTimeout(() => {
-        setShowLoading(true);
-      }, delay);
-    } else {
-      setShowLoading(false);
-    }
+    const timer = setTimeout(() => {
+      setShowLoading(true);
+    }, delay);
 
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, [isLoading, delay]);
 
   return showLoading;

@@ -45,8 +45,10 @@ export const VirtualizedCommand = ({
   const virtualOptions = virtualizer.getVirtualItems();
   const virtualHeight = virtualizer.getTotalSize();
 
-  const scrollToIndex = (index: number) =>
-    virtualizer.scrollToIndex(index, { align: 'center' });
+  const scrollToIndex = React.useCallback(
+    (index: number) => virtualizer.scrollToIndex(index, { align: 'center' }),
+    [virtualizer]
+  );
 
   const handleSearch = (search: string) => {
     setIsKeyboardNavActive(false);
@@ -96,7 +98,7 @@ export const VirtualizedCommand = ({
       setFocusedIndex(index);
       requestAnimationFrame(() => scrollToIndex(index));
     }
-  }, [value]);
+  }, [value, filteredOptions, scrollToIndex]);
 
   const onKeyboard = () => setIsKeyboardNavActive(false);
 

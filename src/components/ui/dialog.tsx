@@ -66,13 +66,11 @@ function DialogOverlay({
 
 function DialogContent({
   className,
-  closeClassName,
   children,
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
-  closeClassName?: string;
 }) {
   return (
     <DialogPortal>
@@ -110,7 +108,10 @@ function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='dialog-header'
-      className={cn('flex flex-col gap-3 text-center sm:text-left select-none', className)}
+      className={cn(
+        'flex flex-col gap-3 text-center sm:text-left select-none',
+        className
+      )}
       {...props}
     />
   );

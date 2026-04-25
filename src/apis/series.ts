@@ -42,7 +42,7 @@ const getSeriesList = (params: SeriesListParams) => {
 };
 
 const addSeries = (body: AddSeriesBody) => {
-  return request.post('api/admin/series', body, {
+  return request.post('/api/admin/series', body, {
     showSuccessToast: true,
     showErrorToast: true
   });

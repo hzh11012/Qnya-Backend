@@ -4,11 +4,8 @@ import Logo from '@/components/custom/logo';
 import { useForm, useWatch } from 'react-hook-form';
 import { LineShadowText } from '@/components/ui/line-shadow-text';
 import { Button } from '@/components/ui/button';
-import {
-  LoginForm,
-  schema,
-  type LoginFormValues
-} from '@/pages/login/login-form';
+import { LoginForm } from '@/pages/login/login-form';
+import { schema, type LoginFormValues } from '@/pages/login/form-schema';
 import useCountDown from '@/hooks/use-count-down';
 import { useRequest } from 'ahooks';
 import { useAuthStore } from '@/store';
@@ -24,7 +21,7 @@ const useAuthLogin = () => {
     manual: true,
     debounceWait: 250,
     onSuccess: () => {
-      !isDisable && start();
+      if (!isDisable) start();
     }
   });
   const { runAsync: onLogin } = useRequest(login, {
@@ -58,7 +55,7 @@ const Login: React.FC = () => {
   const email = useWatch({ control: form.control, name: 'email' });
 
   const handleSendCode = (email: string) => {
-    !isDisable && onSendCode(email);
+    if (!isDisable) onSendCode(email);
     setOpen(true);
   };
 

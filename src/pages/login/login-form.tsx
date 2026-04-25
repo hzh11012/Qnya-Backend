@@ -1,15 +1,9 @@
 import React from 'react';
-import z from 'zod';
 import { Form } from '@/components/ui/form';
 import FormInput from '@/components/custom/form/form-input';
 import type { UseFormReturn } from 'react-hook-form';
 import { Mail } from 'lucide-react';
-
-const schema = z.object({
-  email: z.string().trim().min(1, '邮箱不能为空').email('邮箱格式错误')
-});
-
-type LoginFormValues = z.infer<typeof schema>;
+import type { LoginFormValues } from '@/pages/login/form-schema';
 
 interface FormProps {
   form: UseFormReturn<LoginFormValues>;
@@ -33,4 +27,4 @@ const LoginForm: React.FC<FormProps> = ({ form, onFocus, onSubmit }) => {
   );
 };
 
-export { LoginForm, schema, type LoginFormValues };
+export { LoginForm };

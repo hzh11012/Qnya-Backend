@@ -52,83 +52,80 @@ export const qbitStatusMap: Record<string, QbitStatusConfig> = {
   'unknown': { label: '未知', type: 'muted' }
 };
 
-const getColumns = () => {
-  const columns: ColumnDef<TorrentsListItem>[] = [
-    {
-      accessorKey: 'name',
-      header: () => {
-        return (
-          <div className='flex items-center gap-1'>
-            <span>种子名称</span>
-            <Search className='size-3.5' />
-          </div>
-        );
-      },
-      cell: ({ row }) => {
-        return row.original.name;
-      }
-    },
-    {
-      accessorKey: 'progress',
-      header: '进度',
-      cell: ({ row }) => {
-        const progress = row.original.progress * 100;
-        return (
-          <Progress
-            className='w-48'
-            value={progress}
-          />
-        );
-      }
-    },
-    {
-      accessorKey: 'status',
-      header: '状态',
-      cell: ({ row }) => {
-        const status = row.original.status;
-        const config = qbitStatusMap[status] || {
-          label: '未知',
-          type: 'muted'
-        };
-        return <Badge variant={config.type}>{config.label}</Badge>;
-      }
-    },
-    {
-      accessorKey: 'size',
-      header: ({ column }) => (
+const columns: ColumnDef<TorrentsListItem>[] = [
+  {
+    accessorKey: 'name',
+    header: () => {
+      return (
         <div className='flex items-center gap-1'>
-          <span>选定大小</span>
-          <DataTableColumnSort
-            sortDirection={column.getIsSorted()}
-            onSort={desc => column.toggleSorting(desc)}
-            onClearSort={() => column.clearSorting()}
-          />
+          <span>种子名称</span>
+          <Search className='size-3.5' />
         </div>
-      ),
-      cell: ({ row }) => {
-        const size = row.original.size;
-        return formatFileSize(size);
-      }
+      );
     },
-    {
-      accessorKey: 'createdAt',
-      header: ({ column }) => (
-        <div className='flex items-center gap-1'>
-          <span>下载时间</span>
-          <DataTableColumnSort
-            sortDirection={column.getIsSorted()}
-            onSort={desc => column.toggleSorting(desc)}
-            onClearSort={() => column.clearSorting()}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const createdAt = row.original.createdAt;
-        return formatDate(createdAt);
-      }
+    cell: ({ row }) => {
+      return row.original.name;
     }
-  ];
-  return columns;
-};
+  },
+  {
+    accessorKey: 'progress',
+    header: '进度',
+    cell: ({ row }) => {
+      const progress = row.original.progress * 100;
+      return (
+        <Progress
+          className='w-48'
+          value={progress}
+        />
+      );
+    }
+  },
+  {
+    accessorKey: 'status',
+    header: '状态',
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const config = qbitStatusMap[status] || {
+        label: '未知',
+        type: 'muted'
+      };
+      return <Badge variant={config.type}>{config.label}</Badge>;
+    }
+  },
+  {
+    accessorKey: 'size',
+    header: ({ column }) => (
+      <div className='flex items-center gap-1'>
+        <span>选定大小</span>
+        <DataTableColumnSort
+          sortDirection={column.getIsSorted()}
+          onSort={desc => column.toggleSorting(desc)}
+          onClearSort={() => column.clearSorting()}
+        />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const size = row.original.size;
+      return formatFileSize(size);
+    }
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => (
+      <div className='flex items-center gap-1'>
+        <span>下载时间</span>
+        <DataTableColumnSort
+          sortDirection={column.getIsSorted()}
+          onSort={desc => column.toggleSorting(desc)}
+          onClearSort={() => column.clearSorting()}
+        />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const createdAt = row.original.createdAt;
+      return formatDate(createdAt);
+    }
+  }
+];
 
-export default getColumns;
+export default columns;

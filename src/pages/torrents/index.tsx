@@ -1,81 +1,39 @@
-import React, { useEffect } from 'react';
-import { useShallow } from 'zustand/react/shallow';
+import React from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
-import getColumns from '@/pages/torrents/columns';
+import columns from '@/pages/torrents/columns';
 import { useTorrentsStore } from '@/store';
-import { useRequest } from 'ahooks';
 import { getTorrentsList } from '@/apis';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/torrents/add-dialog';
+import { useDataTablePage } from '@/hooks/use-data-table-page';
 
 const Index: React.FC = () => {
   const {
-    initialized,
-    setInitialized,
     data,
-    setData,
     total,
-    setTotal,
+    pagination,
     sorting,
     setSorting,
-    sort,
-    order,
-    page,
-    pageSize,
-    resetPagination,
-    pagination,
     setPagination,
-    sizes
-  } = useTorrentsStore(
-    useShallow(state => ({
-      initialized: state.initialized,
-      setInitialized: state.setInitialized,
-      data: state.data,
-      setData: state.setData,
-      total: state.total,
-      setTotal: state.setTotal,
-      sorting: state.sorting,
-      setSorting: state.setSorting,
-      sort: state.sort,
-      order: state.order,
-      page: state.page,
-      pageSize: state.pageSize,
-      resetPagination: state.resetPagination,
-      pagination: state.pagination,
-      setPagination: state.setPagination,
-      sizes: state.sizes
-    }))
-  );
-
-  const columns = getColumns();
-
-  useEffect(() => {
-    return () => {
-      resetPagination();
-      setTotal(0);
-      setInitialized(false);
-      setData([]);
-    };
-  }, [resetPagination, setTotal, setInitialized, setData]);
-
-  const { run, loading, refresh, error } = useRequest(getTorrentsList, {
-    loadingDelay: 150,
-    debounceWait: 250,
-    defaultParams: [{ page, pageSize }],
-    onSuccess: ({ items, total }) => {
-      setData(items);
-      setTotal(total);
-    },
-    onFinally: () => {
-      setInitialized(true);
-    },
-    refreshDeps: [page, pageSize, sorting],
-    refreshDepsAction: () => {
-      run({ page, pageSize, order, sort });
+    sizes,
+    loading,
+    refresh,
+    error,
+    isLoading
+  } = useDataTablePage({
+    store: useTorrentsStore,
+    api: getTorrentsList,
+    getParams: ({ page, pageSize, sort, order }) => ({
+      page,
+      pageSize,
+      sort,
+      order
+    }),
+    onSuccess: (res, { setData, setTotal }) => {
+      setData(res.items);
+      setTotal(res.total);
     }
   });
-
-  const isLoading = loading || !initialized;
 
   return (
     <DataTable

@@ -13,7 +13,10 @@ import { addSeries } from '@/apis';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import AddForm from '@/pages/series/add-form';
-import { seriesSchema, type SeriesFormValues } from '@/pages/series/form-schema';
+import {
+  seriesSchema,
+  type SeriesFormValues
+} from '@/pages/series/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 interface AddDialogProps {

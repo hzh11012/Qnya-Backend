@@ -293,7 +293,10 @@ const DataTable = <TData, TValue>({
       {/* 工具栏区域 */}
       {toolbar && (
         <div
-          className={cn('flex items-center justify-between', headerClassName)}
+          className={cn(
+            'flex items-center justify-between gap-6',
+            headerClassName
+          )}
         >
           {toolbar}
         </div>

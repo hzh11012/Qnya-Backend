@@ -33,6 +33,8 @@ export default defineConfig(
     rules: {
       ...prettierPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      '@typescript-eslint/no-explicit-any': 'off',
+      'react-hooks/incompatible-library': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true }

@@ -37,6 +37,10 @@ export const months = [
   { label: '十月番', value: 'october' }
 ];
 
+const typesMap = createMap(types);
+const statusMap = createMap(status);
+const monthsMap = createMap(months);
+
 const getColumns = (
   onRefresh: () => void,
   tagsOption: TagsOptionRes,
@@ -106,8 +110,7 @@ const getColumns = (
         );
       },
       cell: ({ row }) => {
-        const TypesMap = createMap(types);
-        return TypesMap[row.original.type];
+        return typesMap[row.original.type];
       }
     },
     {
@@ -128,8 +131,7 @@ const getColumns = (
         );
       },
       cell: ({ row }) => {
-        const StatusMap = createMap(status);
-        return StatusMap[row.original.status];
+        return statusMap[row.original.status];
       }
     },
     {
@@ -169,8 +171,7 @@ const getColumns = (
         );
       },
       cell: ({ row }) => {
-        const MonthsMap = createMap(months);
-        return MonthsMap[row.original.month];
+        return monthsMap[row.original.month];
       }
     },
     {

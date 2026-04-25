@@ -13,7 +13,10 @@ import { addTorrents } from '@/apis';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import AddForm from '@/pages/torrents/add-form';
-import { torrentsSchema, type TorrentsFormValues } from '@/pages/torrents/form-schema';
+import {
+  torrentsSchema,
+  type TorrentsFormValues
+} from '@/pages/torrents/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 interface AddDialogProps {

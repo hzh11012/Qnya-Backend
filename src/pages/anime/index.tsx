@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/anime/columns';
@@ -8,27 +8,10 @@ import { getAnimeList, getSeriesOption, getTagsOption } from '@/apis';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/anime/add-dialog';
+import { useDataTablePage } from '@/hooks/use-data-table-page';
 
 const Index: React.FC = () => {
   const {
-    initialized,
-    setInitialized,
-    data,
-    setData,
-    keyword,
-    setKeyword,
-    total,
-    setTotal,
-    sorting,
-    setSorting,
-    sort,
-    order,
-    page,
-    pageSize,
-    resetPagination,
-    pagination,
-    setPagination,
-    sizes,
     status,
     types,
     months,
@@ -42,24 +25,6 @@ const Index: React.FC = () => {
     setSeriesOption
   } = useAnimeStore(
     useShallow(state => ({
-      initialized: state.initialized,
-      setInitialized: state.setInitialized,
-      data: state.data,
-      setData: state.setData,
-      keyword: state.keyword,
-      setKeyword: state.setKeyword,
-      total: state.total,
-      setTotal: state.setTotal,
-      sorting: state.sorting,
-      setSorting: state.setSorting,
-      sort: state.sort,
-      order: state.order,
-      page: state.page,
-      pageSize: state.pageSize,
-      resetPagination: state.resetPagination,
-      pagination: state.pagination,
-      setPagination: state.setPagination,
-      sizes: state.sizes,
       status: state.status,
       types: state.types,
       months: state.months,
@@ -74,42 +39,49 @@ const Index: React.FC = () => {
     }))
   );
 
-  useEffect(() => {
-    return () => {
-      resetPagination();
-      setTotal(0);
-      setInitialized(false);
-      setColumnFilters([]);
-      setData([]);
-    };
-  }, [resetPagination, setTotal, setInitialized, setData]);
+  const cleanupExtra = useCallback(() => {
+    setColumnFilters([]);
+  }, [setColumnFilters]);
 
-  const { run, loading, refresh, error } = useRequest(getAnimeList, {
-    loadingDelay: 150,
-    debounceWait: 250,
-    defaultParams: [{ page, pageSize }],
-    onSuccess: ({ items, total }) => {
-      setData(items);
-      setTotal(total);
+  const {
+    data,
+    total,
+    pagination,
+    sorting,
+    setSorting,
+    setPagination,
+    sizes,
+    loading,
+    run,
+    refresh,
+    error,
+    isLoading,
+    resetPagination,
+    setKeyword,
+    sort,
+    order,
+    pageSize
+  } = useDataTablePage({
+    store: useAnimeStore,
+    api: getAnimeList,
+    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+      page,
+      pageSize,
+      keyword,
+      sort,
+      order,
+      status,
+      types,
+      months,
+      years,
+      tags
+    }),
+    onSuccess: (res, { setData, setTotal }) => {
+      setData(res.items);
+      setTotal(res.total);
     },
-    onFinally: () => {
-      setInitialized(true);
-    },
-    refreshDeps: [page, pageSize, sorting, columnFilters],
-    refreshDepsAction: () => {
-      run({
-        page,
-        pageSize,
-        order,
-        keyword,
-        sort,
-        status,
-        types,
-        months,
-        years,
-        tags
-      });
-    }
+    refreshDeps: [columnFilters],
+    cleanupExtra
   });
 
   useRequest(getTagsOption, {
@@ -124,9 +96,10 @@ const Index: React.FC = () => {
     }
   });
 
-  const columns = getColumns(() => {
-    refresh();
-  }, tagsOption, seriesOption);
+  const columns = useMemo(
+    () => getColumns(refresh, tagsOption, seriesOption),
+    [refresh, tagsOption, seriesOption]
+  );
 
   const handleSearch = (keyword: string) => {
     resetPagination();
@@ -145,8 +118,6 @@ const Index: React.FC = () => {
     });
   };
 
-  const isLoading = loading || !initialized;
-
   return (
     <DataTable
       data={data}
@@ -162,7 +133,7 @@ const Index: React.FC = () => {
       columnFilters={columnFilters}
       onColumnFiltersChange={setColumnFilters}
       toolbar={
-        <>
+        <div className='flex flex-1 gap-6'>
           <div className='flex flex-1 items-center gap-6'>
             <AddDialog
               disabled={loading}
@@ -179,7 +150,7 @@ const Index: React.FC = () => {
             onRefresh={refresh}
             disabled={isLoading}
           />
-        </>
+        </div>
       }
     />
   );

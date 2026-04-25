@@ -1,94 +1,44 @@
-import React, { useEffect } from 'react';
-import { useShallow } from 'zustand/react/shallow';
+import React, { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/series/columns';
 import { useSeriesStore } from '@/store';
-import { useRequest } from 'ahooks';
 import { getSeriesList } from '@/apis';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/series/add-dialog';
+import { useDataTablePage } from '@/hooks/use-data-table-page';
 
 const Index: React.FC = () => {
   const {
-    initialized,
-    setInitialized,
     data,
-    setData,
-    keyword,
-    setKeyword,
     total,
-    setTotal,
+    pagination,
     sorting,
     setSorting,
-    sort,
-    order,
-    page,
-    pageSize,
-    resetPagination,
-    pagination,
     setPagination,
-    sizes
-  } = useSeriesStore(
-    useShallow(state => ({
-      initialized: state.initialized,
-      setInitialized: state.setInitialized,
-      data: state.data,
-      setData: state.setData,
-      keyword: state.keyword,
-      setKeyword: state.setKeyword,
-      total: state.total,
-      setTotal: state.setTotal,
-      sorting: state.sorting,
-      setSorting: state.setSorting,
-      sort: state.sort,
-      order: state.order,
-      page: state.page,
-      pageSize: state.pageSize,
-      resetPagination: state.resetPagination,
-      pagination: state.pagination,
-      setPagination: state.setPagination,
-      sizes: state.sizes
-    }))
-  );
-
-  useEffect(() => {
-    return () => {
-      resetPagination();
-      setTotal(0);
-      setInitialized(false);
-      setData([]);
-    };
-  }, [resetPagination, setTotal, setInitialized, setData]);
-
-  const { run, loading, refresh, error } = useRequest(getSeriesList, {
-    loadingDelay: 150,
-    debounceWait: 250,
-    defaultParams: [{ page, pageSize }],
-    onSuccess: ({ items, total }) => {
-      setData(items);
-      setTotal(total);
-    },
-    onFinally: () => {
-      setInitialized(true);
-    },
-    refreshDeps: [page, pageSize, sorting],
-    refreshDepsAction: () => {
-      run({ page, pageSize, order, keyword, sort });
+    sizes,
+    loading,
+    refresh,
+    error,
+    isLoading,
+    handleSearch
+  } = useDataTablePage({
+    store: useSeriesStore,
+    api: getSeriesList,
+    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+      page,
+      pageSize,
+      keyword,
+      sort,
+      order
+    }),
+    onSuccess: (res, { setData, setTotal }) => {
+      setData(res.items);
+      setTotal(res.total);
     }
   });
 
-  const columns = getColumns(() => {
-    refresh();
-  });
-
-  const handleSearch = (keyword: string) => {
-    resetPagination();
-    setKeyword(keyword);
-    run({ page: 1, keyword, pageSize, sort, order });
-  };
-
-  const isLoading = loading || !initialized;
+  const columns = useMemo(() => getColumns(refresh), [refresh]);
 
   return (
     <DataTable
