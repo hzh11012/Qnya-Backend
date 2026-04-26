@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   deleteAnime,
   type AnimeListItem,
@@ -6,11 +5,10 @@ import {
   type TagsOptionRes
 } from '@/apis';
 import { createActionDialog } from '@/components/custom/data-table/create-action-dialog';
+import type { RowActionsProps } from '@/components/custom/data-table/create-form-dialog';
 import EditDialog from '@/pages/anime/edit-dialog';
 
-interface RowActionsProps {
-  row: AnimeListItem;
-  onRefresh: () => void;
+interface AnimeRowActionsProps extends RowActionsProps<AnimeListItem> {
   seriesOption: SeriesOptionRes;
   tagsOption: TagsOptionRes;
 }
@@ -23,7 +21,7 @@ const DeleteDialog = createActionDialog({
   className: 'text-destructive'
 });
 
-const RowActions: React.FC<RowActionsProps> = ({
+const RowActions: React.FC<AnimeRowActionsProps> = ({
   row,
   onRefresh,
   seriesOption,

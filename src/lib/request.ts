@@ -25,6 +25,9 @@ class AxiosRequest {
     this.instance = axios.create({
       timeout: this.defaultTimeout,
       headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+      xsrfCookieName: 'XSRF-TOKEN',
+      xsrfHeaderName: 'X-XSRF-TOKEN',
       ...config
     });
 
@@ -52,11 +55,11 @@ class AxiosRequest {
       },
       error => {
         const config = error.config as RequestConfig;
-        let errorMessage = '请求失败';
+        let errorMessage: string;
 
         if (error.response) {
           const { status: httpStatus, data } = error.response;
-          errorMessage = data.message;
+          errorMessage = data.message || '请求失败';
 
           // 当状态码为401时，跳转登录页
           if (httpStatus === 401) {
@@ -83,12 +86,20 @@ class AxiosRequest {
   }
 
   // POST 请求
-  post<T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> {
+  post<T = any>(
+    url: string,
+    data?: unknown,
+    config?: RequestConfig
+  ): Promise<T> {
     return this.instance.post(url, data, config);
   }
 
   // PUT 请求
-  put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> {
+  put<T = any>(
+    url: string,
+    data?: unknown,
+    config?: RequestConfig
+  ): Promise<T> {
     return this.instance.put(url, data, config);
   }
 
@@ -98,7 +109,11 @@ class AxiosRequest {
   }
 
   // PATCH 请求
-  patch<T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> {
+  patch<T = any>(
+    url: string,
+    data?: unknown,
+    config?: RequestConfig
+  ): Promise<T> {
     return this.instance.patch(url, data, config);
   }
 }

@@ -26,22 +26,22 @@ interface TagsOptionItem {
 
 type TagsOptionRes = TagsOptionItem[];
 
-const getTagsList = (params: TagsListParams) => {
+const fetchTags = (params: TagsListParams) => {
   return request.get<TagsListRes>('/api/admin/tags', {
     params,
     showErrorToast: true
   });
 };
 
-const getTagsOption = () => {
+const fetchTagsOptions = () => {
   return request.get<TagsOptionRes>('/api/admin/tags/options', {
     showErrorToast: true
   });
 };
 
 export {
-  getTagsList,
-  getTagsOption,
+  fetchTags,
+  fetchTagsOptions,
   type TagsListRes,
   type TagsListItem,
   type TagsOptionRes,

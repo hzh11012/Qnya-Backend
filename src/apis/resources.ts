@@ -19,11 +19,11 @@ interface ResourcesListRes {
   hasMore: boolean;
 }
 
-const getResourcesList = (params: ResourcesListParams) => {
+const fetchResources = (params: ResourcesListParams) => {
   return request.get<ResourcesListRes>('/api/admin/resources', {
     params,
     showErrorToast: true
   });
 };
 
-export { getResourcesList, type ResourcesListRes, type ResourcesListItem };
+export { fetchResources, type ResourcesListRes, type ResourcesListItem };

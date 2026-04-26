@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '@/lib/utils';
 import Favicon from '@/assets/favicon.svg?react';
 import LogoSvg from '@/assets/logo.svg?react';

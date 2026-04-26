@@ -24,14 +24,14 @@ interface AddTorrentsBody {
   torrentUrl: string;
 }
 
-const getTorrentsList = (params: TorrentsListParams) => {
+const fetchTorrents = (params: TorrentsListParams) => {
   return request.get<TorrentsListRes>('/api/admin/torrents', {
     params,
     showErrorToast: true
   });
 };
 
-const addTorrents = (body: AddTorrentsBody) => {
+const createTorrent = (body: AddTorrentsBody) => {
   return request.post('/api/admin/torrents', body, {
     showSuccessToast: true,
     showErrorToast: true
@@ -39,8 +39,8 @@ const addTorrents = (body: AddTorrentsBody) => {
 };
 
 export {
-  getTorrentsList,
+  fetchTorrents,
   type TorrentsListRes,
   type TorrentsListItem,
-  addTorrents
+  createTorrent
 };

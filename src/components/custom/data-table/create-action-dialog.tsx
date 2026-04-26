@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRequest } from 'ahooks';
 import {
   DataTableActionDialog,
@@ -6,7 +6,7 @@ import {
 } from '@/components/custom/data-table/data-table-action-dialog';
 
 interface UseActionDialogOptions {
-  api: (params: { id: number }) => Promise<any>;
+  api: (params: { id: number }) => Promise<void>;
   text: string;
   title: string;
   description: string;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form } from '@/components/ui/form';
 import type { UseFormReturn } from 'react-hook-form';
 import type { AnimeFormValues } from '@/pages/anime/form-schema';

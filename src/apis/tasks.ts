@@ -32,21 +32,21 @@ interface DeleteTaskParams {
   id: number;
 }
 
-const getTasksList = (params: TasksListParams) => {
+const fetchTasks = (params: TasksListParams) => {
   return request.get<TasksListRes>('/api/admin/tasks', {
     params,
     showErrorToast: true
   });
 };
 
-const startTranscode = (params: TranscodeParams) => {
+const createTranscode = (params: TranscodeParams) => {
   return request.post('/api/admin/transcodes', params, {
     showErrorToast: true,
     showSuccessToast: true
   });
 };
 
-const cancelTranscode = (params: TranscodeParams) => {
+const deleteTranscode = (params: TranscodeParams) => {
   const { id } = params;
   return request.delete(`/api/admin/transcodes/${id}`, {
     showErrorToast: true,
@@ -71,9 +71,9 @@ const retryTask = (params: TranscodeParams) => {
 };
 
 export {
-  getTasksList,
-  startTranscode,
-  cancelTranscode,
+  fetchTasks,
+  createTranscode,
+  deleteTranscode,
   deleteTask,
   retryTask,
   type TasksListRes,

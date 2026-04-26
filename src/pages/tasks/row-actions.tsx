@@ -1,27 +1,22 @@
-import React from 'react';
 import {
-  startTranscode,
-  cancelTranscode,
+  createTranscode,
+  deleteTranscode,
   deleteTask,
   type TasksListItem,
   retryTask
 } from '@/apis';
 import { createActionDialog } from '@/components/custom/data-table/create-action-dialog';
-
-interface RowActionsProps<T> {
-  row: T;
-  onRefresh: () => void;
-}
+import type { RowActionsProps } from '@/components/custom/data-table/create-form-dialog';
 
 const TranscodeDialog = createActionDialog({
-  api: startTranscode,
+  api: createTranscode,
   text: '转码',
   title: '确认转码',
   description: '此操作将启动ffmpeg进行转码。 请确认是否继续?'
 });
 
 const CancelTranscodeDialog = createActionDialog({
-  api: cancelTranscode,
+  api: deleteTranscode,
   text: '取消转码',
   title: '取消转码',
   description: '此操作将取消ffmpeg转码。 请确认是否继续?'

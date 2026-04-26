@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useRef, useSyncExternalStore, useEffect } from 'react';
 
 /**
  * 延迟显示 loading 状态的 Hook
@@ -7,23 +7,31 @@ import { useState, useEffect } from 'react';
  * @returns 是否应该显示 loading
  */
 const useDeferredLoading = (isLoading: boolean, delay = 250): boolean => {
-  const [showLoading, setShowLoading] = useState(false);
-
-  if (!isLoading && showLoading) {
-    setShowLoading(false);
-  }
+  const showLoadingRef = useRef(false);
+  const subscribersRef = useRef(new Set<() => void>());
 
   useEffect(() => {
-    if (!isLoading) return;
+    if (!isLoading) {
+      showLoadingRef.current = false;
+      subscribersRef.current.forEach(cb => cb());
+      return;
+    }
 
     const timer = setTimeout(() => {
-      setShowLoading(true);
+      showLoadingRef.current = true;
+      subscribersRef.current.forEach(cb => cb());
     }, delay);
 
     return () => clearTimeout(timer);
   }, [isLoading, delay]);
 
-  return showLoading;
+  return useSyncExternalStore(
+    cb => {
+      subscribersRef.current.add(cb);
+      return () => subscribersRef.current.delete(cb);
+    },
+    () => showLoadingRef.current
+  );
 };
 
 export default useDeferredLoading;

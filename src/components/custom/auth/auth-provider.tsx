@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAuthStore } from '@/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Exception from '@/components/custom/exception';

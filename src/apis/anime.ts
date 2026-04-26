@@ -61,30 +61,33 @@ interface AddAnimeBody {
   cv: string;
 }
 
-interface EditAnimeBody extends AddAnimeBody {
+interface EditAnimeParams {
   id: number;
 }
+
+type EditAnimeBody = EditAnimeParams & AddAnimeBody;
 
 interface DeleteAnimeParams {
   id: number;
 }
 
-const getAnimeList = (params: AnimeListParams) => {
+const fetchAnimes = (params: AnimeListParams) => {
   return request.get<AnimeListRes>('/api/admin/anime', {
     params,
     showErrorToast: true
   });
 };
 
-const addAnime = (body: AddAnimeBody) => {
+const createAnime = (body: AddAnimeBody) => {
   return request.post('/api/admin/anime', body, {
     showSuccessToast: true,
     showErrorToast: true
   });
 };
 
-const editAnime = (body: EditAnimeBody) => {
-  return request.put('/api/admin/anime', body, {
+const updateAnime = (body: EditAnimeBody) => {
+  const { id, ...rest } = body;
+  return request.put(`/api/admin/anime/${id}`, rest, {
     showSuccessToast: true,
     showErrorToast: true
   });
@@ -99,12 +102,12 @@ const deleteAnime = (params: DeleteAnimeParams) => {
 };
 
 export {
-  getAnimeList,
+  fetchAnimes,
   type AnimeListRes,
   type AnimeListItem,
   type AddAnimeBody,
   type EditAnimeBody,
-  addAnime,
+  createAnime,
   deleteAnime,
-  editAnime
+  updateAnime
 };

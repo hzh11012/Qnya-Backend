@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store';
 
@@ -39,7 +39,10 @@ const RedirectIfAuthenticated: React.FC<AuthGuardProps> = ({ children }) => {
     if (isAuthenticated) {
       // 获取重定向地址，默认首页
       const params = new URLSearchParams(location.search);
-      const redirectTo = params.get('redirect') || '/';
+      const raw = params.get('redirect') || '/';
+      // 仅允许站内相对路径，防止开放重定向攻击
+      const redirectTo =
+        raw.startsWith('/') && !raw.startsWith('//') ? raw : '/';
       navigate(redirectTo, { replace: true });
     }
   }, [isAuthenticated, navigate, location]);

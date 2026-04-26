@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/tasks/columns';
 import { useTasksStore } from '@/store';
-import { getTasksList } from '@/apis';
+import { fetchTasks } from '@/apis';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
@@ -22,7 +22,7 @@ const Index: React.FC = () => {
     handleSearch
   } = useDataTablePage({
     store: useTasksStore,
-    api: getTasksList,
+    api: fetchTasks,
     getParams: ({ page, pageSize, keyword, sort, order }) => ({
       page,
       pageSize,

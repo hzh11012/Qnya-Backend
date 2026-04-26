@@ -5,6 +5,8 @@ import type {
   SortingState,
   Updater
 } from '@tanstack/react-table';
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 import type { StateCreator } from 'zustand';
 
 interface BaseTableState<TData> {
@@ -152,10 +154,55 @@ const createPaginationSlice = <
   });
 };
 
+type SimpleTableStore<TData> = BaseTableSlice<TData> & BasePaginationSlice;
+
+type ExtendFn<TData, TExtra> = (
+  set: Parameters<StateCreator<SimpleTableStore<TData> & TExtra>>[0],
+  get: Parameters<StateCreator<SimpleTableStore<TData> & TExtra>>[1],
+  store: Parameters<StateCreator<SimpleTableStore<TData> & TExtra>>[2]
+) => TExtra;
+
+/**
+ * 创建表格 Store 的工厂函数
+ * @param name - devtools 中显示的 store 名称
+ * @param extend - 可选，返回额外的 state/actions，可覆盖基础字段
+ */
+function createTableStore<TData, TExtra = object>(
+  name: string,
+  extend?: ExtendFn<TData, TExtra>
+) {
+  type Store = SimpleTableStore<TData> & TExtra;
+  return create<Store>()(
+    devtools(
+      (set, get, store) => {
+        const base = {
+          ...createTableSlice<TData, Store>()(
+            set as Parameters<StateCreator<Store>>[0],
+            get as Parameters<StateCreator<Store>>[1],
+            store as Parameters<StateCreator<Store>>[2]
+          ),
+          ...createPaginationSlice<Store>()(
+            set as Parameters<StateCreator<Store>>[0],
+            get as Parameters<StateCreator<Store>>[1],
+            store as Parameters<StateCreator<Store>>[2]
+          )
+        };
+        const extra = extend?.(set, get, store) ?? ({} as TExtra);
+        return { ...base, ...extra } as Store;
+      },
+      { name }
+    )
+  );
+}
+
 export {
   resolveUpdater,
   createTableSlice,
   createPaginationSlice,
+  createTableStore,
+  type SimpleTableStore,
   type BaseTableSlice,
-  type BasePaginationSlice
+  type BaseTableState,
+  type BasePaginationSlice,
+  type BasePaginationState
 };

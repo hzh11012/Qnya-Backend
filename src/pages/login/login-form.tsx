@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form } from '@/components/ui/form';
 import FormInput from '@/components/custom/form/form-input';
 import type { UseFormReturn } from 'react-hook-form';

@@ -1,11 +1,6 @@
-import React from 'react';
 import { deleteSeries, type SeriesListItem } from '@/apis';
 import { createActionDialog } from '@/components/custom/data-table/create-action-dialog';
-
-interface RowActionsProps<T> {
-  row: T;
-  onRefresh: () => void;
-}
+import type { RowActionsProps } from '@/components/custom/data-table/create-form-dialog';
 
 const DeleteDialog = createActionDialog({
   api: deleteSeries,

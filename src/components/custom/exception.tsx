@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '@/lib/utils';
 import NotFound from '@/assets/not-found.svg?react';
 import Ban from '@/assets/ban.svg?react';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Logo from '@/components/custom/logo';
 import { useForm, useWatch } from 'react-hook-form';

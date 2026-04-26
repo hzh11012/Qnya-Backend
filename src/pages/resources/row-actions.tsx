@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRequest } from 'ahooks';
-import { addTorrents, type ResourcesListItem } from '@/apis';
+import { createTorrent, type ResourcesListItem } from '@/apis';
 import { DataTableActionDialog } from '@/components/custom/data-table/data-table-action-dialog';
-
-interface RowActionsProps<T> {
-  row: T;
-}
+import type { RowActionsProps } from '@/components/custom/data-table/create-form-dialog';
 
 interface DownloadDialogProps {
   url: string;
@@ -14,7 +11,7 @@ interface DownloadDialogProps {
 const DownloadDialog: React.FC<DownloadDialogProps> = ({ url }) => {
   const [open, setOpen] = useState(false);
 
-  const { run, loading } = useRequest(addTorrents, {
+  const { run, loading } = useRequest(createTorrent, {
     manual: true,
     loadingDelay: 150,
     debounceWait: 250,
@@ -38,7 +35,9 @@ const DownloadDialog: React.FC<DownloadDialogProps> = ({ url }) => {
   );
 };
 
-const RowActions: React.FC<RowActionsProps<ResourcesListItem>> = ({ row }) => {
+const RowActions: React.FC<Pick<RowActionsProps<ResourcesListItem>, 'row'>> = ({
+  row
+}) => {
   const { magnet } = row;
 
   return <DownloadDialog url={magnet} />;

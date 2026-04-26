@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/anime/columns';
 import { useAnimeStore } from '@/store';
 import { useRequest } from 'ahooks';
-import { getAnimeList, getSeriesOption, getTagsOption } from '@/apis';
+import { fetchAnimes, fetchSeriesOptions, fetchTagsOptions } from '@/apis';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/anime/add-dialog';
@@ -63,7 +63,7 @@ const Index: React.FC = () => {
     pageSize
   } = useDataTablePage({
     store: useAnimeStore,
-    api: getAnimeList,
+    api: fetchAnimes,
     getParams: ({ page, pageSize, keyword, sort, order }) => ({
       page,
       pageSize,
@@ -84,13 +84,13 @@ const Index: React.FC = () => {
     cleanupExtra
   });
 
-  useRequest(getTagsOption, {
+  useRequest(fetchTagsOptions, {
     onSuccess(options) {
       setTagsOption(options);
     }
   });
 
-  useRequest(getSeriesOption, {
+  useRequest(fetchSeriesOptions, {
     onSuccess(options) {
       setSeriesOption(options);
     }

@@ -34,14 +34,14 @@ interface SeriesOptionItem {
 
 type SeriesOptionRes = SeriesOptionItem[];
 
-const getSeriesList = (params: SeriesListParams) => {
+const fetchSeries = (params: SeriesListParams) => {
   return request.get<SeriesListRes>('/api/admin/series', {
     params,
     showErrorToast: true
   });
 };
 
-const addSeries = (body: AddSeriesBody) => {
+const createSeries = (body: AddSeriesBody) => {
   return request.post('/api/admin/series', body, {
     showSuccessToast: true,
     showErrorToast: true
@@ -56,18 +56,18 @@ const deleteSeries = (params: DeleteSeriesParams) => {
   });
 };
 
-const getSeriesOption = () => {
+const fetchSeriesOptions = () => {
   return request.get<SeriesOptionRes>('/api/admin/series/options', {
     showErrorToast: true
   });
 };
 
 export {
-  getSeriesList,
+  fetchSeries,
   type SeriesListRes,
   type SeriesListItem,
   type SeriesOptionRes,
-  addSeries,
+  createSeries,
   deleteSeries,
-  getSeriesOption
+  fetchSeriesOptions
 };

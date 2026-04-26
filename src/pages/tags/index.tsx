@@ -1,8 +1,7 @@
-import React from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import columns from '@/pages/tags/columns';
 import { useTagsStore } from '@/store';
-import { getTagsList } from '@/apis';
+import { fetchTags } from '@/apis';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
@@ -22,7 +21,7 @@ const Index: React.FC = () => {
     handleSearch
   } = useDataTablePage({
     store: useTagsStore,
-    api: getTagsList,
+    api: fetchTags,
     getParams: ({ page, pageSize, keyword, sort, order }) => ({
       page,
       pageSize,

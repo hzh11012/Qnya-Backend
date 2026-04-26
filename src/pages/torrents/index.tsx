@@ -1,8 +1,7 @@
-import React from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import columns from '@/pages/torrents/columns';
 import { useTorrentsStore } from '@/store';
-import { getTorrentsList } from '@/apis';
+import { fetchTorrents } from '@/apis';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/torrents/add-dialog';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
@@ -22,7 +21,7 @@ const Index: React.FC = () => {
     isLoading
   } = useDataTablePage({
     store: useTorrentsStore,
-    api: getTorrentsList,
+    api: fetchTorrents,
     getParams: ({ page, pageSize, sort, order }) => ({
       page,
       pageSize,

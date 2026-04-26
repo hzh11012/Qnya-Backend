@@ -32,4 +32,4 @@ const useAuthStore = create<AuthStore>()(
   )
 );
 
-export { useAuthStore, type User };
+export { useAuthStore };
