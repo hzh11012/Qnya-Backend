@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Logo from '@/components/custom/logo';
 import { useForm, useWatch } from 'react-hook-form';
@@ -16,12 +16,13 @@ import { toast } from 'sonner';
 
 const useAuthLogin = () => {
   const [open, setOpen] = useState(false);
-  const { start, count, isDisable } = useCountDown(60);
+  const lastSentEmailRef = useRef('');
+  const { start, count, isDisable, reset } = useCountDown(60);
   const { run: onSendCode, loading } = useRequest(sendCode, {
     manual: true,
     debounceWait: 250,
     onSuccess: () => {
-      if (!isDisable) start();
+      start();
     }
   });
   const { runAsync: onLogin } = useRequest(login, {
@@ -29,19 +30,34 @@ const useAuthLogin = () => {
     debounceWait: 250
   });
 
+  const handleSendCode = useCallback(
+    (email: string) => {
+      const emailChanged = lastSentEmailRef.current !== email;
+      if (emailChanged) {
+        reset();
+      }
+      if (!isDisable || emailChanged) {
+        onSendCode(email);
+        lastSentEmailRef.current = email;
+      }
+      setOpen(true);
+    },
+    [isDisable, onSendCode, reset]
+  );
+
   return {
     open,
     setOpen,
     count,
     isDisable,
-    onSendCode,
+    handleSendCode,
     loading,
     onLogin
   };
 };
 
 const Login: React.FC = () => {
-  const { open, setOpen, count, isDisable, onSendCode, loading, onLogin } =
+  const { open, setOpen, count, isDisable, handleSendCode, loading, onLogin } =
     useAuthLogin();
   const setInitialized = useAuthStore(state => state.setInitialized);
   const setUser = useAuthStore(state => state.setUser);
@@ -53,11 +69,6 @@ const Login: React.FC = () => {
     reValidateMode: 'onChange'
   });
   const email = useWatch({ control: form.control, name: 'email' });
-
-  const handleSendCode = (email: string) => {
-    if (!isDisable) onSendCode(email);
-    setOpen(true);
-  };
 
   const handleLogin = async (
     email: string,

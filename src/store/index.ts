@@ -5,3 +5,4 @@ export * from '@/store/tasks';
 export * from '@/store/series';
 export * from '@/store/tags';
 export * from '@/store/anime';
+export * from '@/store/users';

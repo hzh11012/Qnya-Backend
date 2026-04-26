@@ -34,7 +34,13 @@ const useCountDown = (initCount: number = 60) => {
     }
   }, [count, initCount]);
 
-  return { start, count, isDisable };
+  const reset = useCallback(() => {
+    window.clearInterval(timeId.current);
+    setCount(initCount);
+    setIsDisable(false);
+  }, [initCount]);
+
+  return { start, count, isDisable, reset };
 };
 
 export default useCountDown;
