@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@/components/custom/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import router from '@/routes';
+import 'react-photo-view/dist/react-photo-view.css';
 import '@/style/global.css';
 import '@/style/index.css';
 

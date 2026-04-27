@@ -1,65 +1,47 @@
-import type { ScoreListItem } from '@/apis';
+import type { TopicListItem, AnimeOptionRes } from '@/apis';
 import { createMap, formatDate } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
-import RowActions from '@/pages/scores/row-actions';
+import RowActions from '@/pages/topics/row-actions';
 import { DataTableColumnFilter } from '@/components/custom/data-table/data-table-column-filter';
 import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
-import { DataTablePhotoView } from '@/components/custom/data-table/data-table-photo-view';
+import { DataTableArrayTooltip } from '@/components/custom/data-table/data-table-array-tooltip';
+import { DataTableTextTooltip } from '@/components/custom/data-table/data-table-text-tooltip';
 
 export const statusOptions = [
-  { label: '已审核', value: 'true' },
-  { label: '待审核', value: 'false' }
+  { label: '已上架', value: 'true' },
+  { label: '已下架', value: 'false' }
 ];
 
 const statusMap = createMap(statusOptions);
 
-const getColumns = (onRefresh: () => void) => {
-  const columns: ColumnDef<ScoreListItem>[] = [
+const getColumns = (onRefresh: () => void, animeOption: AnimeOptionRes) => {
+  const columns: ColumnDef<TopicListItem>[] = [
     {
-      accessorKey: 'user.name',
+      accessorKey: 'name',
       header: () => {
         return (
           <div className='flex items-center gap-1'>
-            <span>用户名称</span>
+            <span>专题名称</span>
             <Search className='size-3.5' />
           </div>
         );
-      },
-      cell: ({ row }) => {
-        return row.original.user.name;
       }
     },
     {
-      accessorKey: 'anime.name',
-      header: '番剧名称',
+      accessorKey: 'description',
+      header: '专题简介',
       cell: ({ row }) => {
-        const name = row.original.anime.name;
-        const photos = [row.original.anime.cover];
-        return (
-          <DataTablePhotoView
-            label={name}
-            photos={photos}
-          />
-        );
+        const text = row.original.description;
+        return <DataTableTextTooltip text={text} />;
       }
     },
     {
-      accessorKey: 'score',
-      header: '评分'
-    },
-    {
-      accessorKey: 'content',
-      header: '评价内容',
+      accessorKey: 'anime',
+      header: '关联动漫',
       cell: ({ row }) => {
-        return (
-          <div
-            className='max-w-50 truncate'
-            title={row.original.content}
-          >
-            {row.original.content}
-          </div>
-        );
+        const names = row.original.anime.map(item => item.name);
+        return <DataTableArrayTooltip items={names} />;
       }
     },
     {
@@ -69,7 +51,7 @@ const getColumns = (onRefresh: () => void) => {
         const filterValue = (column.getFilterValue() as string[]) ?? [];
         return (
           <div className='flex items-center gap-1'>
-            <span>状态</span>
+            <span>专题状态</span>
             <DataTableColumnFilter
               facets={facets}
               filterValue={filterValue}
@@ -108,6 +90,7 @@ const getColumns = (onRefresh: () => void) => {
           <RowActions
             row={row.original}
             onRefresh={onRefresh}
+            animeOption={animeOption}
           />
         );
       }

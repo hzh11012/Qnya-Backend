@@ -4,6 +4,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 import RowActions from '@/pages/favorites/row-actions';
 import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
+import { DataTablePhotoView } from '@/components/custom/data-table/data-table-photo-view';
 
 const getColumns = (onRefresh: () => void) => {
   const columns: ColumnDef<FavoriteListItem>[] = [
@@ -25,7 +26,14 @@ const getColumns = (onRefresh: () => void) => {
       accessorKey: 'anime.name',
       header: '番剧名称',
       cell: ({ row }) => {
-        return row.original.anime.name;
+        const name = row.original.anime.name;
+        const photos = [row.original.anime.cover];
+        return (
+          <DataTablePhotoView
+            label={name}
+            photos={photos}
+          />
+        );
       }
     },
     {

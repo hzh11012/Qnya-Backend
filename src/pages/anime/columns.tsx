@@ -7,6 +7,7 @@ import { DataTableTextTooltip } from '@/components/custom/data-table/data-table-
 import { DataTableArrayTooltip } from '@/components/custom/data-table/data-table-array-tooltip';
 import { DataTableColumnFilter } from '@/components/custom/data-table/data-table-column-filter';
 import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
+import { DataTablePhotoView } from '@/components/custom/data-table/data-table-photo-view';
 
 export const types = [
   { label: '剧场版', value: 'movie' },
@@ -55,6 +56,16 @@ const getColumns = (
             <span>番剧名称</span>
             <Search className='size-3.5' />
           </div>
+        );
+      },
+      cell: ({ row }) => {
+        const name = row.original.name;
+        const photos = [row.original.cover, row.original.banner];
+        return (
+          <DataTablePhotoView
+            label={name}
+            photos={photos}
+          />
         );
       }
     },

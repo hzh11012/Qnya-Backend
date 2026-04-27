@@ -71,6 +71,13 @@ interface DeleteAnimeParams {
   id: number;
 }
 
+interface AnimeOptionItem {
+  label: string;
+  value: string;
+}
+
+type AnimeOptionRes = AnimeOptionItem[];
+
 const fetchAnimes = (params: AnimeListParams) => {
   return request.get<AnimeListRes>('/api/admin/anime', {
     params,
@@ -101,13 +108,21 @@ const deleteAnime = (params: DeleteAnimeParams) => {
   });
 };
 
+const fetchAnimeOptions = () => {
+  return request.get<AnimeOptionRes>('/api/admin/anime/options', {
+    showErrorToast: true
+  });
+};
+
 export {
   fetchAnimes,
   type AnimeListRes,
   type AnimeListItem,
   type AddAnimeBody,
   type EditAnimeBody,
+  type AnimeOptionRes,
   createAnime,
   deleteAnime,
-  updateAnime
+  updateAnime,
+  fetchAnimeOptions
 };

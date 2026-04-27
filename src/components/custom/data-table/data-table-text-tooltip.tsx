@@ -4,7 +4,6 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 
 interface DataTableTextTooltipProps {
   text: string;
@@ -25,10 +24,10 @@ const DataTableTextTooltip: React.FC<DataTableTextTooltipProps> = ({
         <TooltipTrigger asChild>
           <span>{text.slice(0, maxCount)}...</span>
         </TooltipTrigger>
-        <TooltipContent
-          className={cn('max-w-64 max-h-64 scroll-hidden break-all')}
-        >
-          {text}
+        <TooltipContent className='overflow-hidden'>
+          <p className='max-w-64 max-h-64 overflow-y-auto scrollbar-hide break-all'>
+            {text}
+          </p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
