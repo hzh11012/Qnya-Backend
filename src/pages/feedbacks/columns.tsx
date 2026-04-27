@@ -1,63 +1,77 @@
-import type { UserListItem } from '@/apis';
+import type { FeedbackListItem } from '@/apis';
 import { createMap, formatDate } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
-import RowActions from '@/pages/users/row-actions';
+import RowActions from '@/pages/feedbacks/row-actions';
 import { DataTableColumnFilter } from '@/components/custom/data-table/data-table-column-filter';
 import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
+import { DataTableTextTooltip } from '@/components/custom/data-table/data-table-text-tooltip';
+import { DataTablePhotoView } from '@/components/custom/data-table/data-table-photo-view';
 
-export const roles = [
-  { label: '管理员', value: 'admin' },
-  { label: '高级用户', value: 'premium' },
-  { label: '普通用户', value: 'user' },
-  { label: '游客', value: 'guest' }
+export const typeOptions = [
+  { label: '咨询', value: 'consultation' },
+  { label: '建议', value: 'suggestion' },
+  { label: '投诉', value: 'complaint' },
+  { label: '其他', value: 'other' }
 ];
 
 export const statusOptions = [
-  { label: '启用', value: 'true' },
-  { label: '禁用', value: 'false' }
+  { label: '待处理', value: 'pending' },
+  { label: '处理中', value: 'processing' },
+  { label: '已完成', value: 'done' }
 ];
 
-const rolesMap = createMap(roles);
+const typeMap = createMap(typeOptions);
 const statusMap = createMap(statusOptions);
 
 const getColumns = (onRefresh: () => void) => {
-  const columns: ColumnDef<UserListItem>[] = [
+  const columns: ColumnDef<FeedbackListItem>[] = [
     {
-      accessorKey: 'name',
-      header: () => {
+      accessorKey: 'user.name',
+      header: '用户名称'
+    },
+    {
+      accessorKey: 'anime.name',
+      header: '番剧名称',
+      cell: ({ row }) => {
+        const name = row.original.anime.name;
+        const photos = [row.original.anime.cover];
         return (
-          <div className='flex items-center gap-1'>
-            <span>用户名</span>
-            <Search className='size-3.5' />
-          </div>
+          <DataTablePhotoView
+            label={name}
+            photos={photos}
+          />
         );
       }
     },
     {
-      accessorKey: 'email',
-      header: '邮箱'
-    },
-    {
-      accessorKey: 'role',
+      accessorKey: 'type',
       header: ({ column }) => {
         const facets = column.getFacetedUniqueValues();
         const filterValue = (column.getFilterValue() as string[]) ?? [];
         return (
           <div className='flex items-center gap-1'>
-            <span>角色</span>
+            <span>类型</span>
             <DataTableColumnFilter
               facets={facets}
               filterValue={filterValue}
-              options={roles}
+              options={typeOptions}
               onFilterChange={val => column.setFilterValue(val)}
             />
           </div>
         );
       },
-      cell: ({ row }) => {
-        return rolesMap[row.original.role];
-      }
+      cell: ({ row }) => typeMap[row.original.type]
+    },
+    {
+      accessorKey: 'content',
+      header: () => (
+        <div className='flex items-center gap-1'>
+          <span>反馈内容</span>
+          <Search className='size-3.5' />
+        </div>
+      ),
+      cell: ({ row }) => <DataTableTextTooltip text={row.original.content} />
     },
     {
       accessorKey: 'status',
@@ -76,16 +90,10 @@ const getColumns = (onRefresh: () => void) => {
           </div>
         );
       },
-      cell: ({ row }) => {
-        const status = String(!!row.original.status);
-        return statusMap[status];
-      }
+      cell: ({ row }) => statusMap[row.original.status]
     },
     {
       accessorKey: 'createdAt',
-      meta: {
-        title: '创建时间'
-      },
       header: ({ column }) => (
         <div className='flex items-center gap-1'>
           <span>创建时间</span>
@@ -96,22 +104,17 @@ const getColumns = (onRefresh: () => void) => {
           />
         </div>
       ),
-      cell: ({ row }) => {
-        const createdAt = row.original.createdAt;
-        return formatDate(createdAt);
-      }
+      cell: ({ row }) => formatDate(row.original.createdAt)
     },
     {
       id: 'actions',
       header: '操作',
-      cell: ({ row }) => {
-        return (
-          <RowActions
-            row={row.original}
-            onRefresh={onRefresh}
-          />
-        );
-      }
+      cell: ({ row }) => (
+        <RowActions
+          row={row.original}
+          onRefresh={onRefresh}
+        />
+      )
     }
   ];
   return columns;

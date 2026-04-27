@@ -9,3 +9,4 @@ export * from '@/store/users';
 export * from '@/store/favorites';
 export * from '@/store/scores';
 export * from '@/store/topics';
+export * from '@/store/feedbacks';

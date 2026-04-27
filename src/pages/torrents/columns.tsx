@@ -62,9 +62,6 @@ const columns: ColumnDef<TorrentsListItem>[] = [
           <Search className='size-3.5' />
         </div>
       );
-    },
-    cell: ({ row }) => {
-      return row.original.name;
     }
   },
   {

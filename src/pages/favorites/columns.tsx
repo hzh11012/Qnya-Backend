@@ -17,9 +17,6 @@ const getColumns = (onRefresh: () => void) => {
             <Search className='size-3.5' />
           </div>
         );
-      },
-      cell: ({ row }) => {
-        return row.original.user.name;
       }
     },
     {

@@ -71,11 +71,11 @@ const getColumns = (
     },
     {
       accessorKey: 'remark',
-      header: '番剧简评'
+      header: '简评'
     },
     {
       accessorKey: 'description',
-      header: '番剧简介',
+      header: '简介',
       cell: ({ row }) => {
         const text = row.original.description;
         return <DataTableTextTooltip text={text} />;
@@ -88,7 +88,7 @@ const getColumns = (
         const filterValue = (column.getFilterValue() as string[]) ?? [];
         return (
           <div className='flex items-center gap-1'>
-            <span>番剧标签</span>
+            <span>标签</span>
             <DataTableColumnFilter
               facets={facets}
               filterValue={filterValue}
@@ -110,7 +110,7 @@ const getColumns = (
         const filterValue = (column.getFilterValue() as string[]) ?? [];
         return (
           <div className='flex items-center gap-1'>
-            <span>番剧类型</span>
+            <span>类型</span>
             <DataTableColumnFilter
               facets={facets}
               filterValue={filterValue}
@@ -131,7 +131,7 @@ const getColumns = (
         const filterValue = (column.getFilterValue() as string[]) ?? [];
         return (
           <div className='flex items-center gap-1'>
-            <span>番剧状态</span>
+            <span>状态</span>
             <DataTableColumnFilter
               facets={facets}
               filterValue={filterValue}
@@ -152,7 +152,7 @@ const getColumns = (
         const filterValue = (column.getFilterValue() as string[]) ?? [];
         return (
           <div className='flex items-center gap-1'>
-            <span>番剧发行年份</span>
+            <span>发行年份</span>
             <DataTableColumnFilter
               facets={facets}
               filterValue={filterValue}
@@ -171,7 +171,7 @@ const getColumns = (
         const filterValue = (column.getFilterValue() as string[]) ?? [];
         return (
           <div className='flex items-center gap-1'>
-            <span>番剧发行月份</span>
+            <span>发行月份</span>
             <DataTableColumnFilter
               facets={facets}
               filterValue={filterValue}
@@ -187,7 +187,7 @@ const getColumns = (
     },
     {
       accessorKey: 'season',
-      header: '番剧所属季',
+      header: '所属季',
       cell: ({ row }) => {
         const season = row.original.seasonName || `第${row.original.season}季`;
         return season;
@@ -195,19 +195,19 @@ const getColumns = (
     },
     {
       accessorKey: 'avgScore',
-      header: '番剧评分'
+      header: '评分'
     },
     {
       accessorKey: 'scoreCount',
-      header: '番剧评分数'
+      header: '评分数'
     },
     {
       accessorKey: 'director',
-      header: '番剧导演'
+      header: '导演'
     },
     {
       accessorKey: 'cv',
-      header: '番剧声优'
+      header: '声优'
     },
     {
       accessorKey: 'createdAt',

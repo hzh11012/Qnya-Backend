@@ -51,7 +51,7 @@ const getColumns = (onRefresh: () => void, animeOption: AnimeOptionRes) => {
         const filterValue = (column.getFilterValue() as string[]) ?? [];
         return (
           <div className='flex items-center gap-1'>
-            <span>专题状态</span>
+            <span>状态</span>
             <DataTableColumnFilter
               facets={facets}
               filterValue={filterValue}

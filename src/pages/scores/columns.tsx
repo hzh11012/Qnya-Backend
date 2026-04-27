@@ -6,6 +6,7 @@ import RowActions from '@/pages/scores/row-actions';
 import { DataTableColumnFilter } from '@/components/custom/data-table/data-table-column-filter';
 import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
 import { DataTablePhotoView } from '@/components/custom/data-table/data-table-photo-view';
+import { DataTableTextTooltip } from '@/components/custom/data-table/data-table-text-tooltip';
 
 export const statusOptions = [
   { label: '已审核', value: 'true' },
@@ -25,9 +26,6 @@ const getColumns = (onRefresh: () => void) => {
             <Search className='size-3.5' />
           </div>
         );
-      },
-      cell: ({ row }) => {
-        return row.original.user.name;
       }
     },
     {
@@ -50,16 +48,10 @@ const getColumns = (onRefresh: () => void) => {
     },
     {
       accessorKey: 'content',
-      header: '评价内容',
+      header: '评价',
       cell: ({ row }) => {
-        return (
-          <div
-            className='max-w-50 truncate'
-            title={row.original.content}
-          >
-            {row.original.content}
-          </div>
-        );
+        const text = row.original.content;
+        return <DataTableTextTooltip text={text} />;
       }
     },
     {
