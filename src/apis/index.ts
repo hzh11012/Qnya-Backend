@@ -11,3 +11,4 @@ export * from '@/apis/scores';
 export * from '@/apis/topics';
 export * from '@/apis/feedbacks';
 export * from '@/apis/videos';
+export * from '@/apis/dans';
