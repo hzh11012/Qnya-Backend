@@ -10,3 +10,4 @@ export * from '@/apis/favorites';
 export * from '@/apis/scores';
 export * from '@/apis/topics';
 export * from '@/apis/feedbacks';
+export * from '@/apis/videos';

@@ -43,13 +43,13 @@ const AnimeForm: React.FC<AnimeFormProps> = ({
         />
         <div className='grid grid-cols-2 gap-6 items-start'>
           <FormNumber
-            label='番剧所属季'
+            label='所属季'
             control={form.control}
             name='season'
             maxValue={100}
           />
           <FormInput
-            label='番剧所属季名称'
+            label='所属季名称'
             control={form.control}
             maxLength={25}
             name='seasonName'
@@ -81,13 +81,13 @@ const AnimeForm: React.FC<AnimeFormProps> = ({
         />
         <div className='grid grid-cols-2 gap-6 items-start'>
           <FormSelect
-            label='番剧状态'
+            label='状态'
             control={form.control}
             name='status'
             options={status}
           />
           <FormSelect
-            label='番剧类型'
+            label='类型'
             control={form.control}
             name='type'
             options={types}
@@ -95,32 +95,32 @@ const AnimeForm: React.FC<AnimeFormProps> = ({
         </div>
         <div className='grid grid-cols-2 gap-6 items-start'>
           <FormNumber
-            label='番剧发行年份'
+            label='发行年份'
             control={form.control}
             name='year'
             maxValue={new Date().getFullYear() + 1}
           />
           <FormSelect
-            label='番剧发行月份'
+            label='发行月份'
             control={form.control}
             name='month'
             options={months}
           />
         </div>
         <FormMultiSelect
-          label='番剧标签'
+          label='标签'
           control={form.control}
           name='tags'
           options={tagsOption}
         />
         <FormInput
-          label='番剧导演'
+          label='导演'
           control={form.control}
           maxLength={25}
           name='director'
         />
         <FormTextarea
-          label='番剧声优'
+          label='声优'
           control={form.control}
           maxLength={1000}
           name='cv'

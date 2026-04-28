@@ -103,7 +103,7 @@ const Login: React.FC = () => {
             className='size-14'
           />
           <h3 className='font-semibold text-primary text-4xl'>
-            Ani<LineShadowText className='italic'>Sphere</LineShadowText>
+            Q<LineShadowText className='italic'>nya</LineShadowText>
           </h3>
         </div>
         <div className='font-semibold text-lg mx-2 mb-3'>邮箱登录/注册</div>

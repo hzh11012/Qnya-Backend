@@ -38,7 +38,7 @@ const getColumns = (onRefresh: () => void, animeOption: AnimeOptionRes) => {
     },
     {
       accessorKey: 'anime',
-      header: '关联动漫',
+      header: '关联番剧',
       cell: ({ row }) => {
         const names = row.original.anime.map(item => item.name);
         return <DataTableArrayTooltip items={names} />;

@@ -21,12 +21,12 @@ const NavHeader = () => {
             </div>
             <div className='flex flex-col gap-1 leading-none'>
               <span className='font-semibold whitespace-nowrap'>
-                Ani
+                Q
                 <LineShadowText
                   className='italic'
                   shadowColor='var(--primary)'
                 >
-                  Sphere
+                  nya
                 </LineShadowText>
               </span>
               <span className='text-xs whitespace-nowrap'>后台管理中心</span>

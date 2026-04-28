@@ -71,11 +71,11 @@ const getColumns = (
     },
     {
       accessorKey: 'remark',
-      header: '简评'
+      header: '番剧简评'
     },
     {
       accessorKey: 'description',
-      header: '简介',
+      header: '番剧简介',
       cell: ({ row }) => {
         const text = row.original.description;
         return <DataTableTextTooltip text={text} />;
@@ -207,7 +207,11 @@ const getColumns = (
     },
     {
       accessorKey: 'cv',
-      header: '声优'
+      header: '声优',
+      cell: ({ row }) => {
+        const text = row.original.cv;
+        return <DataTableTextTooltip text={text} />;
+      }
     },
     {
       accessorKey: 'createdAt',

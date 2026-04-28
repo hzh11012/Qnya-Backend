@@ -33,14 +33,14 @@ const TopicForm: React.FC<TopicFormProps> = ({
             name='name'
           />
           <FormSelect
-            label='专题状态'
+            label='状态'
             control={form.control}
             name='status'
             options={statusOptions}
           />
         </div>
         <FormMultiSelect
-          label='关联动漫'
+          label='关联番剧'
           control={form.control}
           name='animeIds'
           options={animeOption}

@@ -24,7 +24,7 @@ const DataTableTextTooltip: React.FC<DataTableTextTooltipProps> = ({
         <TooltipTrigger asChild>
           <span>{text.slice(0, maxCount)}...</span>
         </TooltipTrigger>
-        <TooltipContent className='overflow-hidden'>
+        <TooltipContent>
           <p className='max-w-64 max-h-64 overflow-y-auto scrollbar-hide break-all'>
             {text}
           </p>
