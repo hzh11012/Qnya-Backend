@@ -15,6 +15,7 @@ interface DanmakuListItem {
   };
   anime: {
     name: string;
+    cover: string;
   };
   text: string;
   mode: 'scroll' | 'top' | 'bottom';

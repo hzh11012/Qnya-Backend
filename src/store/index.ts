@@ -12,3 +12,4 @@ export * from '@/store/topics';
 export * from '@/store/feedbacks';
 export * from '@/store/videos';
 export * from '@/store/dans';
+export * from '@/store/histories';

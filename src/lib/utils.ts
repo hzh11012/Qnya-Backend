@@ -98,6 +98,23 @@ export const formatFileSize = (size: number, unit: 'byte' | 'kb' = 'byte') => {
 };
 
 /**
+ * 格式化秒数为 [hh:]mm:ss，小时为 0 时省略
+ * @param seconds 秒数
+ */
+export const formatDuration = (seconds: number) => {
+  const t = Math.max(0, Math.floor(seconds));
+  const h = Math.floor(t / 3600);
+  const m = Math.floor((t % 3600) / 60);
+  const s = t % 60;
+  const mm = String(m).padStart(2, '0');
+  const ss = String(s).padStart(2, '0');
+  if (h > 0) {
+    return `${String(h).padStart(2, '0')}:${mm}:${ss}`;
+  }
+  return `${mm}:${ss}`;
+};
+
+/**
  * 创建映射对象
  * @param arr 数组
  */
