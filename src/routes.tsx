@@ -108,6 +108,10 @@ const staticRoutes: RouteObject[] = [
             lazy: createLazyComponent(() => import('@/pages/histories/index'))
           },
           {
+            path: 'settings',
+            lazy: createLazyComponent(() => import('@/pages/settings/index'))
+          },
+          {
             path: '*',
             element: <Exception />
           }

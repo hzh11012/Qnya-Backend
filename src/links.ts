@@ -151,7 +151,7 @@ const links: NavItem[] = [
     ]
   },
   {
-    title: '平台设置',
+    title: '系统信息',
     icon: Settings,
     url: '/settings'
   }

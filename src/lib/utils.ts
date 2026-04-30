@@ -115,6 +115,32 @@ export const formatDuration = (seconds: number) => {
 };
 
 /**
+ * 格式化运行时长（秒 → X天X小时X分Xs）
+ * @param seconds 秒数
+ */
+export function formatUptime(seconds: number): string {
+  const d = Math.floor(seconds / 86400);
+  const h = Math.floor((seconds % 86400) / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  const parts: string[] = [];
+  if (d > 0) parts.push(`${d}天`);
+  if (h > 0) parts.push(`${h}小时`);
+  if (m > 0) parts.push(`${m}分`);
+  parts.push(`${s}秒`);
+  return parts.join(' ');
+}
+
+/**
+ * 格式化毫秒（>=1000ms 转为秒）
+ * @param ms 毫秒数
+ */
+export function formatMs(ms: number): string {
+  if (ms >= 1000) return `${(ms / 1000).toFixed(0)}s`;
+  return `${ms}ms`;
+}
+
+/**
  * 创建映射对象
  * @param arr 数组
  */

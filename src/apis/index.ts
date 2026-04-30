@@ -13,3 +13,5 @@ export * from '@/apis/feedbacks';
 export * from '@/apis/videos';
 export * from '@/apis/dans';
 export * from '@/apis/histories';
+export * from '@/apis/dashboard';
+export * from '@/apis/settings';

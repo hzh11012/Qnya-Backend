@@ -72,11 +72,11 @@ const FormMultiSelect = <TFieldValues extends FieldValues>({
                       ? selected.map(val => (
                           <div
                             key={val}
-                            className='animate-fadeIn bg-background dark:bg-input/30 text-secondary-foreground relative inline-flex h-6.5 cursor-default items-center rounded-lg border ps-2 pe-7 text-xs font-medium transition-all'
+                            className='animate-fadeIn bg-background dark:bg-input/30 text-secondary-foreground relative inline-flex h-6.5 cursor-default items-center rounded-md border ps-2 pe-7 text-xs font-medium transition-all'
                           >
                             {optionMap.get(val) ?? val}
                             <span
-                              className='text-button-foreground hover:text-foreground absolute -inset-y-px -end-px flex size-6.5 items-center justify-center rounded-e-md p-0 cursor-pointer transition-colors'
+                              className='text-button-foreground hover:text-foreground absolute -inset-y-px -inset-e-px flex size-6.5 items-center justify-center rounded-e-md p-0 cursor-pointer transition-colors'
                               onPointerDown={e => {
                                 e.preventDefault();
                                 e.stopPropagation();
