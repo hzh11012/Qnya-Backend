@@ -4,9 +4,12 @@ export interface SettingsInfoServer {
   nodeVersion: string;
   environment: string;
   uptime: number;
+  port: number;
+  adminEmail: string;
 }
 
 export interface SettingsInfoFfmpeg {
+  path: string;
   encoder: string;
   threads: number;
   hlsSegmentTime: number;
@@ -18,11 +21,13 @@ export interface SettingsInfoFfmpeg {
 export interface SettingsInfoQbit {
   host: string;
   downloadPath: string;
+  hostDownloadPath: string;
 }
 
 export interface SettingsInfoSmtp {
   host: string;
   port: number;
+  secure: boolean;
   from: string;
 }
 
@@ -43,6 +48,15 @@ export interface SettingsInfoSecurity {
   corsOrigins: string;
 }
 
+export interface SettingsInfoResource {
+  rootPath: string;
+}
+
+export interface SettingsInfoTmdb {
+  imageDomain: string;
+  apiDomain: string;
+}
+
 export interface SettingsInfoResponse {
   server: SettingsInfoServer;
   ffmpeg: SettingsInfoFfmpeg;
@@ -51,6 +65,8 @@ export interface SettingsInfoResponse {
   database: SettingsInfoDatabase;
   session: SettingsInfoSession;
   security: SettingsInfoSecurity;
+  resource: SettingsInfoResource;
+  tmdb: SettingsInfoTmdb;
 }
 
 export const fetchSettingsInfo = () => {

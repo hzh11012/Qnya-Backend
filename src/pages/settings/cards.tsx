@@ -18,7 +18,11 @@ import {
   Users,
   Timer,
   Zap,
-  Lock
+  Lock,
+  HardDrive,
+  Image,
+  Link,
+  ShieldAlert
 } from 'lucide-react';
 import { formatUptime, formatMs } from '@/lib/utils';
 import { Card, SectionTitle, InfoRow, ActiveBadge } from './components';
@@ -58,6 +62,16 @@ export const ServerCard = ({
       label='已运行时长'
       value={formatUptime(data.uptime)}
     />
+    <InfoRow
+      icon={PlugZap}
+      label='监听端口'
+      value={`${data.port}`}
+    />
+    <InfoRow
+      icon={AtSign}
+      label='管理员邮箱'
+      value={data.adminEmail || '未设置'}
+    />
   </Card>
 );
 
@@ -71,6 +85,11 @@ export const FfmpegCard = ({
       icon={Video}
       title='FFmpeg 转码'
       badge={<ActiveBadge count={data.activeCount} />}
+    />
+    <InfoRow
+      icon={FolderOpen}
+      label='可执行文件路径'
+      value={<TruncatedValue value={data.path} />}
     />
     <InfoRow
       icon={Cpu}
@@ -123,6 +142,11 @@ export const QbitCard = ({ data }: { data: SettingsInfoResponse['qbit'] }) => (
       label='下载路径'
       value={<TruncatedValue value={data.downloadPath} />}
     />
+    <InfoRow
+      icon={HardDrive}
+      label='宿主机下载路径'
+      value={<TruncatedValue value={data.hostDownloadPath} />}
+    />
   </Card>
 );
 
@@ -141,6 +165,12 @@ export const SmtpCard = ({ data }: { data: SettingsInfoResponse['smtp'] }) => (
       icon={PlugZap}
       label='端口'
       value={`${data.port}`}
+    />
+    <InfoRow
+      icon={ShieldAlert}
+      label='SSL 加密'
+      value={data.secure ? '启用' : '禁用'}
+      highlight={data.secure ? 'success' : 'warning'}
     />
     <InfoRow
       icon={AtSign}
@@ -225,6 +255,43 @@ export const SecurityCard = ({
       icon={Lock}
       label='CORS 来源'
       value={<TruncatedValue value={data.corsOrigins} />}
+    />
+  </Card>
+);
+
+export const ResourceCard = ({
+  data
+}: {
+  data: SettingsInfoResponse['resource'];
+}) => (
+  <Card>
+    <SectionTitle
+      icon={HardDrive}
+      title='资源路径'
+    />
+    <InfoRow
+      icon={FolderOpen}
+      label='根路径'
+      value={<TruncatedValue value={data.rootPath} />}
+    />
+  </Card>
+);
+
+export const TmdbCard = ({ data }: { data: SettingsInfoResponse['tmdb'] }) => (
+  <Card>
+    <SectionTitle
+      icon={Image}
+      title='TMDB 配置'
+    />
+    <InfoRow
+      icon={Link}
+      label='图片域名'
+      value={<TruncatedValue value={data.imageDomain} />}
+    />
+    <InfoRow
+      icon={Globe}
+      label='API 域名'
+      value={<TruncatedValue value={data.apiDomain} />}
     />
   </Card>
 );

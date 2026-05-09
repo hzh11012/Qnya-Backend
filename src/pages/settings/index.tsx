@@ -12,7 +12,9 @@ import {
   SmtpCard,
   DatabaseCard,
   SessionCard,
-  SecurityCard
+  SecurityCard,
+  ResourceCard,
+  TmdbCard
 } from './cards';
 
 const Settings = () => {
@@ -45,12 +47,14 @@ const Settings = () => {
 
       {loading ? (
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
+          <SkeletonCard rows={5} />
+          <SkeletonCard rows={7} />
           <SkeletonCard rows={3} />
-          <SkeletonCard rows={6} />
+          <SkeletonCard rows={4} />
+          <SkeletonCard rows={3} />
+          <SkeletonCard rows={3} />
           <SkeletonCard rows={2} />
-          <SkeletonCard rows={3} />
-          <SkeletonCard rows={3} />
-          <SkeletonCard rows={3} />
+          <SkeletonCard rows={1} />
           <SkeletonCard rows={2} />
         </div>
       ) : data ? (
@@ -62,6 +66,8 @@ const Settings = () => {
           <DatabaseCard data={data.database} />
           <SessionCard data={data.session} />
           <SecurityCard data={data.security} />
+          <ResourceCard data={data.resource} />
+          <TmdbCard data={data.tmdb} />
         </div>
       ) : null}
     </div>
