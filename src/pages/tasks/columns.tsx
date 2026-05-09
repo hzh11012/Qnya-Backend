@@ -10,6 +10,8 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/tooltip';
+import { DataTableColumnFilter } from '@/components/custom/data-table/data-table-column-filter';
+import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
 
 type TaskStatusType =
   | 'success'
@@ -31,6 +33,10 @@ export const taskStatusMap: Record<string, TaskStatusConfig> = {
   'failed': { label: '失败', type: 'destructive' }
 };
 
+const statusFilterOptions = Object.entries(taskStatusMap).map(
+  ([value, config]) => ({ label: config.label, value })
+);
+
 const getColumns = (onRefresh: () => void) => {
   const columns: ColumnDef<TasksListItem>[] = [
     {
@@ -46,7 +52,21 @@ const getColumns = (onRefresh: () => void) => {
     },
     {
       accessorKey: 'status',
-      header: '状态',
+      header: ({ column }) => {
+        const facets = column.getFacetedUniqueValues();
+        const filterValue = (column.getFilterValue() as string[]) ?? [];
+        return (
+          <div className='flex items-center gap-1'>
+            <span>状态</span>
+            <DataTableColumnFilter
+              facets={facets}
+              filterValue={filterValue}
+              options={statusFilterOptions}
+              onFilterChange={val => column.setFilterValue(val)}
+            />
+          </div>
+        );
+      },
       cell: ({ row }) => {
         const { status, transcodeProgress, errorMessage } = row.original;
         const config = taskStatusMap[status];
@@ -75,7 +95,16 @@ const getColumns = (onRefresh: () => void) => {
     },
     {
       accessorKey: 'fileSize',
-      header: '资源大小',
+      header: ({ column }) => (
+        <div className='flex items-center gap-1'>
+          <span>资源大小</span>
+          <DataTableColumnSort
+            sortDirection={column.getIsSorted()}
+            onSort={desc => column.toggleSorting(desc)}
+            onClearSort={() => column.clearSorting()}
+          />
+        </div>
+      ),
       cell: ({ row }) => {
         const size = row.original.fileSize;
         return formatFileSize(size);
@@ -83,7 +112,16 @@ const getColumns = (onRefresh: () => void) => {
     },
     {
       accessorKey: 'createdAt',
-      header: '创建时间',
+      header: ({ column }) => (
+        <div className='flex items-center gap-1'>
+          <span>创建时间</span>
+          <DataTableColumnSort
+            sortDirection={column.getIsSorted()}
+            onSort={desc => column.toggleSorting(desc)}
+            onClearSort={() => column.clearSorting()}
+          />
+        </div>
+      ),
       cell: ({ row }) => {
         const createdAt = row.original.createdAt;
         return formatDate(createdAt);

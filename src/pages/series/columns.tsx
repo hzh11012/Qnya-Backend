@@ -3,6 +3,7 @@ import { formatDate } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 import RowActions from '@/pages/series/row-actions';
+import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
 
 const getColumns = (onRefresh: () => void) => {
   const columns: ColumnDef<SeriesListItem>[] = [
@@ -19,7 +20,16 @@ const getColumns = (onRefresh: () => void) => {
     },
     {
       accessorKey: 'createdAt',
-      header: '创建时间',
+      header: ({ column }) => (
+        <div className='flex items-center gap-1'>
+          <span>创建时间</span>
+          <DataTableColumnSort
+            sortDirection={column.getIsSorted()}
+            onSort={desc => column.toggleSorting(desc)}
+            onClearSort={() => column.clearSorting()}
+          />
+        </div>
+      ),
       cell: ({ row }) => {
         const createdAt = row.original.createdAt;
         return formatDate(createdAt);

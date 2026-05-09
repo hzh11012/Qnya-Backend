@@ -49,7 +49,7 @@ const TopCollections = ({ stats, loading }: Props) => (
                   'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
                 idx === 2 &&
                   'bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-400',
-                idx > 2 && 'bg-muted text-muted-foreground'
+                idx > 2 && 'bg-muted'
               )}
             >
               {idx + 1}
@@ -64,15 +64,11 @@ const TopCollections = ({ stats, loading }: Props) => (
               </AvatarFallback>
             </Avatar>
             <span className='flex-1 text-xs truncate'>{item.animeName}</span>
-            <span className='text-xs font-semibold text-muted-foreground'>
-              {item.count}
-            </span>
+            <span className='text-xs font-semibold'>{item.count}</span>
           </div>
         ))}
         {(stats?.topCollections ?? []).length === 0 && (
-          <p className='text-xs text-muted-foreground text-center py-4'>
-            暂无数据
-          </p>
+          <p className='text-xs text-center py-4'>暂无数据</p>
         )}
       </div>
     )}
@@ -115,18 +111,12 @@ const RecentFeedbacks = ({ stats, loading }: Props) => (
                 {item.animeName}
               </span>
             </div>
-            <p className='text-xs text-muted-foreground line-clamp-1'>
-              {item.content}
-            </p>
-            <p className='text-[10px] text-muted-foreground/70'>
-              {formatDate(item.createdAt)}
-            </p>
+            <p className='text-xs line-clamp-1'>{item.content}</p>
+            <p className='text-[10px]'>{formatDate(item.createdAt)}</p>
           </div>
         ))}
         {(stats?.recentFeedbacks ?? []).length === 0 && (
-          <p className='text-xs text-muted-foreground text-center py-4'>
-            暂无待处理反馈
-          </p>
+          <p className='text-xs text-center py-4'>暂无待处理反馈</p>
         )}
       </div>
     )}
@@ -165,34 +155,27 @@ const RecentScores = ({ stats, loading }: Props) => (
                     key={i}
                     className={cn(
                       'size-3',
-                      i < Math.round(item.score / 2)
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-muted-foreground/40'
+                      i < Math.round(item.score / 2) &&
+                        'fill-yellow-400 text-yellow-400'
                     )}
                   />
                 ))}
               </div>
-              <span className='text-[10px] text-muted-foreground'>
-                {item.score}
-              </span>
+              <span className='text-[10px]'>{item.score}</span>
             </div>
             <span className='text-xs font-medium truncate'>
               {item.animeName}
             </span>
             <div className='flex items-center justify-between'>
-              <p className='text-xs text-muted-foreground line-clamp-1 flex-1'>
+              <p className='text-xs line-clamp-1 flex-1'>
                 {item.content || '—'}
               </p>
-              <span className='text-[10px] text-muted-foreground/70 shrink-0 ml-2'>
-                {item.userName}
-              </span>
+              <span className='text-[10px] shrink-0 ml-2'>{item.userName}</span>
             </div>
           </div>
         ))}
         {(stats?.recentScores ?? []).length === 0 && (
-          <p className='text-xs text-muted-foreground text-center py-4'>
-            暂无评分数据
-          </p>
+          <p className='text-xs text-center py-4'>暂无评分数据</p>
         )}
       </div>
     )}

@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/tasks/columns';
 import { useTasksStore } from '@/store';
@@ -8,6 +9,18 @@ import DataTableRefresh from '@/components/custom/data-table/data-table-refresh'
 import { useDataTablePage } from '@/hooks/use-data-table-page';
 
 const Index: React.FC = () => {
+  const { status, columnFilters, setColumnFilters } = useTasksStore(
+    useShallow(state => ({
+      status: state.status,
+      columnFilters: state.columnFilters,
+      setColumnFilters: state.setColumnFilters
+    }))
+  );
+
+  const cleanupExtra = useCallback(() => {
+    setColumnFilters([]);
+  }, [setColumnFilters]);
+
   const {
     data,
     total,
@@ -28,12 +41,15 @@ const Index: React.FC = () => {
       pageSize,
       keyword,
       sort,
-      order
+      order,
+      status
     }),
     onSuccess: (res, { setData, setTotal }) => {
       setData(res.items);
       setTotal(res.total);
-    }
+    },
+    refreshDeps: [columnFilters],
+    cleanupExtra
   });
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
@@ -50,6 +66,8 @@ const Index: React.FC = () => {
       onSortingChange={setSorting}
       sizes={sizes}
       error={!!error}
+      columnFilters={columnFilters}
+      onColumnFiltersChange={setColumnFilters}
       toolbar={
         <>
           <DataTableSearch

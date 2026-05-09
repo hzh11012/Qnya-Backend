@@ -53,7 +53,7 @@ export const InfoRow = ({
 
   return (
     <div className='flex items-center justify-between py-2 border-b last:border-0 border-border/50'>
-      <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+      <div className='flex items-center gap-2 text-sm'>
         {Icon && <Icon className='size-3.5 shrink-0' />}
         <span>{label}</span>
       </div>
@@ -95,7 +95,7 @@ export const ActiveBadge = ({ count }: { count: number }) => (
       'ml-1 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
       count > 0
         ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-        : 'bg-muted text-muted-foreground'
+        : 'bg-muted'
     )}
   >
     {count > 0 ? `${count} 活跃` : '空闲'}

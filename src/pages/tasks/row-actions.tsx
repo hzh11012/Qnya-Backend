@@ -7,6 +7,7 @@ import {
 } from '@/apis';
 import { createActionDialog } from '@/components/custom/data-table/create-action-dialog';
 import type { RowActionsProps } from '@/components/custom/data-table/create-form-dialog';
+import IngestDialog from '@/pages/tasks/ingest-dialog';
 
 const TranscodeDialog = createActionDialog({
   api: createTranscode,
@@ -37,10 +38,6 @@ const RetryDialog = createActionDialog({
   description: '此操作将重新启动ffmpeg进行转码。 请确认是否继续?'
 });
 
-const ScrapeAnimeDialog: React.FC = () => {
-  return <div>刮削（TODO）</div>;
-};
-
 const RowActions: React.FC<RowActionsProps<TasksListItem>> = ({
   row,
   onRefresh
@@ -67,7 +64,12 @@ const RowActions: React.FC<RowActionsProps<TasksListItem>> = ({
           onRefresh={onRefresh}
         />
       )}
-      {status === 'transcoded' && <ScrapeAnimeDialog />}
+      {status === 'transcoded' && (
+        <IngestDialog
+          id={id}
+          onRefresh={onRefresh}
+        />
+      )}
       {status !== 'transcoding' && (
         <DeleteDialog
           id={id}

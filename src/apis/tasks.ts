@@ -6,6 +6,7 @@ interface TasksListParams {
   keyword?: string;
   sort?: string;
   order?: string;
+  status?: string[];
 }
 
 interface TasksListItem {
@@ -30,6 +31,23 @@ interface TranscodeParams {
 
 interface DeleteTaskParams {
   id: number;
+}
+
+interface FileNode {
+  name: string;
+  path: string;
+  hasChildren: boolean;
+}
+
+type FileTreeRes = FileNode[];
+
+interface FileTreeParams {
+  path?: string;
+}
+
+interface FileIngestParams {
+  id: number;
+  path: string;
 }
 
 const fetchTasks = (params: TasksListParams) => {
@@ -70,12 +88,30 @@ const retryTask = (params: TranscodeParams) => {
   });
 };
 
+const fetchFileTree = (params: FileTreeParams) => {
+  return request.get<FileTreeRes>(`/api/admin/files/tree`, {
+    params: params.path ? { path: params.path } : undefined,
+    showErrorToast: true
+  });
+};
+
+const ingestFile = (params: FileIngestParams) => {
+  return request.post('/api/admin/tasks/ingest', params, {
+    showErrorToast: true,
+    showSuccessToast: true
+  });
+};
+
 export {
   fetchTasks,
   createTranscode,
   deleteTranscode,
   deleteTask,
   retryTask,
+  fetchFileTree,
+  ingestFile,
   type TasksListRes,
-  type TasksListItem
+  type TasksListItem,
+  type FileNode,
+  type FileTreeRes
 };

@@ -107,7 +107,7 @@ const Login: React.FC = () => {
           </h3>
         </div>
         <div className='font-semibold text-lg mx-2 mb-3'>邮箱登录/注册</div>
-        <div className='text-muted-foreground text-sm mx-2 mb-10'>
+        <div className='text-sm mx-2 mb-10'>
           未注册用户验证后将自动注册并登录
         </div>
         <LoginForm

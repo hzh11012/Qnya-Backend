@@ -71,9 +71,7 @@ const AnimeStatusChart = ({ stats, loading }: Props) => (
               key={value}
               className='flex items-center gap-2'
             >
-              <span className='w-16 shrink-0 text-xs text-muted-foreground'>
-                {label}
-              </span>
+              <span className='w-16 shrink-0 text-xs'>{label}</span>
               <MiniBar
                 value={val}
                 max={total}
@@ -116,9 +114,7 @@ const AnimeTypeChart = ({ stats, loading }: Props) => (
               key={value}
               className='flex items-center gap-2'
             >
-              <span className='w-16 shrink-0 text-xs text-muted-foreground'>
-                {label}
-              </span>
+              <span className='w-16 shrink-0 text-xs'>{label}</span>
               <MiniBar
                 value={val}
                 max={total}
@@ -159,9 +155,7 @@ const UserRoleChart = ({ stats, loading }: Props) => (
               key={value}
               className='flex items-center gap-2'
             >
-              <span className='w-16 shrink-0 text-xs text-muted-foreground'>
-                {label}
-              </span>
+              <span className='w-16 shrink-0 text-xs'>{label}</span>
               <MiniBar
                 value={val}
                 max={total}

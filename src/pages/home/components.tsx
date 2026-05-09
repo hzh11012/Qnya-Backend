@@ -15,7 +15,7 @@ export const StatCard = ({
 }) => (
   <div className='rounded-md border bg-card p-5 flex flex-col gap-3'>
     <div className='flex items-center justify-between'>
-      <span className='text-sm text-muted-foreground'>{title}</span>
+      <span className='text-sm'>{title}</span>
       <span
         className={cn(
           'flex size-8 items-center justify-center rounded-md',
@@ -44,9 +44,7 @@ export const SkeletonCard = () => (
 );
 
 export const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h2 className='text-sm font-semibold text-muted-foreground uppercase tracking-wider'>
-    {children}
-  </h2>
+  <h2 className='text-sm font-semibold uppercase tracking-wider'>{children}</h2>
 );
 
 export const StatusDot = ({ status }: { status: 'ok' | 'error' }) =>

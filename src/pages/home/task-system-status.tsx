@@ -116,14 +116,12 @@ const SystemStatus = ({ stats, loading }: Props) => (
               className='flex items-center justify-between rounded-md border bg-muted/30 px-4 py-2.5'
             >
               <div className='flex items-center gap-2 text-sm'>
-                <Icon className='size-4 text-muted-foreground' />
+                <Icon className='size-4' />
                 <span>{label}</span>
               </div>
               <div className='flex items-center gap-3'>
                 {sys?.latency !== undefined && (
-                  <span className='text-xs text-muted-foreground'>
-                    {sys.latency}ms
-                  </span>
+                  <span className='text-xs'>{sys.latency}ms</span>
                 )}
                 <StatusDot status={sys?.status ?? 'error'} />
               </div>
