@@ -9,6 +9,8 @@ import FormTextarea from '@/components/custom/form/form-textarea';
 import FormSelect from '@/components/custom/form/form-select';
 import FormMultiSelect from '@/components/custom/form/form-multiple-select';
 import { months, status, types } from '@/pages/anime/columns';
+import TmdbSearchDialog from '@/pages/anime/tmdb-search-dialog';
+import type { ScrapeDetailResult } from '@/apis/anime';
 
 interface AnimeFormProps {
   form: UseFormReturn<AnimeFormValues>;
@@ -23,18 +25,36 @@ const AnimeForm: React.FC<AnimeFormProps> = ({
   seriesOption,
   tagsOption
 }) => {
+  const handleTmdbSelect = (detail: ScrapeDetailResult) => {
+    if (detail.name) form.setValue('name', detail.name);
+    if (detail.description) form.setValue('description', detail.description);
+    if (detail.cover) form.setValue('cover', detail.cover);
+    if (detail.banner) form.setValue('banner', detail.banner);
+    if (detail.status) form.setValue('status', detail.status);
+    if (detail.type) form.setValue('type', detail.type);
+    if (detail.year) form.setValue('year', detail.year);
+    if (detail.month) form.setValue('month', detail.month);
+    if (detail.director) form.setValue('director', detail.director);
+    if (detail.cv) form.setValue('cv', detail.cv);
+  };
+
   return (
     <Form {...form}>
       <form
         className='flex flex-col gap-4'
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <FormInput
-          label='番剧名称'
-          control={form.control}
-          maxLength={100}
-          name='name'
-        />
+        <div className='flex items-end gap-2'>
+          <div className='flex-1'>
+            <FormInput
+              label='番剧名称'
+              control={form.control}
+              maxLength={100}
+              name='name'
+            />
+          </div>
+          <TmdbSearchDialog onSelect={handleTmdbSelect} />
+        </div>
         <FormCombobox
           label='番剧系列'
           control={form.control}

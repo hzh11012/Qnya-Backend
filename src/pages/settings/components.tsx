@@ -95,7 +95,7 @@ export const ActiveBadge = ({ count }: { count: number }) => (
       'ml-1 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
       count > 0
         ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-        : 'bg-muted'
+        : 'bg-muted text-white'
     )}
   >
     {count > 0 ? `${count} 活跃` : '空闲'}

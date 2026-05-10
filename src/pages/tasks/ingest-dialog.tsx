@@ -40,6 +40,8 @@ const IngestDialog: React.FC<IngestDialogProps> = ({ id, onRefresh }) => {
 
   const { run: runIngest, loading: ingestLoading } = useRequest(ingestFile, {
     manual: true,
+    loadingDelay: 150,
+    debounceWait: 250,
     onSuccess() {
       handleClose();
       onRefresh();
@@ -159,9 +161,9 @@ const IngestDialog: React.FC<IngestDialogProps> = ({ id, onRefresh }) => {
           <div className='flex items-center gap-2'>
             <span
               className='text-sm shrink-0 truncate max-w-32'
-              title={newFolderInput ? `${newFolderInput}/` : '根目录/'}
+              title={newFolderInput ? `${newFolderInput}/` : '/'}
             >
-              {newFolderInput ? `${newFolderInput}/` : '根目录/'}
+              {newFolderInput ? `${newFolderInput}/` : '/'}
             </span>
             <Input
               placeholder='目录名'

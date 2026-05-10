@@ -114,6 +114,46 @@ const fetchAnimeOptions = () => {
   });
 };
 
+export type MediaType = 'tv' | 'movie';
+export interface ScrapeSearchItem {
+  tmdbId: number;
+  mediaType: MediaType;
+  name: string;
+  overview: string;
+  cover: string | null;
+}
+
+export interface ScrapeDetailResult {
+  name: string;
+  description: string;
+  cover: string | null;
+  banner: string | null;
+  status: 'draft' | 'upcoming' | 'airing' | 'completed';
+  type: 'movie' | 'japanese' | 'american' | 'chinese' | 'adult';
+  year: number;
+  month: 'january' | 'april' | 'july' | 'october';
+  director: string;
+  cv: string;
+}
+
+const scrapeSearch = (params: { query: string; language?: string }) => {
+  return request.get<ScrapeSearchItem[]>('/api/admin/scrape/search', {
+    params,
+    showErrorToast: true
+  });
+};
+
+const scrapeDetail = (params: {
+  tmdbId: number;
+  mediaType: MediaType;
+  language?: string;
+}) => {
+  return request.get<ScrapeDetailResult>('/api/admin/scrape/detail', {
+    params,
+    showErrorToast: true
+  });
+};
+
 export {
   fetchAnimes,
   type AnimeListRes,
@@ -124,5 +164,7 @@ export {
   createAnime,
   deleteAnime,
   updateAnime,
-  fetchAnimeOptions
+  fetchAnimeOptions,
+  scrapeSearch,
+  scrapeDetail
 };
