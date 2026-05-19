@@ -13,20 +13,13 @@ interface TasksListItem {
   id: number;
   filename: string;
   fileSize: number;
-  needsTranscode: boolean;
   status: string;
-  errorMessage: string | null;
-  transcodeProgress: number;
   createdAt: string;
 }
 
 interface TasksListRes {
   items: TasksListItem[];
   total: number;
-}
-
-interface TranscodeParams {
-  id: number;
 }
 
 interface DeleteTaskParams {
@@ -57,32 +50,9 @@ const fetchTasks = (params: TasksListParams) => {
   });
 };
 
-const createTranscode = (params: TranscodeParams) => {
-  return request.post('/api/admin/transcodes', params, {
-    showErrorToast: true,
-    showSuccessToast: true
-  });
-};
-
-const deleteTranscode = (params: TranscodeParams) => {
-  const { id } = params;
-  return request.delete(`/api/admin/transcodes/${id}`, {
-    showErrorToast: true,
-    showSuccessToast: true
-  });
-};
-
 const deleteTask = (params: DeleteTaskParams) => {
   const { id } = params;
   return request.delete(`/api/admin/tasks/${id}`, {
-    showErrorToast: true,
-    showSuccessToast: true
-  });
-};
-
-const retryTask = (params: TranscodeParams) => {
-  const { id } = params;
-  return request.post(`/api/admin/transcodes/${id}/retry`, null, {
     showErrorToast: true,
     showSuccessToast: true
   });
@@ -104,10 +74,7 @@ const ingestFile = (params: FileIngestParams) => {
 
 export {
   fetchTasks,
-  createTranscode,
-  deleteTranscode,
   deleteTask,
-  retryTask,
   fetchFileTree,
   ingestFile,
   type TasksListRes,

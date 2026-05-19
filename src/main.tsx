@@ -13,7 +13,7 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider
       attribute='class'
       defaultTheme='system'
-      storageKey='anispher-theme'
+      storageKey='qnya-theme'
       disableTransitionOnChange
     >
       <RouterProvider router={router} />

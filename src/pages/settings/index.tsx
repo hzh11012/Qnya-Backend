@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { SkeletonCard } from './components';
 import {
   ServerCard,
-  FfmpegCard,
   QbitCard,
   SmtpCard,
   DatabaseCard,
@@ -48,7 +47,6 @@ const Settings = () => {
       {loading ? (
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
           <SkeletonCard rows={5} />
-          <SkeletonCard rows={7} />
           <SkeletonCard rows={3} />
           <SkeletonCard rows={4} />
           <SkeletonCard rows={3} />
@@ -60,7 +58,6 @@ const Settings = () => {
       ) : data ? (
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
           <ServerCard data={data.server} />
-          <FfmpegCard data={data.ffmpeg} />
           <QbitCard data={data.qbit} />
           <SmtpCard data={data.smtp} />
           <DatabaseCard data={data.database} />

@@ -4,21 +4,10 @@ import { formatDate, formatFileSize } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 import RowActions from '@/pages/tasks/row-actions';
-import { Progress } from '@/components/ui/progress';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
 import { DataTableColumnFilter } from '@/components/custom/data-table/data-table-column-filter';
 import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
 
-type TaskStatusType =
-  | 'success'
-  | 'warning'
-  | 'destructive'
-  | 'default'
-  | 'muted';
+type TaskStatusType = 'success' | 'muted';
 
 interface TaskStatusConfig {
   label: string;
@@ -26,11 +15,8 @@ interface TaskStatusConfig {
 }
 
 export const taskStatusMap: Record<string, TaskStatusConfig> = {
-  'pending': { label: '待处理', type: 'muted' },
-  'transcoding': { label: '转码中', type: 'default' },
-  'transcoded': { label: '转码完成', type: 'warning' },
-  'completed': { label: '已完成', type: 'success' },
-  'failed': { label: '失败', type: 'destructive' }
+  'pending': { label: '待入库', type: 'muted' },
+  'completed': { label: '已完成', type: 'success' }
 };
 
 const statusFilterOptions = Object.entries(taskStatusMap).map(
@@ -68,28 +54,8 @@ const getColumns = (onRefresh: () => void) => {
         );
       },
       cell: ({ row }) => {
-        const { status, transcodeProgress, errorMessage } = row.original;
+        const { status } = row.original;
         const config = taskStatusMap[status];
-        if (status === 'transcoding' || status === 'failed') {
-          return (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge variant={config.type}>{config.label}</Badge>
-              </TooltipTrigger>
-              <TooltipContent className='max-w-80'>
-                {status === 'transcoding' ? (
-                  <Progress
-                    className='w-48'
-                    value={transcodeProgress}
-                  />
-                ) : (
-                  errorMessage
-                )}
-              </TooltipContent>
-            </Tooltip>
-          );
-        }
-
         return <Badge variant={config.type}>{config.label}</Badge>;
       }
     },

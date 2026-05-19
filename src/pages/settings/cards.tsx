@@ -1,7 +1,6 @@
 import type { SettingsInfoResponse } from '@/apis';
 import {
   Server,
-  Video,
   Download,
   Mail,
   Database,
@@ -11,8 +10,6 @@ import {
   Cpu,
   Globe,
   FolderOpen,
-  Activity,
-  ListOrdered,
   AtSign,
   PlugZap,
   Users,
@@ -25,7 +22,7 @@ import {
   ShieldAlert
 } from 'lucide-react';
 import { formatUptime, formatMs } from '@/lib/utils';
-import { Card, SectionTitle, InfoRow, ActiveBadge } from './components';
+import { Card, SectionTitle, InfoRow } from './components';
 
 const TruncatedValue = ({ value }: { value: string }) => (
   <span
@@ -71,57 +68,6 @@ export const ServerCard = ({
       icon={AtSign}
       label='管理员邮箱'
       value={data.adminEmail || '未设置'}
-    />
-  </Card>
-);
-
-export const FfmpegCard = ({
-  data
-}: {
-  data: SettingsInfoResponse['ffmpeg'];
-}) => (
-  <Card>
-    <SectionTitle
-      icon={Video}
-      title='FFmpeg 转码'
-      badge={<ActiveBadge count={data.activeCount} />}
-    />
-    <InfoRow
-      icon={FolderOpen}
-      label='可执行文件路径'
-      value={<TruncatedValue value={data.path} />}
-    />
-    <InfoRow
-      icon={Cpu}
-      label='编码器'
-      value={data.encoder}
-    />
-    <InfoRow
-      icon={Activity}
-      label='线程数'
-      value={`${data.threads} 线程`}
-    />
-    <InfoRow
-      icon={Timer}
-      label='HLS 分片时长'
-      value={`${data.hlsSegmentTime}s`}
-    />
-    <InfoRow
-      icon={FolderOpen}
-      label='输出路径'
-      value={<TruncatedValue value={data.transcodePath} />}
-    />
-    <InfoRow
-      icon={Activity}
-      label='活跃转码数'
-      value={`${data.activeCount}`}
-      highlight={data.activeCount > 0 ? 'success' : undefined}
-    />
-    <InfoRow
-      icon={ListOrdered}
-      label='队列等待数'
-      value={`${data.queueLength}`}
-      highlight={data.queueLength > 5 ? 'warning' : undefined}
     />
   </Card>
 );

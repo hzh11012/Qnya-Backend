@@ -40,15 +40,11 @@ interface DashboardStatsInteraction {
 
 interface DashboardStatsTasks {
   pending: number;
-  transcoding: number;
-  transcoded: number;
   completed: number;
-  failed: number;
 }
 
 interface DashboardStatsPending {
   feedbacks: number;
-  failedTasks: number;
 }
 
 interface TopCollectionItem {

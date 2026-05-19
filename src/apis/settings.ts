@@ -8,16 +8,6 @@ export interface SettingsInfoServer {
   adminEmail: string;
 }
 
-export interface SettingsInfoFfmpeg {
-  path: string;
-  encoder: string;
-  threads: number;
-  hlsSegmentTime: number;
-  transcodePath: string;
-  activeCount: number;
-  queueLength: number;
-}
-
 export interface SettingsInfoQbit {
   host: string;
   downloadPath: string;
@@ -59,7 +49,6 @@ export interface SettingsInfoTmdb {
 
 export interface SettingsInfoResponse {
   server: SettingsInfoServer;
-  ffmpeg: SettingsInfoFfmpeg;
   qbit: SettingsInfoQbit;
   smtp: SettingsInfoSmtp;
   database: SettingsInfoDatabase;
