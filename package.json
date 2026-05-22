@@ -3,6 +3,23 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "Qnya backend",
+  "author": "Qnets",
+  "license": "MIT",
+  "homepage": "https://github.com/hzh11012/Qnya-Backend#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hzh11012/Qnya-Backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hzh11012/Qnya-Backend/issues"
+  },
+  "keywords": [
+    "anime",
+    "qnya",
+    "react",
+    "backend"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
