@@ -60,6 +60,10 @@ Qnya 番剧平台管理后台，仅限 `admin` 角色访问，支持移动端自
 
 展示后端运行配置：服务器、qBittorrent、SMTP、数据库连接池、Session、安全配置、资源路径、TMDB。支持手动清除仪表盘缓存。
 
+### MCP `/mcp`
+
+展示 MCP（Model Context Protocol）集成信息：端点地址、Token 鉴权状态（未启用时显示警告）、可用工具列表（工具卡片网格）、Markdown 渲染的完整操作指南。
+
 ## 技术栈
 
 | 类别     | 技术                                             |
@@ -72,6 +76,7 @@ Qnya 番剧平台管理后台，仅限 `admin` 角色访问，支持移动端自
 | 表格     | TanStack Table v8（排序、过滤、分页、虚拟滚动）  |
 | 表单     | React Hook Form v7 + Zod v4                      |
 | 请求     | Axios + ahooks `useRequest`                      |
+| Markdown | react-markdown v10 + remark-gfm                  |
 | 规范     | ESLint + Prettier + husky + Conventional Commits |
 
 ## 项目结构
@@ -112,3 +117,75 @@ pnpm lint
 ```
 
 提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/) 规范，提交时自动执行 lint-staged。
+
+## MCP 接入指南
+
+Qnya 后端暴露了一个 [MCP（Model Context Protocol）](https://modelcontextprotocol.io/) 端点，可将平台数据工具直接接入 Claude、Cursor 等支持 MCP 的 AI 客户端。
+
+### 第一步：获取接入信息
+
+在管理后台进入 **MCP** 页面（`/mcp`），可以查到：
+
+- **端点地址**：形如 `https://your-domain.com/api/mcp`
+- **Token 保护**：显示"已启用"时需要在请求头携带 Bearer Token；显示"未启用"（黄色警告）时无需鉴权
+- **可用工具列表**：当前服务端注册的所有工具名称与说明
+
+Token 由后端管理员签发，请向服务端管理员获取。
+
+### 第二步：配置客户端
+
+将下方示例中的 `YOUR_ENDPOINT` 替换为实际端点地址，`YOUR_TOKEN` 替换为实际 Token。若 Token 保护未启用，去掉 `headers` 字段即可。
+
+#### Claude Desktop
+
+编辑 `~/Library/Application Support/Claude/claude_desktop_config.json`（Windows 为 `%APPDATA%\Claude\claude_desktop_config.json`）：
+
+```json
+{
+  "mcpServers": {
+    "qnya": {
+      "url": "YOUR_ENDPOINT",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      }
+    }
+  }
+}
+```
+
+保存后重启 Claude Desktop 生效。
+
+#### Cursor
+
+编辑 `~/.cursor/mcp.json`（或项目根目录下的 `.cursor/mcp.json`）：
+
+```json
+{
+  "mcpServers": {
+    "qnya": {
+      "url": "YOUR_ENDPOINT",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN"
+      }
+    }
+  }
+}
+```
+
+#### Claude Code
+
+```bash
+claude mcp add --transport http qnya YOUR_ENDPOINT \
+  --header "Authorization: Bearer YOUR_TOKEN"
+```
+
+验证是否接入成功：
+
+```bash
+claude mcp list
+```
+
+### 备注
+
+- MCP 端点采用 **Streamable HTTP** 传输协议，无需额外安装本地进程
+- 可用工具的完整说明见管理后台 `/mcp` 页面的「操作指南」区块

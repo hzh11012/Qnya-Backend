@@ -108,6 +108,10 @@ const staticRoutes: RouteObject[] = [
             lazy: createLazyComponent(() => import('@/pages/histories/index'))
           },
           {
+            path: 'mcp',
+            lazy: createLazyComponent(() => import('@/pages/mcp/index'))
+          },
+          {
             path: 'settings',
             lazy: createLazyComponent(() => import('@/pages/settings/index'))
           },

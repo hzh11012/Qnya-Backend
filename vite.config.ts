@@ -24,7 +24,7 @@ export default defineConfig({
   },
   server: {
     // 这里配置了代理，需要配合后端的set-cookie的domain
-    host: 'localhost.qnya.cn',
+    host: '0.0.0.0',
     port: 5900,
     proxy: {
       '/api': {

@@ -8,6 +8,7 @@ import {
   ListVideo,
   MessageCircle,
   MessageSquareText,
+  Network,
   ScanSearch,
   Settings,
   Sparkles,
@@ -149,6 +150,11 @@ const links: NavItem[] = [
         url: '/feedbacks'
       }
     ]
+  },
+  {
+    title: 'MCP',
+    icon: Network,
+    url: '/mcp'
   },
   {
     title: '系统信息',
