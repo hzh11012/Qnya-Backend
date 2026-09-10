@@ -1,54 +1,13 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface TopicListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-  status?: boolean[];
-}
-
-interface TopicAnimeItem {
-  id: number;
-  name: string;
-}
-
-interface TopicListItem {
-  id: number;
-  name: string;
-  description: string;
-  status: boolean;
-  cover: string;
-  anime: TopicAnimeItem[];
-  createdAt: string;
-}
-
-interface TopicListRes {
-  items: TopicListItem[];
-  total: number;
-}
-
-interface AddTopicBody {
-  name: string;
-  description: string;
-  status: boolean;
-  cover: string;
-  animeIds?: number[];
-}
-
-interface UpdateTopicBody {
-  id: number;
-  name?: string;
-  description?: string;
-  status?: boolean;
-  cover?: string;
-  animeIds?: number[];
-}
-
-interface DeleteTopicParams {
-  id: number;
-}
+type TopicListParams = ApiQuery<'/api/admin/topics/'>;
+type TopicListRes = ApiData<'/api/admin/topics/'>;
+type TopicListItem = TopicListRes['items'][number];
+type AddTopicBody = ApiBody<'/api/admin/topics/'>;
+type UpdateTopicBody = ApiPath<'/api/admin/topics/{id}', 'put'> &
+  ApiBody<'/api/admin/topics/{id}', 'put'>;
+type DeleteTopicParams = ApiPath<'/api/admin/topics/{id}', 'delete'>;
 
 const fetchTopics = (params: TopicListParams) => {
   return request.get<TopicListRes>('/api/admin/topics', {
@@ -81,6 +40,7 @@ const deleteTopic = (params: DeleteTopicParams) => {
 };
 
 export {
+  type TopicListParams,
   fetchTopics,
   createTopic,
   updateTopic,

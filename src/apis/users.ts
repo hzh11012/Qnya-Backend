@@ -1,40 +1,11 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface UserListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-  role?: string[];
-  status?: boolean[];
-}
-
-interface UserListItem {
-  id: number;
-  name: string;
-  email: string;
-  role: 'admin' | 'premium' | 'user' | 'guest';
-  status: boolean;
-  avatar: string | null;
-  createdAt: string;
-}
-
-interface UserListRes {
-  items: UserListItem[];
-  total: number;
-}
-
-interface EditUserParams {
-  id: number;
-}
-
-type EditUserBody = EditUserParams & {
-  name?: string;
-  role?: 'admin' | 'premium' | 'user' | 'guest';
-  status?: boolean;
-  avatar?: string | null;
-};
+type UserListParams = ApiQuery<'/api/admin/users/'>;
+type UserListRes = ApiData<'/api/admin/users/'>;
+type UserListItem = UserListRes['items'][number];
+type EditUserBody = ApiPath<'/api/admin/users/{id}', 'put'> &
+  ApiBody<'/api/admin/users/{id}', 'put'>;
 
 const fetchUsers = (params: UserListParams) => {
   return request.get<UserListRes>('/api/admin/users', {
@@ -52,6 +23,7 @@ const updateUser = (body: EditUserBody) => {
 };
 
 export {
+  type UserListParams,
   fetchUsers,
   type UserListRes,
   type UserListItem,

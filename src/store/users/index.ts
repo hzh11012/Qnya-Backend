@@ -1,4 +1,3 @@
-import type { UserListItem } from '@/apis/users';
 import {
   createTableStore,
   resolveUpdater,
@@ -12,27 +11,23 @@ interface UserExtra {
   setColumnFilters: OnChangeFn<ColumnFiltersState>;
 }
 
-type UserStore = SimpleTableStore<UserListItem> & UserExtra;
+type UserStore = SimpleTableStore<UserExtra>;
 
-const useUserStore = createTableStore<UserListItem, UserExtra>(
-  'user-store',
-  set => ({
-    role: [],
-    status: [],
-    setColumnFilters: updater => {
-      set(state => {
-        const base = state.columnFilters;
-        const next = resolveUpdater(updater, base);
-        return {
-          columnFilters: next,
-          role: (next.find(item => item.id === 'role')?.value ??
-            []) as string[],
-          status: (next.find(item => item.id === 'status')?.value ??
-            []) as boolean[]
-        } as Partial<UserStore>;
-      });
-    }
-  })
-);
+const useUserStore = createTableStore<UserExtra>('user-store', set => ({
+  role: [],
+  status: [],
+  setColumnFilters: updater => {
+    set(state => {
+      const base = state.columnFilters;
+      const next = resolveUpdater(updater, base);
+      return {
+        columnFilters: next,
+        role: (next.find(item => item.id === 'role')?.value ?? []) as string[],
+        status: (next.find(item => item.id === 'status')?.value ??
+          []) as boolean[]
+      } as Partial<UserStore>;
+    });
+  }
+}));
 
 export { useUserStore };

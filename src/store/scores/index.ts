@@ -1,4 +1,3 @@
-import type { ScoreListItem } from '@/apis/scores';
 import {
   createTableStore,
   resolveUpdater,
@@ -11,24 +10,21 @@ interface ScoreExtra {
   setColumnFilters: OnChangeFn<ColumnFiltersState>;
 }
 
-type ScoreStore = SimpleTableStore<ScoreListItem> & ScoreExtra;
+type ScoreStore = SimpleTableStore<ScoreExtra>;
 
-const useScoreStore = createTableStore<ScoreListItem, ScoreExtra>(
-  'score-store',
-  set => ({
-    status: [],
-    setColumnFilters: updater => {
-      set(state => {
-        const base = state.columnFilters;
-        const next = resolveUpdater(updater, base);
-        return {
-          columnFilters: next,
-          status: (next.find(item => item.id === 'status')?.value ??
-            []) as boolean[]
-        } as Partial<ScoreStore>;
-      });
-    }
-  })
-);
+const useScoreStore = createTableStore<ScoreExtra>('score-store', set => ({
+  status: [],
+  setColumnFilters: updater => {
+    set(state => {
+      const base = state.columnFilters;
+      const next = resolveUpdater(updater, base);
+      return {
+        columnFilters: next,
+        status: (next.find(item => item.id === 'status')?.value ??
+          []) as boolean[]
+      } as Partial<ScoreStore>;
+    });
+  }
+}));
 
 export { useScoreStore };

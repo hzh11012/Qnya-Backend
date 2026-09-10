@@ -9,11 +9,12 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import type { StateCreator } from 'zustand';
 
-interface BaseTableState<TData> {
-  initialized: boolean;
-  data: TData[];
-  total: number;
-  hasMore: boolean;
+/**
+ * 表格页 UI 状态 Slice（服务端数据由 TanStack Query 管理，不存入 store）
+ *
+ * @template TStore - 完整 Store 类型（包含此 slice）
+ */
+interface BaseTableState {
   sizes: number[];
   sorting: SortingState;
   type: string;
@@ -23,11 +24,7 @@ interface BaseTableState<TData> {
   columnFilters: ColumnFiltersState;
 }
 
-interface BaseTableActions<TData> {
-  setInitialized: (initialized: boolean) => void;
-  setData: (data: TData[]) => void;
-  setTotal: (total: number) => void;
-  setHasMore: (hasMore: boolean) => void;
+interface BaseTableActions {
   setSorting: OnChangeFn<SortingState>;
   setType: (type: string) => void;
   setKeyword: (keyword?: string) => void;
@@ -35,7 +32,7 @@ interface BaseTableActions<TData> {
   setSort: (sort?: string) => void;
 }
 
-type BaseTableSlice<TData> = BaseTableState<TData> & BaseTableActions<TData>;
+type BaseTableSlice = BaseTableState & BaseTableActions;
 
 interface BasePaginationState {
   page: number;
@@ -51,10 +48,6 @@ interface BasePaginationActions {
 type BasePaginationSlice = BasePaginationState & BasePaginationActions;
 
 const DEFAULT_TABLE_STATE = {
-  initialized: false,
-  data: [],
-  total: 0,
-  hasMore: false,
   sizes: [10, 20, 50],
   sorting: [],
   type: 'name',
@@ -62,9 +55,7 @@ const DEFAULT_TABLE_STATE = {
   order: undefined,
   sort: undefined,
   columnFilters: []
-} as const satisfies Omit<BaseTableState<unknown>, 'data'> & {
-  data: unknown[];
-};
+} as const satisfies BaseTableState;
 
 const DEFAULT_PAGINATION_STATE = {
   page: 1,
@@ -86,20 +77,12 @@ function resolveUpdater<T>(updater: Updater<T>, currentValue: T): T {
  * @template TData - 表格数据项类型
  * @template TStore - 完整 Store 类型（包含此 slice）
  */
-const createTableSlice = <
-  TData,
-  TStore extends BaseTableSlice<TData> = BaseTableSlice<TData>
->(
-  initialState?: Partial<BaseTableState<TData>>
-): StateCreator<TStore, [], [], BaseTableSlice<TData>> => {
+const createTableSlice = <TStore extends BaseTableSlice = BaseTableSlice>(
+  initialState?: Partial<BaseTableState>
+): StateCreator<TStore, [], [], BaseTableSlice> => {
   return set => ({
     ...DEFAULT_TABLE_STATE,
-    data: [] as TData[],
     ...initialState,
-    setInitialized: initialized => set({ initialized } as Partial<TStore>),
-    setData: data => set({ data } as Partial<TStore>),
-    setTotal: total => set({ total } as Partial<TStore>),
-    setHasMore: hasMore => set({ hasMore } as Partial<TStore>),
     setSorting: updater => {
       set(state => {
         const nextSorting = resolveUpdater(updater, state.sorting);
@@ -154,12 +137,14 @@ const createPaginationSlice = <
   });
 };
 
-type SimpleTableStore<TData> = BaseTableSlice<TData> & BasePaginationSlice;
+type SimpleTableStore<TExtra extends object = object> = BaseTableSlice &
+  BasePaginationSlice &
+  TExtra;
 
-type ExtendFn<TData, TExtra> = (
-  set: Parameters<StateCreator<SimpleTableStore<TData> & TExtra>>[0],
-  get: Parameters<StateCreator<SimpleTableStore<TData> & TExtra>>[1],
-  store: Parameters<StateCreator<SimpleTableStore<TData> & TExtra>>[2]
+type ExtendFn<TExtra extends object> = (
+  set: Parameters<StateCreator<SimpleTableStore<TExtra>>>[0],
+  get: Parameters<StateCreator<SimpleTableStore<TExtra>>>[1],
+  store: Parameters<StateCreator<SimpleTableStore<TExtra>>>[2]
 ) => TExtra;
 
 /**
@@ -167,16 +152,16 @@ type ExtendFn<TData, TExtra> = (
  * @param name - devtools 中显示的 store 名称
  * @param extend - 可选，返回额外的 state/actions，可覆盖基础字段
  */
-function createTableStore<TData, TExtra = object>(
+function createTableStore<TExtra extends object = object>(
   name: string,
-  extend?: ExtendFn<TData, TExtra>
+  extend?: ExtendFn<TExtra>
 ) {
-  type Store = SimpleTableStore<TData> & TExtra;
+  type Store = SimpleTableStore<TExtra>;
   return create<Store>()(
     devtools(
       (set, get, store) => {
         const base = {
-          ...createTableSlice<TData, Store>()(
+          ...createTableSlice<Store>()(
             set as Parameters<StateCreator<Store>>[0],
             get as Parameters<StateCreator<Store>>[1],
             store as Parameters<StateCreator<Store>>[2]

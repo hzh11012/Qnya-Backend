@@ -1,4 +1,4 @@
-import { useRequest } from 'ahooks';
+import { useQuery } from '@tanstack/react-query';
 import { fetchMcpInfo } from '@/apis/mcp';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,15 +14,20 @@ import {
 } from './components';
 
 const Mcp = () => {
-  const { data, loading, refresh } = useRequest(fetchMcpInfo, {
-    loadingDelay: 150
+  const {
+    data,
+    isPending: loading,
+    refetch
+  } = useQuery({
+    queryKey: ['mcp', 'info'],
+    queryFn: fetchMcpInfo
   });
 
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex items-center justify-end gap-2'>
         <DataTableRefresh
-          onRefresh={refresh}
+          onRefresh={() => refetch()}
           disabled={loading}
         />
       </div>

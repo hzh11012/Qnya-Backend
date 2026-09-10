@@ -1,48 +1,13 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface VideoListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-}
-
-interface VideoListItem {
-  id: number;
-  animeId: number;
-  anime: {
-    name: string;
-    cover: string;
-  };
-  title: string;
-  episode: number;
-  url: string;
-  views: number;
-  createdAt: string;
-}
-
-interface VideoListRes {
-  items: VideoListItem[];
-  total: number;
-}
-
-interface AddVideoBody {
-  animeId: number;
-  title: string;
-  episode: number;
-  url: string;
-}
-
-interface EditVideoParams {
-  id: number;
-}
-
-type EditVideoBody = EditVideoParams & Partial<AddVideoBody>;
-
-interface DeleteVideoParams {
-  id: number;
-}
+type VideoListParams = ApiQuery<'/api/admin/videos/'>;
+type VideoListRes = ApiData<'/api/admin/videos/'>;
+type VideoListItem = VideoListRes['items'][number];
+type AddVideoBody = ApiBody<'/api/admin/videos/'>;
+type EditVideoBody = ApiPath<'/api/admin/videos/{id}', 'put'> &
+  ApiBody<'/api/admin/videos/{id}', 'put'>;
+type DeleteVideoParams = ApiPath<'/api/admin/videos/{id}', 'delete'>;
 
 const fetchVideos = (params: VideoListParams) => {
   return request.get<VideoListRes>('/api/admin/videos', {
@@ -75,6 +40,7 @@ const deleteVideo = (params: DeleteVideoParams) => {
 };
 
 export {
+  type VideoListParams,
   fetchVideos,
   createVideo,
   updateVideo,

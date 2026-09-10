@@ -1,13 +1,7 @@
 import request from '@/lib/request';
+import type { ApiData } from '@/types/helpers';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  status: boolean;
-  avatar: string;
-}
+export type User = ApiData<'/api/auth/me'>;
 
 const me = async () => {
   return request.get<User>('/api/auth/me');
@@ -33,4 +27,4 @@ const logout = () => {
   return request.post('/api/auth/logout');
 };
 
-export { me, login, sendCode, logout, type User };
+export { me, login, sendCode, logout };

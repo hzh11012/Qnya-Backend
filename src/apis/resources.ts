@@ -1,23 +1,9 @@
 import request from '@/lib/request';
+import type { ApiData, ApiQuery } from '@/types/helpers';
 
-interface ResourcesListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-}
-
-interface ResourcesListItem {
-  title: string;
-  magnet: string;
-  size: number;
-  fansub?: string;
-  createdAt: string;
-}
-
-interface ResourcesListRes {
-  items: ResourcesListItem[];
-  hasMore: boolean;
-}
+type ResourcesListParams = ApiQuery<'/api/admin/resources/'>;
+type ResourcesListRes = ApiData<'/api/admin/resources/'>;
+type ResourcesListItem = ResourcesListRes['items'][number];
 
 const fetchResources = (params: ResourcesListParams) => {
   return request.get<ResourcesListRes>('/api/admin/resources', {

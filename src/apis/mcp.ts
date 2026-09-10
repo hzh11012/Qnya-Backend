@@ -1,16 +1,10 @@
 import request from '@/lib/request';
+import type { ApiData } from '@/types/helpers';
 
-export interface McpTool {
-  name: string;
-  description: string;
-}
+type McpInfoRes = ApiData<'/api/admin/mcp/info'>;
 
-export interface McpInfoResponse {
-  endpoint: string;
-  tokenEnabled: boolean;
-  tools: McpTool[];
-  guide: string;
-}
+export type McpInfoResponse = McpInfoRes;
+export type McpTool = McpInfoRes['tools'][number];
 
 export const fetchMcpInfo = () => {
   return request.get<McpInfoResponse>('/api/admin/mcp/info', {

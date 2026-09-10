@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRequest } from 'ahooks';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { fetchFileTree, ingestFile } from '@/apis/tasks';
 import {
   FileTree,
@@ -30,28 +30,26 @@ const IngestDialog: React.FC<IngestDialogProps> = ({ id, onRefresh }) => {
   const [newFolderInput, setNewFolderInput] = useState<string | null>(null);
   const [newFolderName, setNewFolderName] = useState('');
 
-  const {
-    data: rootNodes,
-    loading: rootLoading,
-    run: loadRoot
-  } = useRequest(() => fetchFileTree({}), {
-    manual: true
+  // 打开弹窗时才拉取文件树（enabled: open），过期后每次打开自动重新拉取
+  const { data: rootNodes, isPending: rootLoading } = useQuery({
+    queryKey: ['files', 'tree'],
+    queryFn: () => fetchFileTree({}),
+    enabled: open
   });
 
-  const { run: runIngest, loading: ingestLoading } = useRequest(ingestFile, {
-    manual: true,
-    loadingDelay: 150,
-    debounceWait: 250,
+  const ingestMutation = useMutation({
+    mutationFn: ingestFile,
     onSuccess() {
       handleClose();
       onRefresh();
     }
   });
 
+  const ingestLoading = ingestMutation.isPending;
+
   const handleOpen = (val: boolean) => {
     if (val) {
       setOpen(true);
-      loadRoot();
     } else {
       handleClose();
     }
@@ -109,8 +107,8 @@ const IngestDialog: React.FC<IngestDialogProps> = ({ id, onRefresh }) => {
   }, []);
 
   const handleConfirm = () => {
-    if (!selectedPath) return;
-    runIngest({ id, path: selectedPath });
+    if (!selectedPath || ingestLoading) return;
+    ingestMutation.mutate({ id, path: selectedPath });
   };
 
   return (

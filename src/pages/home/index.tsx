@@ -1,6 +1,5 @@
-import { useRequest } from 'ahooks';
+import { useQuery } from '@tanstack/react-query';
 import { fetchDashboardStats } from '@/apis/dashboard';
-import type { DashboardStatsResponse } from '@/apis/dashboard';
 import { AlertTriangle } from 'lucide-react';
 import ContentOverview from './content-overview';
 import InteractionOverview from './interaction-overview';
@@ -9,11 +8,14 @@ import OperationData from './operation-data';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 
 const Home = () => {
-  const { data, loading, refresh } = useRequest(fetchDashboardStats, {
-    loadingDelay: 150
+  const {
+    data: stats,
+    isPending: loading,
+    refetch
+  } = useQuery({
+    queryKey: ['dashboard', 'stats'],
+    queryFn: fetchDashboardStats
   });
-
-  const stats = data as DashboardStatsResponse | undefined;
 
   return (
     <div className='flex flex-col gap-4'>
@@ -30,7 +32,7 @@ const Home = () => {
           )}
         </div>
         <DataTableRefresh
-          onRefresh={refresh}
+          onRefresh={() => refetch()}
           disabled={loading}
         />
       </div>

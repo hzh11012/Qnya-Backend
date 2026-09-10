@@ -1,45 +1,12 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface FeedbackListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-  type?: string[];
-  status?: string[];
-}
-
-interface FeedbackListItem {
-  id: number;
-  userId: number;
-  animeId: number;
-  user: {
-    name: string;
-  };
-  anime: {
-    name: string;
-    cover: string;
-  };
-  type: 'consultation' | 'suggestion' | 'complaint' | 'other';
-  content: string;
-  status: 'pending' | 'processing' | 'done';
-  createdAt: string;
-}
-
-interface FeedbackListRes {
-  items: FeedbackListItem[];
-  total: number;
-}
-
-interface DeleteFeedbackParams {
-  id: number;
-}
-
-interface UpdateFeedbackBody {
-  id: number;
-  status?: 'pending' | 'processing' | 'done';
-}
+type FeedbackListParams = ApiQuery<'/api/admin/feedbacks/'>;
+type FeedbackListRes = ApiData<'/api/admin/feedbacks/'>;
+type FeedbackListItem = FeedbackListRes['items'][number];
+type DeleteFeedbackParams = ApiPath<'/api/admin/feedbacks/{id}', 'delete'>;
+type UpdateFeedbackBody = ApiPath<'/api/admin/feedbacks/{id}', 'put'> &
+  ApiBody<'/api/admin/feedbacks/{id}', 'put'>;
 
 const fetchFeedbacks = (params: FeedbackListParams) => {
   return request.get<FeedbackListRes>('/api/admin/feedbacks', {
@@ -65,6 +32,7 @@ const updateFeedback = (body: UpdateFeedbackBody) => {
 };
 
 export {
+  type FeedbackListParams,
   fetchFeedbacks,
   deleteFeedback,
   updateFeedback,

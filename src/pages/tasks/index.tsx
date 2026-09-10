@@ -3,7 +3,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/tasks/columns';
 import { useTasksStore } from '@/store/tasks';
-import { fetchTasks } from '@/apis/tasks';
+import { fetchTasks, type TasksListParams } from '@/apis/tasks';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
@@ -35,20 +35,17 @@ const Index: React.FC = () => {
     handleSearch
   } = useDataTablePage({
     store: useTasksStore,
+    scope: 'tasks',
     api: fetchTasks,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({ page, pageSize, keyword, sort, order }): TasksListParams => ({
       page,
       pageSize,
       keyword,
-      sort,
-      order,
-      status
+      sort: sort as TasksListParams['sort'],
+      order: order as TasksListParams['order'],
+      status: status as TasksListParams['status']
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    },
-    refreshDeps: [columnFilters],
+    getPageData: res => ({ items: res.items, total: res.total }),
     cleanupExtra
   });
 

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/dans/columns';
 import { useDanmakuStore } from '@/store/dans';
-import { fetchDanmakus } from '@/apis/dans';
+import { fetchDanmakus, type DanmakuListParams } from '@/apis/dans';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
@@ -16,38 +16,32 @@ const Index: React.FC = () => {
     setSorting,
     setPagination,
     sizes,
-    run,
     refresh,
     error,
     isLoading,
-    resetPagination,
-    setKeyword,
-    sort,
-    order,
-    pageSize
+    handleSearch
   } = useDataTablePage({
     store: useDanmakuStore,
+    scope: 'dans',
     api: fetchDanmakus,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({
       page,
       pageSize,
       keyword,
       sort,
       order
+    }): DanmakuListParams => ({
+      page,
+      pageSize,
+      keyword,
+      // 表格排序状态是宽泛 string，此处收窄为 API 允许的字面量联合
+      sort: sort as DanmakuListParams['sort'],
+      order: order as DanmakuListParams['order']
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    }
+    getPageData: res => ({ items: res.items, total: res.total })
   });
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
-
-  const handleSearch = (keyword: string) => {
-    resetPagination();
-    setKeyword(keyword);
-    run({ page: 1, keyword, pageSize, sort, order });
-  };
 
   return (
     <DataTable

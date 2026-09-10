@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useRequest } from 'ahooks';
 import {
   Dialog,
   DialogContent,
@@ -10,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useMutation } from '@tanstack/react-query';
 import {
   scrapeSearch,
   scrapeDetail,
@@ -27,24 +27,17 @@ const TmdbSearchDialog: React.FC<TmdbSearchDialogProps> = ({ onSelect }) => {
   const [keyword, setKeyword] = useState('');
   const [results, setResults] = useState<ScrapeSearchItem[]>([]);
   const [searched, setSearched] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const { run: runSearch } = useRequest(scrapeSearch, {
-    manual: true,
-    debounceWait: 250,
+  const searchMutation = useMutation({
+    mutationFn: scrapeSearch,
     onSuccess(data) {
       setResults(data);
       setSearched(true);
-      setLoading(false);
-    },
-    onError() {
-      setLoading(false);
     }
   });
 
-  const { run: runDetail, loading: fetchingDetail } = useRequest(scrapeDetail, {
-    manual: true,
-    debounceWait: 250,
+  const detailMutation = useMutation({
+    mutationFn: scrapeDetail,
     onSuccess(detail) {
       onSelect(detail);
       setOpen(false);
@@ -52,19 +45,20 @@ const TmdbSearchDialog: React.FC<TmdbSearchDialogProps> = ({ onSelect }) => {
     }
   });
 
+  const loading = searchMutation.isPending;
+  const fetchingDetail = detailMutation.isPending;
+
   const resetState = () => {
     setKeyword('');
     setResults([]);
     setSearched(false);
-    setLoading(false);
   };
 
   const handleSearch = () => {
-    if (!keyword.trim() || fetchingDetail) return;
+    if (!keyword.trim() || fetchingDetail || loading) return;
     setResults([]);
     setSearched(false);
-    setLoading(true);
-    runSearch({ query: keyword.trim() });
+    searchMutation.mutate({ query: keyword.trim() });
   };
 
   const handleOpenChange = (val: boolean) => {
@@ -124,7 +118,7 @@ const TmdbSearchDialog: React.FC<TmdbSearchDialogProps> = ({ onSelect }) => {
                   key={item.tmdbId}
                   onClick={() =>
                     !fetchingDetail &&
-                    runDetail({
+                    detailMutation.mutate({
                       tmdbId: item.tmdbId,
                       mediaType: item.mediaType
                     })

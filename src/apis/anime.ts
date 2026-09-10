@@ -1,82 +1,15 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface AnimeListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-  status?: string[];
-  types?: string[];
-  months?: string[];
-  years?: string[];
-  tags?: string[];
-}
-
-interface AnimeListItem {
-  id: number;
-  seriesId: number;
-  cover: string;
-  banner: string;
-  name: string;
-  remark: string;
-  description: string;
-  tags: {
-    id: string;
-    name: string;
-  }[];
-  type: 'movie' | 'japanese' | 'american' | 'chinese' | 'adult';
-  status: 'draft' | 'upcoming' | 'airing' | 'completed';
-  year: number;
-  month: 'january' | 'april' | 'july' | 'october';
-  seasonName: string | null;
-  season: number;
-  avgScore: number;
-  scoreCount: number;
-  director: string;
-  cv: string;
-  createdAt: string;
-}
-
-interface AnimeListRes {
-  items: AnimeListItem[];
-  total: number;
-}
-
-interface AddAnimeBody {
-  seriesId: string;
-  name: string;
-  cover: string;
-  banner: string;
-  description: string;
-  remark: string;
-  status: 'draft' | 'upcoming' | 'airing' | 'completed';
-  type: 'movie' | 'japanese' | 'american' | 'chinese' | 'adult';
-  year: number;
-  month: 'january' | 'april' | 'july' | 'october';
-  seasonName: string | null;
-  season: number;
-  tags: string[];
-  director: string;
-  cv: string;
-}
-
-interface EditAnimeParams {
-  id: number;
-}
-
-type EditAnimeBody = EditAnimeParams & AddAnimeBody;
-
-interface DeleteAnimeParams {
-  id: number;
-}
-
-interface AnimeOptionItem {
-  label: string;
-  value: string;
-}
-
-type AnimeOptionRes = AnimeOptionItem[];
+type AnimeListParams = ApiQuery<'/api/admin/anime/'>;
+type AnimeListRes = ApiData<'/api/admin/anime/'>;
+type AnimeListItem = AnimeListRes['items'][number];
+type AddAnimeBody = ApiBody<'/api/admin/anime/'>;
+type EditAnimeBody = ApiPath<'/api/admin/anime/{id}', 'put'> &
+  ApiBody<'/api/admin/anime/{id}', 'put'>;
+type DeleteAnimeParams = ApiPath<'/api/admin/anime/{id}', 'delete'>;
+type AnimeOptionRes = ApiData<'/api/admin/anime/options'>;
+export type AnimeOptionItem = AnimeOptionRes[number];
 
 const fetchAnimes = (params: AnimeListParams) => {
   return request.get<AnimeListRes>('/api/admin/anime', {
@@ -114,40 +47,20 @@ const fetchAnimeOptions = () => {
   });
 };
 
-export type MediaType = 'tv' | 'movie';
-export interface ScrapeSearchItem {
-  tmdbId: number;
-  mediaType: MediaType;
-  name: string;
-  overview: string;
-  cover: string | null;
-}
+export type MediaType = ScrapeSearchItem['mediaType'];
+export type ScrapeSearchItem = ApiData<'/api/admin/scrape/search'>[number];
+export type ScrapeDetailResult = ApiData<'/api/admin/scrape/detail'>;
+type ScrapeSearchParams = ApiQuery<'/api/admin/scrape/search'>;
+type ScrapeDetailParams = ApiQuery<'/api/admin/scrape/detail'>;
 
-export interface ScrapeDetailResult {
-  name: string;
-  description: string;
-  cover: string | null;
-  banner: string | null;
-  status: 'draft' | 'upcoming' | 'airing' | 'completed';
-  type: 'movie' | 'japanese' | 'american' | 'chinese' | 'adult';
-  year: number;
-  month: 'january' | 'april' | 'july' | 'october';
-  director: string;
-  cv: string;
-}
-
-const scrapeSearch = (params: { query: string; language?: string }) => {
+const scrapeSearch = (params: ScrapeSearchParams) => {
   return request.get<ScrapeSearchItem[]>('/api/admin/scrape/search', {
     params,
     showErrorToast: true
   });
 };
 
-const scrapeDetail = (params: {
-  tmdbId: number;
-  mediaType: MediaType;
-  language?: string;
-}) => {
+const scrapeDetail = (params: ScrapeDetailParams) => {
   return request.get<ScrapeDetailResult>('/api/admin/scrape/detail', {
     params,
     showErrorToast: true
@@ -155,6 +68,7 @@ const scrapeDetail = (params: {
 };
 
 export {
+  type AnimeListParams,
   fetchAnimes,
   type AnimeListRes,
   type AnimeListItem,

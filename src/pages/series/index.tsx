@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/series/columns';
 import { useSeriesStore } from '@/store/series';
-import { fetchSeries } from '@/apis/series';
+import { fetchSeries, type SeriesListParams } from '@/apis/series';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/series/add-dialog';
@@ -24,18 +24,22 @@ const Index: React.FC = () => {
     handleSearch
   } = useDataTablePage({
     store: useSeriesStore,
+    scope: 'series',
     api: fetchSeries,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({
       page,
       pageSize,
       keyword,
       sort,
       order
+    }): SeriesListParams => ({
+      page,
+      pageSize,
+      keyword,
+      sort: sort as SeriesListParams['sort'],
+      order: order as SeriesListParams['order']
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    }
+    getPageData: res => ({ items: res.items, total: res.total })
   });
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);

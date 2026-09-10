@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { useRequest } from 'ahooks';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import {
   useForm,
@@ -71,10 +71,8 @@ function createFormDialog<TValues extends FieldValues>({
       reValidateMode: 'onChange'
     });
 
-    const { run, loading } = useRequest(api, {
-      manual: true,
-      loadingDelay: 150,
-      debounceWait: 250,
+    const { mutate, isPending } = useMutation({
+      mutationFn: api,
       onSuccess() {
         setOpen(false);
         if (defaultValues) {
@@ -89,7 +87,8 @@ function createFormDialog<TValues extends FieldValues>({
     });
 
     const handleSubmit = (formValues: TValues) => {
-      run(transformSubmit ? transformSubmit(formValues) : { ...formValues });
+      if (isPending) return;
+      mutate(transformSubmit ? transformSubmit(formValues) : { ...formValues });
     };
 
     const formContent = (
@@ -107,7 +106,7 @@ function createFormDialog<TValues extends FieldValues>({
       >
         <DialogTrigger asChild>
           <Button
-            disabled={disabled || loading}
+            disabled={disabled || isPending}
             {...(triggerVariant !== 'default'
               ? { variant: triggerVariant }
               : {})}
@@ -146,7 +145,7 @@ function createFormDialog<TValues extends FieldValues>({
               type='submit'
               className='flex-1'
               onClick={form.handleSubmit(handleSubmit)}
-              disabled={loading}
+              disabled={isPending}
             >
               确认
             </Button>

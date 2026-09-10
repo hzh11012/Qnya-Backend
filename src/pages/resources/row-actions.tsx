@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRequest } from 'ahooks';
+import { useMutation } from '@tanstack/react-query';
 import { createTorrent } from '@/apis/torrents';
 import type { ResourcesListItem } from '@/apis/resources';
 import { DataTableActionDialog } from '@/components/custom/data-table/data-table-action-dialog';
@@ -12,16 +12,17 @@ interface DownloadDialogProps {
 const DownloadDialog: React.FC<DownloadDialogProps> = ({ url }) => {
   const [open, setOpen] = useState(false);
 
-  const { run, loading } = useRequest(createTorrent, {
-    manual: true,
-    loadingDelay: 150,
-    debounceWait: 250,
+  const { mutate, isPending } = useMutation({
+    mutationFn: createTorrent,
     onSuccess() {
       setOpen(false);
     }
   });
 
-  const handleClick = () => run({ torrentUrl: url });
+  const handleClick = () => {
+    if (isPending) return;
+    mutate({ torrentUrl: url });
+  };
 
   return (
     <DataTableActionDialog
@@ -31,7 +32,7 @@ const DownloadDialog: React.FC<DownloadDialogProps> = ({ url }) => {
       title='确认下载'
       description='此操作无法撤销。 若需要, 请使用qBittorrent'
       onClick={handleClick}
-      disabled={loading}
+      disabled={isPending}
     />
   );
 };

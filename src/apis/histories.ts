@@ -1,34 +1,10 @@
 import request from '@/lib/request';
+import type { ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface HistoryListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-}
-
-interface HistoryListItem {
-  id: number;
-  user: {
-    name: string;
-  };
-  anime: {
-    name: string;
-    cover: string;
-  };
-  time: number;
-  createdAt: string;
-}
-
-interface HistoryListRes {
-  items: HistoryListItem[];
-  total: number;
-}
-
-interface DeleteHistoryParams {
-  id: number;
-}
+type HistoryListParams = ApiQuery<'/api/admin/histories/'>;
+type HistoryListRes = ApiData<'/api/admin/histories/'>;
+type HistoryListItem = HistoryListRes['items'][number];
+type DeleteHistoryParams = ApiPath<'/api/admin/histories/{id}', 'delete'>;
 
 const fetchHistories = (params: HistoryListParams) => {
   return request.get<HistoryListRes>('/api/admin/histories', {
@@ -46,6 +22,7 @@ const deleteHistory = (params: DeleteHistoryParams) => {
 };
 
 export {
+  type HistoryListParams,
   fetchHistories,
   deleteHistory,
   type HistoryListRes,

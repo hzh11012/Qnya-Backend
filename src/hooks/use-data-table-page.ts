@@ -1,13 +1,20 @@
 import { useEffect } from 'react';
-import { useRequest } from 'ahooks';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import type { BaseTableSlice, BasePaginationSlice } from '@/store/base';
 import { useShallow } from 'zustand/react/shallow';
 import type { StoreApi, UseBoundStore } from 'zustand';
 
-type DataTableStore = BaseTableSlice<any> & BasePaginationSlice;
+/**
+ * 表格页 UI 状态切片（分页/关键词/排序等由 zustand 管理，
+ * 服务端数据由 TanStack Query 管理，不再写入 store）
+ */
+type DataTableStore = BaseTableSlice & BasePaginationSlice;
 
 interface UseDataTablePageOptions<TParams extends Record<string, any>, TRes> {
+  /** zustand UI 状态 store */
   store: UseBoundStore<StoreApi<DataTableStore>>;
+  /** 查询缓存作用域标识，不同页面/API 必须唯一（queryKey 前缀） */
+  scope: string;
   api: (params: TParams) => Promise<TRes>;
   getParams: (state: {
     page: number;
@@ -16,115 +23,112 @@ interface UseDataTablePageOptions<TParams extends Record<string, any>, TRes> {
     sort?: string;
     order?: string;
   }) => TParams;
-  onSuccess: (
-    res: TRes,
-    actions: {
-      setData: (data: any[]) => void;
-      setTotal: (total: number) => void;
-      setHasMore: (hasMore: boolean) => void;
-    }
-  ) => void;
-  refreshDeps?: any[];
+  /** 从响应中提取列表数据与分页信息 */
+  getPageData: (res: TRes) => {
+    items: any[];
+    total?: number;
+    hasMore?: boolean;
+  };
+  /** 卸载时的额外清理（如重置筛选状态） */
   cleanupExtra?: () => void;
 }
 
 function useDataTablePage<TParams extends Record<string, any>, TRes>({
   store,
+  scope,
   api,
   getParams,
-  onSuccess,
-  refreshDeps = [],
+  getPageData,
   cleanupExtra
 }: UseDataTablePageOptions<TParams, TRes>) {
   const state = store(
     useShallow(s => ({
-      initialized: s.initialized,
-      setInitialized: s.setInitialized,
-      data: s.data,
-      setData: s.setData,
-      keyword: s.keyword,
-      setKeyword: s.setKeyword,
-      total: s.total,
-      setTotal: s.setTotal,
-      hasMore: s.hasMore,
-      setHasMore: s.setHasMore,
+      pagination: s.pagination,
       sorting: s.sorting,
-      setSorting: s.setSorting,
-      sort: s.sort,
-      order: s.order,
+      sizes: s.sizes,
       page: s.page,
       pageSize: s.pageSize,
-      resetPagination: s.resetPagination,
-      pagination: s.pagination,
+      keyword: s.keyword,
+      sort: s.sort,
+      order: s.order,
+      setSorting: s.setSorting,
       setPagination: s.setPagination,
-      sizes: s.sizes
+      setKeyword: s.setKeyword,
+      resetPagination: s.resetPagination
     }))
   );
 
   const {
-    setInitialized,
-    setData,
-    setTotal,
-    setHasMore,
-    resetPagination,
+    pagination,
+    sorting,
+    sizes,
     page,
     pageSize,
     keyword,
     sort,
     order,
-    sorting
+    setSorting,
+    setPagination,
+    setKeyword,
+    resetPagination
   } = state;
 
-  useEffect(() => {
-    return () => {
+  // 卸载时重置 UI 状态，避免下次进入残留
+  useEffect(
+    () => () => {
       resetPagination();
-      setTotal(0);
-      setHasMore(false);
-      setInitialized(false);
-      setData([]);
       cleanupExtra?.();
-    };
-  }, [
-    resetPagination,
-    setTotal,
-    setHasMore,
-    setInitialized,
-    setData,
-    cleanupExtra
-  ]);
+    },
+    [resetPagination, cleanupExtra]
+  );
 
-  const { run, loading, refresh, error } = useRequest(api, {
-    loadingDelay: 150,
-    debounceWait: 250,
-    defaultParams: [getParams({ page, pageSize, keyword, sort, order })],
-    onSuccess: (res: TRes) => {
-      onSuccess(res, { setData, setTotal, setHasMore });
-    },
-    onFinally: () => {
-      setInitialized(true);
-    },
-    refreshDeps: [page, pageSize, sorting, ...refreshDeps],
-    refreshDepsAction: () => {
-      run(getParams({ page, pageSize, keyword, sort, order }));
-    }
+  // 参数由 zustand UI 状态派生，变化即自动重新请求
+  const params = getParams({ page, pageSize, keyword, sort, order });
+
+  const {
+    data: res,
+    error,
+    isPending,
+    isPlaceholderData,
+    isFetching,
+    refetch
+  } = useQuery({
+    queryKey: [scope, params],
+    queryFn: () => api(params),
+    placeholderData: keepPreviousData,
+    staleTime: 30_000
   });
 
+  const pageData = res ? getPageData(res) : undefined;
+
+  /** 搜索：重置分页并更新关键词，触发 queryKey 变更自动请求 */
   const handleSearch = (kw: string) => {
     resetPagination();
-    state.setKeyword(kw);
-    run(getParams({ page: 1, pageSize, keyword: kw, sort, order }));
+    setKeyword(kw);
   };
 
-  const isLoading = loading || !state.initialized;
-
   return {
-    ...state,
-    run,
-    loading,
-    refresh,
+    data: pageData?.items ?? [],
+    total: pageData?.total ?? 0,
+    hasMore: pageData?.hasMore ?? false,
+    pagination,
+    sorting,
+    sizes,
+    setSorting,
+    setPagination,
+    /** 请求飞行中 */
+    loading: isFetching,
+    /** 首次加载或翻页中（保留旧数据渲染 + loading 态） */
+    isLoading: isPending || isPlaceholderData,
     error,
-    isLoading,
-    handleSearch
+    refresh: refetch,
+    handleSearch,
+    resetPagination,
+    setKeyword,
+    keyword,
+    sort,
+    order,
+    pageSize
   };
 }
 

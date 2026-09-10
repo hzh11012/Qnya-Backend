@@ -1,4 +1,3 @@
-import type { TasksListItem } from '@/apis/tasks';
 import {
   createTableStore,
   resolveUpdater,
@@ -11,24 +10,21 @@ interface TasksExtra {
   setColumnFilters: OnChangeFn<ColumnFiltersState>;
 }
 
-type TasksStore = SimpleTableStore<TasksListItem> & TasksExtra;
+type TasksStore = SimpleTableStore<TasksExtra>;
 
-const useTasksStore = createTableStore<TasksListItem, TasksExtra>(
-  'tasks-store',
-  set => ({
-    status: [],
-    setColumnFilters: updater => {
-      set(state => {
-        const base = state.columnFilters;
-        const next = resolveUpdater(updater, base);
-        return {
-          columnFilters: next,
-          status: (next.find(item => item.id === 'status')?.value ??
-            []) as string[]
-        } as Partial<TasksStore>;
-      });
-    }
-  })
-);
+const useTasksStore = createTableStore<TasksExtra>('tasks-store', set => ({
+  status: [],
+  setColumnFilters: updater => {
+    set(state => {
+      const base = state.columnFilters;
+      const next = resolveUpdater(updater, base);
+      return {
+        columnFilters: next,
+        status: (next.find(item => item.id === 'status')?.value ??
+          []) as string[]
+      } as Partial<TasksStore>;
+    });
+  }
+}));
 
 export { useTasksStore };

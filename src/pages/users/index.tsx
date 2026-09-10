@@ -3,7 +3,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/users/columns';
 import { useUserStore } from '@/store/users';
-import { fetchUsers } from '@/apis/users';
+import { fetchUsers, type UserListParams } from '@/apis/users';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
@@ -30,50 +30,28 @@ const Index: React.FC = () => {
     setSorting,
     setPagination,
     sizes,
-    run,
     refresh,
     error,
     isLoading,
-    resetPagination,
-    setKeyword,
-    sort,
-    order,
-    pageSize
+    handleSearch
   } = useDataTablePage({
     store: useUserStore,
+    scope: 'users',
     api: fetchUsers,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({ page, pageSize, keyword, sort, order }): UserListParams => ({
       page,
       pageSize,
       keyword,
-      sort,
-      order,
-      role,
-      status
+      sort: sort as UserListParams['sort'],
+      order: order as UserListParams['order'],
+      role: role as UserListParams['role'],
+      status: status.map(s => (s ? 'true' : 'false'))
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    },
-    refreshDeps: [columnFilters],
+    getPageData: res => ({ items: res.items, total: res.total }),
     cleanupExtra
   });
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
-
-  const handleSearch = (keyword: string) => {
-    resetPagination();
-    setKeyword(keyword);
-    run({
-      page: 1,
-      keyword,
-      pageSize,
-      sort,
-      order,
-      role,
-      status
-    });
-  };
 
   return (
     <DataTable

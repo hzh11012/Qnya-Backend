@@ -1,35 +1,10 @@
 import request from '@/lib/request';
+import type { ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface FavoriteListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-}
-
-interface FavoriteListItem {
-  id: number;
-  userId: number;
-  animeId: number;
-  user: {
-    name: string;
-  };
-  anime: {
-    name: string;
-    cover: string;
-  };
-  createdAt: string;
-}
-
-interface FavoriteListRes {
-  items: FavoriteListItem[];
-  total: number;
-}
-
-interface DeleteFavoriteParams {
-  id: number;
-}
+type FavoriteListParams = ApiQuery<'/api/admin/collections/'>;
+type FavoriteListRes = ApiData<'/api/admin/collections/'>;
+type FavoriteListItem = FavoriteListRes['items'][number];
+type DeleteFavoriteParams = ApiPath<'/api/admin/collections/{id}', 'delete'>;
 
 const fetchFavorites = (params: FavoriteListParams) => {
   return request.get<FavoriteListRes>('/api/admin/collections', {
@@ -47,6 +22,7 @@ const deleteFavorite = (params: DeleteFavoriteParams) => {
 };
 
 export {
+  type FavoriteListParams,
   fetchFavorites,
   deleteFavorite,
   type FavoriteListRes,

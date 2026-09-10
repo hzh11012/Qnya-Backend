@@ -1,38 +1,13 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface SeriesListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-}
-
-interface SeriesListItem {
-  id: number;
-  name: string;
-  createdAt: string;
-}
-
-interface SeriesListRes {
-  items: SeriesListItem[];
-  total: number;
-}
-
-interface AddSeriesBody {
-  name: string;
-}
-
-interface DeleteSeriesParams {
-  id: number;
-}
-
-interface SeriesOptionItem {
-  label: string;
-  value: string;
-}
-
-type SeriesOptionRes = SeriesOptionItem[];
+type SeriesListParams = ApiQuery<'/api/admin/series/'>;
+type SeriesListRes = ApiData<'/api/admin/series/'>;
+type SeriesListItem = SeriesListRes['items'][number];
+type AddSeriesBody = ApiBody<'/api/admin/series/'>;
+type DeleteSeriesParams = ApiPath<'/api/admin/series/{id}', 'delete'>;
+type SeriesOptionRes = ApiData<'/api/admin/series/options'>;
+type SeriesOptionItem = SeriesOptionRes[number];
 
 const fetchSeries = (params: SeriesListParams) => {
   return request.get<SeriesListRes>('/api/admin/series', {
@@ -63,10 +38,12 @@ const fetchSeriesOptions = () => {
 };
 
 export {
+  type SeriesListParams,
   fetchSeries,
   type SeriesListRes,
   type SeriesListItem,
   type SeriesOptionRes,
+  type SeriesOptionItem,
   createSeries,
   deleteSeries,
   fetchSeriesOptions

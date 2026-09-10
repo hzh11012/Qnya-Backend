@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRequest } from 'ahooks';
+import { useMutation } from '@tanstack/react-query';
 import {
   DataTableActionDialog,
   type ActionDialogProps
@@ -30,10 +30,8 @@ function createActionDialog({
   }) => {
     const [open, setOpen] = useState(false);
 
-    const { run, loading } = useRequest(api, {
-      manual: true,
-      loadingDelay: 150,
-      debounceWait: 250,
+    const { mutate, isPending } = useMutation({
+      mutationFn: api,
       onSuccess() {
         setOpen(false);
         onRefresh();
@@ -41,7 +39,10 @@ function createActionDialog({
       }
     });
 
-    const handleClick = () => run({ id });
+    const handleClick = () => {
+      if (isPending) return;
+      mutate({ id });
+    };
 
     return (
       <DataTableActionDialog
@@ -52,7 +53,7 @@ function createActionDialog({
         description={description}
         className={className}
         onClick={handleClick}
-        disabled={loading}
+        disabled={isPending}
       />
     );
   };

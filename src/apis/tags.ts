@@ -1,30 +1,11 @@
 import request from '@/lib/request';
+import type { ApiData, ApiQuery } from '@/types/helpers';
 
-interface TagsListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-}
-
-interface TagsListItem {
-  id: number;
-  name: string;
-  createdAt: string;
-}
-
-interface TagsListRes {
-  items: TagsListItem[];
-  total: number;
-}
-
-interface TagsOptionItem {
-  label: string;
-  value: string;
-}
-
-type TagsOptionRes = TagsOptionItem[];
+type TagsListParams = ApiQuery<'/api/admin/tags/'>;
+type TagsListRes = ApiData<'/api/admin/tags/'>;
+type TagsListItem = TagsListRes['items'][number];
+type TagsOptionRes = ApiData<'/api/admin/tags/options'>;
+type TagsOptionItem = TagsOptionRes[number];
 
 const fetchTags = (params: TagsListParams) => {
   return request.get<TagsListRes>('/api/admin/tags', {
@@ -40,6 +21,7 @@ const fetchTagsOptions = () => {
 };
 
 export {
+  type TagsListParams,
   fetchTags,
   fetchTagsOptions,
   type TagsListRes,

@@ -1,4 +1,3 @@
-import type { FeedbackListItem } from '@/apis/feedbacks';
 import {
   createTableStore,
   resolveUpdater,
@@ -12,9 +11,9 @@ interface FeedbackExtra {
   setColumnFilters: OnChangeFn<ColumnFiltersState>;
 }
 
-type FeedbackStore = SimpleTableStore<FeedbackListItem> & FeedbackExtra;
+type FeedbackStore = SimpleTableStore<FeedbackExtra>;
 
-const useFeedbackStore = createTableStore<FeedbackListItem, FeedbackExtra>(
+const useFeedbackStore = createTableStore<FeedbackExtra>(
   'feedback-store',
   set => ({
     type: [],

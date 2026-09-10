@@ -1,44 +1,12 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface ScoreListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-  status?: boolean[];
-}
-
-interface ScoreListItem {
-  id: number;
-  userId: number;
-  animeId: number;
-  score: number;
-  content: string;
-  status: boolean;
-  user: {
-    name: string;
-  };
-  anime: {
-    name: string;
-    cover: string;
-  };
-  createdAt: string;
-}
-
-interface ScoreListRes {
-  items: ScoreListItem[];
-  total: number;
-}
-
-interface DeleteScoreParams {
-  id: number;
-}
-
-interface UpdateScoreBody {
-  id: number;
-  status: boolean;
-}
+type ScoreListParams = ApiQuery<'/api/admin/scores/'>;
+type ScoreListRes = ApiData<'/api/admin/scores/'>;
+type ScoreListItem = ScoreListRes['items'][number];
+type DeleteScoreParams = ApiPath<'/api/admin/scores/{id}', 'delete'>;
+type UpdateScoreBody = ApiPath<'/api/admin/scores/{id}', 'put'> &
+  ApiBody<'/api/admin/scores/{id}', 'put'>;
 
 const fetchScores = (params: ScoreListParams) => {
   return request.get<ScoreListRes>('/api/admin/scores', {
@@ -64,6 +32,7 @@ const updateScore = (body: UpdateScoreBody) => {
 };
 
 export {
+  type ScoreListParams,
   fetchScores,
   deleteScore,
   updateScore,

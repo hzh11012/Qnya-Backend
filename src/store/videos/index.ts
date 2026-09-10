@@ -1,21 +1,5 @@
-import type { VideoListItem } from '@/apis/videos';
-import type { AnimeOptionRes } from '@/apis/anime';
-import { createTableStore, type SimpleTableStore } from '@/store/base';
+import { createTableStore } from '@/store/base';
 
-interface VideoExtra {
-  animeOptions: AnimeOptionRes;
-  setAnimeOptions: (options: AnimeOptionRes) => void;
-}
-
-type VideoStore = SimpleTableStore<VideoListItem> & VideoExtra;
-
-const useVideoStore = createTableStore<VideoListItem, VideoExtra>(
-  'video-store',
-  set => ({
-    animeOptions: [],
-    setAnimeOptions: options =>
-      set({ animeOptions: options } as Partial<VideoStore>)
-  })
-);
+const useVideoStore = createTableStore('video-store');
 
 export { useVideoStore };

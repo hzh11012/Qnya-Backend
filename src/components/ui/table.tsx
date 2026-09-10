@@ -13,7 +13,7 @@ function Table({
       tabIndex={-1}
       onScroll={onScroll}
       data-slot='table-container'
-      className='relative w-full overflow-x-auto scrollbar-hide'
+      className='relative w-full overflow-x-auto'
     >
       <table
         data-slot='table'

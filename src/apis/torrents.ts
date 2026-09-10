@@ -1,28 +1,10 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiQuery } from '@/types/helpers';
 
-interface TorrentsListParams {
-  page?: number;
-  pageSize?: number;
-  sort?: string;
-  order?: string;
-}
-
-interface TorrentsListItem {
-  name: string;
-  status: string;
-  progress: number;
-  size: number;
-  createdAt: string;
-}
-
-interface TorrentsListRes {
-  items: TorrentsListItem[];
-  total: number;
-}
-
-interface AddTorrentsBody {
-  torrentUrl: string;
-}
+type TorrentsListParams = ApiQuery<'/api/admin/torrents/'>;
+type TorrentsListRes = ApiData<'/api/admin/torrents/'>;
+type TorrentsListItem = TorrentsListRes['items'][number];
+type AddTorrentsBody = ApiBody<'/api/admin/torrents/'>;
 
 const fetchTorrents = (params: TorrentsListParams) => {
   return request.get<TorrentsListRes>('/api/admin/torrents', {
@@ -39,6 +21,7 @@ const createTorrent = (body: AddTorrentsBody) => {
 };
 
 export {
+  type TorrentsListParams,
   fetchTorrents,
   type TorrentsListRes,
   type TorrentsListItem,

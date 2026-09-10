@@ -1,98 +1,12 @@
 import request from '@/lib/request';
+import type { ApiData } from '@/types/helpers';
 
-interface DashboardStatsContent {
-  animeTotal: number;
-  animeByStatus: {
-    draft: number;
-    upcoming: number;
-    airing: number;
-    completed: number;
-  };
-  animeByType: {
-    movie: number;
-    japanese: number;
-    american: number;
-    chinese: number;
-    adult: number;
-  };
-  videoTotal: number;
-  seriesTotal: number;
-  topicTotal: number;
-}
+type DashboardStatsRes = ApiData<'/api/admin/dashboard/stats'>;
 
-interface DashboardStatsUsers {
-  total: number;
-  active: number;
-  byRole: {
-    admin: number;
-    premium: number;
-    user: number;
-    guest: number;
-  };
-}
-
-interface DashboardStatsInteraction {
-  danmakuTotal: number;
-  historyTotal: number;
-  collectionTotal: number;
-  scoreTotal: number;
-}
-
-interface DashboardStatsTasks {
-  pending: number;
-  completed: number;
-}
-
-interface DashboardStatsPending {
-  feedbacks: number;
-}
-
-interface TopCollectionItem {
-  animeId: number;
-  animeName: string;
-  cover: string;
-  count: number;
-}
-
-interface RecentFeedbackItem {
-  id: number;
-  animeName: string;
-  type: string;
-  content: string;
-  createdAt: string;
-}
-
-interface RecentScoreItem {
-  id: number;
-  userName: string;
-  animeName: string;
-  score: number;
-  content: string;
-  createdAt: string;
-}
-
-interface DashboardStatsSystem {
-  database: {
-    status: 'ok' | 'error';
-    latency?: number;
-  };
-  redis: {
-    status: 'ok' | 'error';
-    latency?: number;
-  };
-}
-
-export interface DashboardStatsResponse {
-  content: DashboardStatsContent;
-  users: DashboardStatsUsers;
-  interaction: DashboardStatsInteraction;
-  tasks: DashboardStatsTasks;
-  pending: DashboardStatsPending;
-  topCollections: TopCollectionItem[];
-  recentFeedbacks: RecentFeedbackItem[];
-  recentScores: RecentScoreItem[];
-  system: DashboardStatsSystem;
-}
+export type DashboardStatsResponse = DashboardStatsRes;
+export type TopCollectionItem = DashboardStatsRes['topCollections'][number];
+export type RecentFeedbackItem = DashboardStatsRes['recentFeedbacks'][number];
+export type RecentScoreItem = DashboardStatsRes['recentScores'][number];
 
 const fetchDashboardStats = () => {
   return request.get<DashboardStatsResponse>('/api/admin/dashboard/stats', {
@@ -100,9 +14,4 @@ const fetchDashboardStats = () => {
   });
 };
 
-export {
-  fetchDashboardStats,
-  type TopCollectionItem,
-  type RecentFeedbackItem,
-  type RecentScoreItem
-};
+export { fetchDashboardStats };

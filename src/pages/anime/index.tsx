@@ -3,10 +3,8 @@ import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/anime/columns';
 import { useAnimeStore } from '@/store/anime';
-import { useRequest } from 'ahooks';
-import { fetchAnimes } from '@/apis/anime';
-import { fetchSeriesOptions } from '@/apis/series';
-import { fetchTagsOptions } from '@/apis/tags';
+import { fetchAnimes, type AnimeListParams } from '@/apis/anime';
+import { useSeriesOptions, useTagsOptions } from '@/hooks/use-options';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/anime/add-dialog';
@@ -20,11 +18,7 @@ const Index: React.FC = () => {
     years,
     tags,
     columnFilters,
-    setColumnFilters,
-    tagsOption,
-    setTagsOption,
-    seriesOption,
-    setSeriesOption
+    setColumnFilters
   } = useAnimeStore(
     useShallow(state => ({
       status: state.status,
@@ -33,13 +27,13 @@ const Index: React.FC = () => {
       years: state.years,
       tags: state.tags,
       columnFilters: state.columnFilters,
-      setColumnFilters: state.setColumnFilters,
-      tagsOption: state.tagsOption,
-      setTagsOption: state.setTagsOption,
-      seriesOption: state.seriesOption,
-      setSeriesOption: state.setSeriesOption
+      setColumnFilters: state.setColumnFilters
     }))
   );
+
+  // 选项走 Query 缓存，跨页面共享、5 分钟内不重复请求
+  const tagsOption = useTagsOptions();
+  const seriesOption = useSeriesOptions();
 
   const cleanupExtra = useCallback(() => {
     setColumnFilters([]);
@@ -54,71 +48,34 @@ const Index: React.FC = () => {
     setPagination,
     sizes,
     loading,
-    run,
     refresh,
     error,
     isLoading,
-    resetPagination,
-    setKeyword,
-    sort,
-    order,
-    pageSize
+    handleSearch
   } = useDataTablePage({
     store: useAnimeStore,
+    scope: 'anime',
     api: fetchAnimes,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({ page, pageSize, keyword, sort, order }): AnimeListParams => ({
       page,
       pageSize,
       keyword,
-      sort,
-      order,
-      status,
-      types,
-      months,
-      years,
-      tags
+      sort: sort as AnimeListParams['sort'],
+      order: order as AnimeListParams['order'],
+      status: status as AnimeListParams['status'],
+      types: types as AnimeListParams['types'],
+      months: months as AnimeListParams['months'],
+      years: years as AnimeListParams['years'],
+      tags: tags.map(Number)
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    },
-    refreshDeps: [columnFilters],
+    getPageData: res => ({ items: res.items, total: res.total }),
     cleanupExtra
-  });
-
-  useRequest(fetchTagsOptions, {
-    onSuccess(options) {
-      setTagsOption(options);
-    }
-  });
-
-  useRequest(fetchSeriesOptions, {
-    onSuccess(options) {
-      setSeriesOption(options);
-    }
   });
 
   const columns = useMemo(
     () => getColumns(refresh, tagsOption, seriesOption),
     [refresh, tagsOption, seriesOption]
   );
-
-  const handleSearch = (keyword: string) => {
-    resetPagination();
-    setKeyword(keyword);
-    run({
-      page: 1,
-      keyword,
-      pageSize,
-      sort,
-      order,
-      status,
-      types,
-      months,
-      years,
-      tags
-    });
-  };
 
   return (
     <DataTable

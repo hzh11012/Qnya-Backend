@@ -1,4 +1,3 @@
-import type { TorrentsListItem } from '@/apis/torrents';
 import { createTableStore, resolveUpdater } from '@/store/base';
 import type { OnChangeFn, SortingState } from '@tanstack/react-table';
 
@@ -6,7 +5,7 @@ interface TorrentsExtra {
   setSorting: OnChangeFn<SortingState>;
 }
 
-const useTorrentsStore = createTableStore<TorrentsListItem, TorrentsExtra>(
+const useTorrentsStore = createTableStore<TorrentsExtra>(
   'torrents-store',
   set => ({
     setSorting: updater => {

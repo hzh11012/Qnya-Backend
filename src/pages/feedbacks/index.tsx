@@ -3,7 +3,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/feedbacks/columns';
 import { useFeedbackStore } from '@/store/feedbacks';
-import { fetchFeedbacks } from '@/apis/feedbacks';
+import { fetchFeedbacks, type FeedbackListParams } from '@/apis/feedbacks';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
@@ -30,50 +30,34 @@ const Index: React.FC = () => {
     setSorting,
     setPagination,
     sizes,
-    run,
     refresh,
     error,
     isLoading,
-    resetPagination,
-    setKeyword,
-    sort,
-    order,
-    pageSize
+    handleSearch
   } = useDataTablePage({
     store: useFeedbackStore,
+    scope: 'feedbacks',
     api: fetchFeedbacks,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({
       page,
       pageSize,
       keyword,
       sort,
-      order,
-      type,
-      status
+      order
+    }): FeedbackListParams => ({
+      page,
+      pageSize,
+      keyword,
+      sort: sort as FeedbackListParams['sort'],
+      order: order as FeedbackListParams['order'],
+      type: type as FeedbackListParams['type'],
+      status: status as FeedbackListParams['status']
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    },
-    refreshDeps: [columnFilters],
+    getPageData: res => ({ items: res.items, total: res.total }),
     cleanupExtra
   });
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
-
-  const handleSearch = (keyword: string) => {
-    resetPagination();
-    setKeyword(keyword);
-    run({
-      page: 1,
-      keyword,
-      pageSize,
-      sort,
-      order,
-      type,
-      status
-    });
-  };
 
   return (
     <DataTable

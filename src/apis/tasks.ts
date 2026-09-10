@@ -1,47 +1,14 @@
 import request from '@/lib/request';
+import type { ApiBody, ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface TasksListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-  status?: string[];
-}
-
-interface TasksListItem {
-  id: number;
-  filename: string;
-  fileSize: number;
-  status: string;
-  createdAt: string;
-}
-
-interface TasksListRes {
-  items: TasksListItem[];
-  total: number;
-}
-
-interface DeleteTaskParams {
-  id: number;
-}
-
-interface FileNode {
-  name: string;
-  path: string;
-  hasChildren: boolean;
-}
-
-type FileTreeRes = FileNode[];
-
-interface FileTreeParams {
-  path?: string;
-}
-
-interface FileIngestParams {
-  id: number;
-  path: string;
-}
+type TasksListParams = ApiQuery<'/api/admin/tasks/'>;
+type TasksListRes = ApiData<'/api/admin/tasks/'>;
+type TasksListItem = TasksListRes['items'][number];
+type DeleteTaskParams = ApiPath<'/api/admin/tasks/{id}', 'delete'>;
+type FileTreeRes = ApiData<'/api/admin/files/tree'>;
+type FileNode = FileTreeRes[number];
+type FileTreeParams = ApiQuery<'/api/admin/files/tree'>;
+type FileIngestParams = ApiBody<'/api/admin/tasks/ingest'>;
 
 const fetchTasks = (params: TasksListParams) => {
   return request.get<TasksListRes>('/api/admin/tasks', {
@@ -73,6 +40,7 @@ const ingestFile = (params: FileIngestParams) => {
 };
 
 export {
+  type TasksListParams,
   fetchTasks,
   deleteTask,
   fetchFileTree,

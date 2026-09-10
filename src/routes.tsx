@@ -3,7 +3,6 @@ import {
   Outlet,
   type RouteObject
 } from 'react-router-dom';
-import { createLazyComponent } from '@/lib/utils';
 import Exception from '@/components/custom/exception';
 import Fallback from '@/components/custom/fallback';
 import Layout from '@/layout';
@@ -12,6 +11,32 @@ import {
   RedirectIfAuthenticated
 } from '@/components/custom/auth/auth-guard';
 import { AuthProvider } from '@/components/custom/auth/auth-provider';
+import { links } from '@/links';
+
+/**
+ * 从导航配置派生主布局下的路由树
+ * links.ts 是路径的唯一数据源，新增页面只需在其中挂上 lazy
+ */
+const pageRoutes: RouteObject[] = links.flatMap((link): RouteObject[] => {
+  // 分组导航：收集子项的路由
+  if (link.items) {
+    return link.items
+      .filter(item => item.lazy)
+      .map(item => ({
+        path: item.url.replace(/^\//, ''),
+        lazy: item.lazy
+      }));
+  }
+  // 顶级导航：'/' 映射为 index 路由，其余去掉前导斜杠
+  if (link.lazy) {
+    return [
+      link.url === '/'
+        ? { index: true, lazy: link.lazy }
+        : { path: link.url.replace(/^\//, ''), lazy: link.lazy }
+    ];
+  }
+  return [];
+});
 
 const staticRoutes: RouteObject[] = [
   {
@@ -33,7 +58,10 @@ const staticRoutes: RouteObject[] = [
         children: [
           {
             index: true,
-            lazy: createLazyComponent(() => import('@/pages/login/index'))
+            lazy: () =>
+              import('@/pages/login/index').then(m => ({
+                Component: m.default
+              }))
           }
         ]
       },
@@ -47,74 +75,7 @@ const staticRoutes: RouteObject[] = [
         hydrateFallbackElement: <Fallback />,
         errorElement: <Exception type='error' />,
         children: [
-          {
-            index: true,
-            lazy: createLazyComponent(() => import('@/pages/home/index'))
-          },
-          {
-            path: 'resources',
-            lazy: createLazyComponent(() => import('@/pages/resources/index'))
-          },
-          {
-            path: 'torrents',
-            lazy: createLazyComponent(() => import('@/pages/torrents/index'))
-          },
-          {
-            path: 'tasks',
-            lazy: createLazyComponent(() => import('@/pages/tasks/index'))
-          },
-          {
-            path: 'series',
-            lazy: createLazyComponent(() => import('@/pages/series/index'))
-          },
-          {
-            path: 'tags',
-            lazy: createLazyComponent(() => import('@/pages/tags/index'))
-          },
-          {
-            path: 'anime',
-            lazy: createLazyComponent(() => import('@/pages/anime/index'))
-          },
-          {
-            path: 'users',
-            lazy: createLazyComponent(() => import('@/pages/users/index'))
-          },
-          {
-            path: 'favorites',
-            lazy: createLazyComponent(() => import('@/pages/favorites/index'))
-          },
-          {
-            path: 'scores',
-            lazy: createLazyComponent(() => import('@/pages/scores/index'))
-          },
-          {
-            path: 'topics',
-            lazy: createLazyComponent(() => import('@/pages/topics/index'))
-          },
-          {
-            path: 'feedbacks',
-            lazy: createLazyComponent(() => import('@/pages/feedbacks/index'))
-          },
-          {
-            path: 'videos',
-            lazy: createLazyComponent(() => import('@/pages/videos/index'))
-          },
-          {
-            path: 'dans',
-            lazy: createLazyComponent(() => import('@/pages/dans/index'))
-          },
-          {
-            path: 'histories',
-            lazy: createLazyComponent(() => import('@/pages/histories/index'))
-          },
-          {
-            path: 'mcp',
-            lazy: createLazyComponent(() => import('@/pages/mcp/index'))
-          },
-          {
-            path: 'settings',
-            lazy: createLazyComponent(() => import('@/pages/settings/index'))
-          },
+          ...pageRoutes,
           {
             path: '*',
             element: <Exception />

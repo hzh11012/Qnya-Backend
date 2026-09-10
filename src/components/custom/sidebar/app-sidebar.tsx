@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/sidebar';
 import { links } from '@/links';
 import { useAuthStore } from '@/store/auth';
-import { useRequest } from 'ahooks';
+import { useMutation } from '@tanstack/react-query';
 import { logout } from '@/apis/auth';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -25,13 +25,14 @@ const AppSideBar: React.FC<React.ComponentProps<typeof Sidebar>> = ({
     }))
   );
 
-  const { run: onLogout } = useRequest(logout, {
-    manual: true,
-    debounceWait: 250,
-    onFinally: () => {
+  // 登出后无论成败都清除本地用户态（401 会由请求层统一跳登录页）
+  const logoutMutation = useMutation({
+    mutationFn: logout,
+    onSettled: () => {
       setUser(null);
     }
   });
+  const onLogout = () => logoutMutation.mutate();
 
   return (
     <Sidebar {...props}>

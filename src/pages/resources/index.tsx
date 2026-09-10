@@ -19,16 +19,14 @@ const Index: React.FC = () => {
     handleSearch
   } = useDataTablePage({
     store: useResourcesStore,
+    scope: 'resources',
     api: fetchResources,
     getParams: ({ page, pageSize, keyword }) => ({
       page,
       pageSize,
       keyword
     }),
-    onSuccess: (res, { setData, setHasMore }) => {
-      setData(res.items);
-      setHasMore(res.hasMore);
-    }
+    getPageData: res => ({ items: res.items, hasMore: res.hasMore })
   });
 
   return (

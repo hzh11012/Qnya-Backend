@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -24,7 +25,6 @@ import {
   type PaginationState,
   type SortingState
 } from '@tanstack/react-table';
-import { useThrottleFn } from 'ahooks';
 import { cn } from '@/lib/utils';
 import DataTablePagination from '@/components/custom/data-table/data-table-pagination';
 import Exception from '@/components/custom/exception';
@@ -194,20 +194,23 @@ const DataTable = <TData, TValue>({
     return styles;
   };
 
-  const { run: handleScroll } = useThrottleFn(
-    () => {
-      const container = tableContainerRef.current;
-      if (!container) return;
+  // 节流版滚动检测（100ms）
+  const lastScrollTimeRef = useRef(0);
+  const handleScroll = useCallback(() => {
+    const now = Date.now();
+    if (now - lastScrollTimeRef.current < 100) return;
+    lastScrollTimeRef.current = now;
 
-      const { scrollLeft, clientWidth, scrollWidth } = container;
-      const isStart = scrollLeft <= 0;
-      const isEnd = Math.abs(scrollLeft + clientWidth - scrollWidth) < 1;
+    const container = tableContainerRef.current;
+    if (!container) return;
 
-      setIsLeftStart(isStart);
-      setIsRightEnd(isEnd);
-    },
-    { wait: 100 }
-  );
+    const { scrollLeft, clientWidth, scrollWidth } = container;
+    const isStart = scrollLeft <= 0;
+    const isEnd = Math.abs(scrollLeft + clientWidth - scrollWidth) < 1;
+
+    setIsLeftStart(isStart);
+    setIsRightEnd(isEnd);
+  }, []);
 
   useEffect(() => {
     handleScroll();
@@ -358,7 +361,7 @@ const DataTable = <TData, TValue>({
           />
         </div>
         {/* 显示总条数 */}
-        {paginationConfig.mode === 'total' && paginationConfig.total && (
+        {paginationConfig.mode === 'total' && paginationConfig.total > 0 && (
           <DataTableTotal total={paginationConfig.total} />
         )}
       </div>

@@ -1,32 +1,26 @@
 import { useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useRequest } from 'ahooks';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/topics/columns';
 import { useTopicStore } from '@/store/topics';
-import { fetchTopics } from '@/apis/topics';
-import { fetchAnimeOptions } from '@/apis/anime';
+import { fetchTopics, type TopicListParams } from '@/apis/topics';
+import { useAnimeOptions } from '@/hooks/use-options';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/topics/add-dialog';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
 
 const Index: React.FC = () => {
-  const {
-    status,
-    columnFilters,
-    setColumnFilters,
-    animeOption,
-    setAnimeOption
-  } = useTopicStore(
+  const { status, columnFilters, setColumnFilters } = useTopicStore(
     useShallow(state => ({
       status: state.status,
       columnFilters: state.columnFilters,
-      setColumnFilters: state.setColumnFilters,
-      animeOption: state.animeOption,
-      setAnimeOption: state.setAnimeOption
+      setColumnFilters: state.setColumnFilters
     }))
   );
+
+  // 选项走 Query 缓存，与 videos 页共享同一份，5 分钟内不重复请求
+  const animeOption = useAnimeOptions();
 
   const cleanupExtra = useCallback(() => {
     setColumnFilters([]);
@@ -41,57 +35,30 @@ const Index: React.FC = () => {
     setPagination,
     sizes,
     loading,
-    run,
     refresh,
     error,
     isLoading,
-    resetPagination,
-    setKeyword,
-    sort,
-    order,
-    pageSize
+    handleSearch
   } = useDataTablePage({
     store: useTopicStore,
+    scope: 'topics',
     api: fetchTopics,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({ page, pageSize, keyword, sort, order }): TopicListParams => ({
       page,
       pageSize,
       keyword,
-      sort,
-      order,
-      status
+      sort: sort as TopicListParams['sort'],
+      order: order as TopicListParams['order'],
+      status: status.map(s => (s ? 'true' : 'false'))
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    },
-    refreshDeps: [columnFilters],
+    getPageData: res => ({ items: res.items, total: res.total }),
     cleanupExtra
-  });
-
-  useRequest(fetchAnimeOptions, {
-    onSuccess(options) {
-      setAnimeOption(options);
-    }
   });
 
   const columns = useMemo(
     () => getColumns(refresh, animeOption),
     [refresh, animeOption]
   );
-
-  const handleSearch = (keyword: string) => {
-    resetPagination();
-    setKeyword(keyword);
-    run({
-      page: 1,
-      keyword,
-      pageSize,
-      sort,
-      order,
-      status
-    });
-  };
 
   return (
     <DataTable

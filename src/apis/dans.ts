@@ -1,37 +1,10 @@
 import request from '@/lib/request';
+import type { ApiData, ApiPath, ApiQuery } from '@/types/helpers';
 
-interface DanmakuListParams {
-  page?: number;
-  pageSize?: number;
-  keyword?: string;
-  sort?: string;
-  order?: string;
-}
-
-interface DanmakuListItem {
-  id: number;
-  user: {
-    name: string;
-  };
-  anime: {
-    name: string;
-    cover: string;
-  };
-  text: string;
-  mode: 'scroll' | 'top' | 'bottom';
-  color: string;
-  time: number;
-  createdAt: string;
-}
-
-interface DanmakuListRes {
-  items: DanmakuListItem[];
-  total: number;
-}
-
-interface DeleteDanmakuParams {
-  id: number;
-}
+type DanmakuListParams = ApiQuery<'/api/admin/danmaku/'>;
+type DanmakuListRes = ApiData<'/api/admin/danmaku/'>;
+type DanmakuListItem = DanmakuListRes['items'][number];
+type DeleteDanmakuParams = ApiPath<'/api/admin/danmaku/{id}', 'delete'>;
 
 const fetchDanmakus = (params: DanmakuListParams) => {
   return request.get<DanmakuListRes>('/api/admin/danmaku', {
@@ -52,5 +25,6 @@ export {
   fetchDanmakus,
   deleteDanmaku,
   type DanmakuListRes,
-  type DanmakuListItem
+  type DanmakuListItem,
+  type DanmakuListParams
 };

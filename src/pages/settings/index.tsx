@@ -1,7 +1,6 @@
-import { useRequest } from 'ahooks';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchSettingsInfo, clearDashboardCache } from '@/apis/settings';
 import { Trash2 } from 'lucide-react';
-import { useRequest as useManualRequest } from 'ahooks';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { Button } from '@/components/ui/button';
 import { SkeletonCard } from './components';
@@ -17,29 +16,39 @@ import {
 } from './cards';
 
 const Settings = () => {
-  const { data, loading, refresh } = useRequest(fetchSettingsInfo, {
-    loadingDelay: 150
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    isPending: loading,
+    refetch
+  } = useQuery({
+    queryKey: ['settings', 'info'],
+    queryFn: fetchSettingsInfo
   });
 
-  const { loading: clearing, run: runClear } = useManualRequest(
-    clearDashboardCache,
-    { manual: true }
-  );
+  // 清除后端仪表盘缓存后，同步失效前端的 dashboard 缓存
+  const clearCache = useMutation({
+    mutationFn: clearDashboardCache,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    }
+  });
 
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex items-center justify-end gap-2'>
         <Button
           variant='outline'
-          disabled={clearing}
-          onClick={runClear}
+          disabled={clearCache.isPending}
+          onClick={() => clearCache.mutate()}
           className='gap-1.5'
         >
           <Trash2 className='size-3.5' />
           清除仪表盘缓存
         </Button>
         <DataTableRefresh
-          onRefresh={refresh}
+          onRefresh={() => refetch()}
           disabled={loading}
         />
       </div>

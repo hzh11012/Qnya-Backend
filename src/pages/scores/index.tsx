@@ -3,7 +3,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/scores/columns';
 import { useScoreStore } from '@/store/scores';
-import { fetchScores } from '@/apis/scores';
+import { fetchScores, type ScoreListParams } from '@/apis/scores';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
@@ -29,48 +29,27 @@ const Index: React.FC = () => {
     setSorting,
     setPagination,
     sizes,
-    run,
     refresh,
     error,
     isLoading,
-    resetPagination,
-    setKeyword,
-    sort,
-    order,
-    pageSize
+    handleSearch
   } = useDataTablePage({
     store: useScoreStore,
+    scope: 'scores',
     api: fetchScores,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({ page, pageSize, keyword, sort, order }): ScoreListParams => ({
       page,
       pageSize,
       keyword,
-      sort,
-      order,
-      status
+      sort: sort as ScoreListParams['sort'],
+      order: order as ScoreListParams['order'],
+      status: status.map(s => (s ? 'true' : 'false'))
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    },
-    refreshDeps: [columnFilters],
+    getPageData: res => ({ items: res.items, total: res.total }),
     cleanupExtra
   });
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
-
-  const handleSearch = (keyword: string) => {
-    resetPagination();
-    setKeyword(keyword);
-    run({
-      page: 1,
-      keyword,
-      pageSize,
-      sort,
-      order,
-      status
-    });
-  };
 
   return (
     <DataTable

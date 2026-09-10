@@ -1,23 +1,17 @@
 import { useMemo } from 'react';
-import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import getColumns from '@/pages/videos/columns';
 import { useVideoStore } from '@/store/videos';
-import { fetchVideos } from '@/apis/videos';
-import { fetchAnimeOptions } from '@/apis/anime';
+import { fetchVideos, type VideoListParams } from '@/apis/videos';
+import { useAnimeOptions } from '@/hooks/use-options';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/videos/add-dialog';
 import { useDataTablePage } from '@/hooks/use-data-table-page';
-import { useRequest } from 'ahooks';
 
 const Index: React.FC = () => {
-  const { animeOptions, setAnimeOptions } = useVideoStore(
-    useShallow(state => ({
-      animeOptions: state.animeOptions,
-      setAnimeOptions: state.setAnimeOptions
-    }))
-  );
+  // 选项走 Query 缓存，与 topics 页共享同一份，5 分钟内不重复请求
+  const animeOptions = useAnimeOptions();
 
   const {
     data,
@@ -28,53 +22,28 @@ const Index: React.FC = () => {
     setPagination,
     sizes,
     loading,
-    run,
     refresh,
     error,
     isLoading,
-    resetPagination,
-    setKeyword,
-    sort,
-    order,
-    pageSize
+    handleSearch
   } = useDataTablePage({
     store: useVideoStore,
+    scope: 'videos',
     api: fetchVideos,
-    getParams: ({ page, pageSize, keyword, sort, order }) => ({
+    getParams: ({ page, pageSize, keyword, sort, order }): VideoListParams => ({
       page,
       pageSize,
       keyword,
-      sort,
-      order
+      sort: sort as VideoListParams['sort'],
+      order: order as VideoListParams['order']
     }),
-    onSuccess: (res, { setData, setTotal }) => {
-      setData(res.items);
-      setTotal(res.total);
-    }
-  });
-
-  useRequest(fetchAnimeOptions, {
-    onSuccess(options) {
-      setAnimeOptions(options);
-    }
+    getPageData: res => ({ items: res.items, total: res.total })
   });
 
   const columns = useMemo(
     () => getColumns(refresh, animeOptions),
     [refresh, animeOptions]
   );
-
-  const handleSearch = (keyword: string) => {
-    resetPagination();
-    setKeyword(keyword);
-    run({
-      page: 1,
-      keyword,
-      pageSize,
-      sort,
-      order
-    });
-  };
 
   return (
     <DataTable

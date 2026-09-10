@@ -22,11 +22,17 @@ import {
   Users,
   type LucideIcon
 } from 'lucide-react';
+import { createLazyComponent } from '@/lib/utils';
 
 interface NavSubItem {
   title: string;
   icon?: LucideIcon;
   url: string;
+  /**
+   * 页面懒加载器（react-router lazy 形态）
+   * 路由树由此派生，见 routes.tsx
+   */
+  lazy?: () => Promise<{ Component: React.ComponentType }>;
 }
 
 interface NavItemBase {
@@ -43,6 +49,7 @@ interface NavItemWithChildren extends NavItemBase {
 interface NavItemWithoutChildren extends NavItemBase {
   items?: never;
   url: string;
+  lazy?: () => Promise<{ Component: React.ComponentType }>;
 }
 
 type NavItem = NavItemWithChildren | NavItemWithoutChildren;
@@ -51,7 +58,8 @@ const links: NavItem[] = [
   {
     title: '概览',
     icon: Gauge,
-    url: '/'
+    url: '/',
+    lazy: createLazyComponent(() => import('@/pages/home/index'))
   },
   {
     title: '自动化',
@@ -61,17 +69,20 @@ const links: NavItem[] = [
       {
         title: '资源检索',
         icon: ScanSearch,
-        url: '/resources'
+        url: '/resources',
+        lazy: createLazyComponent(() => import('@/pages/resources/index'))
       },
       {
         title: '种子记录',
         icon: Sprout,
-        url: '/torrents'
+        url: '/torrents',
+        lazy: createLazyComponent(() => import('@/pages/torrents/index'))
       },
       {
         title: '视频任务',
         icon: Timer,
-        url: '/tasks'
+        url: '/tasks',
+        lazy: createLazyComponent(() => import('@/pages/tasks/index'))
       }
     ]
   },
@@ -83,7 +94,8 @@ const links: NavItem[] = [
       {
         title: '专题推荐',
         icon: Sparkles,
-        url: '/topics'
+        url: '/topics',
+        lazy: createLazyComponent(() => import('@/pages/topics/index'))
       }
     ]
   },
@@ -95,27 +107,32 @@ const links: NavItem[] = [
       {
         title: '系列',
         icon: ListVideo,
-        url: '/series'
+        url: '/series',
+        lazy: createLazyComponent(() => import('@/pages/series/index'))
       },
       {
         title: '番剧',
         icon: Tv,
-        url: '/anime'
+        url: '/anime',
+        lazy: createLazyComponent(() => import('@/pages/anime/index'))
       },
       {
         title: '剧集',
         icon: Film,
-        url: '/videos'
+        url: '/videos',
+        lazy: createLazyComponent(() => import('@/pages/videos/index'))
       },
       {
         title: '弹幕',
         icon: MessageCircle,
-        url: '/dans'
+        url: '/dans',
+        lazy: createLazyComponent(() => import('@/pages/dans/index'))
       },
       {
         title: '标签',
         icon: Tags,
-        url: '/tags'
+        url: '/tags',
+        lazy: createLazyComponent(() => import('@/pages/tags/index'))
       }
     ]
   },
@@ -127,39 +144,46 @@ const links: NavItem[] = [
       {
         title: '账户',
         icon: UserCircle,
-        url: '/users'
+        url: '/users',
+        lazy: createLazyComponent(() => import('@/pages/users/index'))
       },
       {
         title: '追番',
         icon: Bookmark,
-        url: '/favorites'
+        url: '/favorites',
+        lazy: createLazyComponent(() => import('@/pages/favorites/index'))
       },
       {
         title: '评分',
         icon: Star,
-        url: '/scores'
+        url: '/scores',
+        lazy: createLazyComponent(() => import('@/pages/scores/index'))
       },
       {
         title: '观看记录',
         icon: History,
-        url: '/histories'
+        url: '/histories',
+        lazy: createLazyComponent(() => import('@/pages/histories/index'))
       },
       {
         title: '问题反馈',
         icon: MessageSquareText,
-        url: '/feedbacks'
+        url: '/feedbacks',
+        lazy: createLazyComponent(() => import('@/pages/feedbacks/index'))
       }
     ]
   },
   {
     title: 'MCP',
     icon: Network,
-    url: '/mcp'
+    url: '/mcp',
+    lazy: createLazyComponent(() => import('@/pages/mcp/index'))
   },
   {
     title: '系统信息',
     icon: Settings,
-    url: '/settings'
+    url: '/settings',
+    lazy: createLazyComponent(() => import('@/pages/settings/index'))
   }
 ];
 
