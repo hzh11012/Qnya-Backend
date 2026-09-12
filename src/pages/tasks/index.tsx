@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
+import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/tasks/columns';
 import { useTasksStore } from '@/store/tasks';
 import { fetchTasks, type TasksListParams } from '@/apis/tasks';
@@ -52,32 +53,41 @@ const Index: React.FC = () => {
   const columns = useMemo(() => getColumns(refresh), [refresh]);
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      loading={isLoading}
-      pagination={pagination}
-      paginationConfig={{ mode: 'total', total }}
-      onPaginationChange={setPagination}
-      sorting={sorting}
-      onSortingChange={setSorting}
-      sizes={sizes}
-      error={!!error}
-      columnFilters={columnFilters}
-      onColumnFiltersChange={setColumnFilters}
-      toolbar={
-        <>
-          <DataTableSearch
-            onSearch={handleSearch}
-            disabled={isLoading}
-          />
-          <DataTableRefresh
-            onRefresh={refresh}
-            disabled={isLoading}
-          />
-        </>
-      }
-    />
+    <div className='flex h-full min-h-0 flex-col gap-6'>
+      <ListPageHeader
+        label='Tasks'
+        title='视频任务'
+        description='视频下载与转码任务的执行记录'
+      />
+      <div className='animate-fade-up min-h-0 flex-1 [animation-delay:90ms]'>
+        <DataTable
+          data={data}
+          columns={columns}
+          loading={isLoading}
+          pagination={pagination}
+          paginationConfig={{ mode: 'total', total }}
+          onPaginationChange={setPagination}
+          sorting={sorting}
+          onSortingChange={setSorting}
+          sizes={sizes}
+          error={!!error}
+          columnFilters={columnFilters}
+          onColumnFiltersChange={setColumnFilters}
+          toolbar={
+            <>
+              <DataTableSearch
+                onSearch={handleSearch}
+                disabled={isLoading}
+              />
+              <DataTableRefresh
+                onRefresh={refresh}
+                disabled={isLoading}
+              />
+            </>
+          }
+        />
+      </div>
+    </div>
   );
 };
 

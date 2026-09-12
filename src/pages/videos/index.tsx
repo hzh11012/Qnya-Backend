@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
+import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/videos/columns';
 import { useVideoStore } from '@/store/videos';
 import { fetchVideos, type VideoListParams } from '@/apis/videos';
@@ -46,37 +47,46 @@ const Index: React.FC = () => {
   );
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      loading={isLoading}
-      pagination={pagination}
-      paginationConfig={{ mode: 'total', total }}
-      onPaginationChange={setPagination}
-      sorting={sorting}
-      onSortingChange={setSorting}
-      sizes={sizes}
-      error={!!error}
-      toolbar={
-        <div className='flex flex-1 gap-6'>
-          <div className='flex flex-1 items-center gap-6'>
-            <AddDialog
-              disabled={loading}
-              onRefresh={refresh}
-              animeOptions={animeOptions}
-            />
-            <DataTableSearch
-              onSearch={handleSearch}
-              disabled={isLoading}
-            />
-          </div>
-          <DataTableRefresh
-            onRefresh={refresh}
-            disabled={isLoading}
-          />
-        </div>
-      }
-    />
+    <div className='flex h-full min-h-0 flex-col gap-6'>
+      <ListPageHeader
+        label='Videos'
+        title='剧集'
+        description='剧集信息管理，关联番剧与播放源'
+      />
+      <div className='animate-fade-up min-h-0 flex-1 [animation-delay:90ms]'>
+        <DataTable
+          data={data}
+          columns={columns}
+          loading={isLoading}
+          pagination={pagination}
+          paginationConfig={{ mode: 'total', total }}
+          onPaginationChange={setPagination}
+          sorting={sorting}
+          onSortingChange={setSorting}
+          sizes={sizes}
+          error={!!error}
+          toolbar={
+            <div className='flex flex-1 gap-6'>
+              <div className='flex flex-1 items-center gap-6'>
+                <AddDialog
+                  disabled={loading}
+                  onRefresh={refresh}
+                  animeOptions={animeOptions}
+                />
+                <DataTableSearch
+                  onSearch={handleSearch}
+                  disabled={isLoading}
+                />
+              </div>
+              <DataTableRefresh
+                onRefresh={refresh}
+                disabled={isLoading}
+              />
+            </div>
+          }
+        />
+      </div>
+    </div>
   );
 };
 

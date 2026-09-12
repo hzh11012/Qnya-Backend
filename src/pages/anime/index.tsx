@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { DataTable } from '@/components/custom/data-table/data-table';
+import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/anime/columns';
 import { useAnimeStore } from '@/store/anime';
 import { fetchAnimes, type AnimeListParams } from '@/apis/anime';
@@ -78,40 +79,49 @@ const Index: React.FC = () => {
   );
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      loading={isLoading}
-      pagination={pagination}
-      paginationConfig={{ mode: 'total', total }}
-      onPaginationChange={setPagination}
-      sorting={sorting}
-      onSortingChange={setSorting}
-      sizes={sizes}
-      error={!!error}
-      columnFilters={columnFilters}
-      onColumnFiltersChange={setColumnFilters}
-      toolbar={
-        <div className='flex flex-1 gap-6'>
-          <div className='flex flex-1 items-center gap-6'>
-            <AddDialog
-              disabled={loading}
-              seriesOption={seriesOption}
-              tagsOption={tagsOption}
-              onRefresh={refresh}
-            />
-            <DataTableSearch
-              onSearch={handleSearch}
-              disabled={isLoading}
-            />
-          </div>
-          <DataTableRefresh
-            onRefresh={refresh}
-            disabled={isLoading}
-          />
-        </div>
-      }
-    />
+    <div className='flex h-full min-h-0 flex-col gap-6'>
+      <ListPageHeader
+        label='Anime'
+        title='番剧'
+        description='番剧资料的增删改查，关联系列、标签与剧集'
+      />
+      <div className='animate-fade-up min-h-0 flex-1 [animation-delay:90ms]'>
+        <DataTable
+          data={data}
+          columns={columns}
+          loading={isLoading}
+          pagination={pagination}
+          paginationConfig={{ mode: 'total', total }}
+          onPaginationChange={setPagination}
+          sorting={sorting}
+          onSortingChange={setSorting}
+          sizes={sizes}
+          error={!!error}
+          columnFilters={columnFilters}
+          onColumnFiltersChange={setColumnFilters}
+          toolbar={
+            <div className='flex flex-1 gap-6'>
+              <div className='flex flex-1 items-center gap-6'>
+                <AddDialog
+                  disabled={loading}
+                  seriesOption={seriesOption}
+                  tagsOption={tagsOption}
+                  onRefresh={refresh}
+                />
+                <DataTableSearch
+                  onSearch={handleSearch}
+                  disabled={isLoading}
+                />
+              </div>
+              <DataTableRefresh
+                onRefresh={refresh}
+                disabled={isLoading}
+              />
+            </div>
+          }
+        />
+      </div>
+    </div>
   );
 };
 

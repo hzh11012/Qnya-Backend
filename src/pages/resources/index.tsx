@@ -1,4 +1,5 @@
 import { DataTable } from '@/components/custom/data-table/data-table';
+import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import columns from '@/pages/resources/columns';
 import { useResourcesStore } from '@/store/resources';
 import { fetchResources } from '@/apis/resources';
@@ -30,28 +31,37 @@ const Index: React.FC = () => {
   });
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      loading={isLoading}
-      pagination={pagination}
-      paginationConfig={{ mode: 'hasMore', hasMore }}
-      onPaginationChange={setPagination}
-      sizes={sizes}
-      error={!!error}
-      toolbar={
-        <>
-          <DataTableSearch
-            onSearch={handleSearch}
-            disabled={isLoading}
-          />
-          <DataTableRefresh
-            onRefresh={refresh}
-            disabled={isLoading}
-          />
-        </>
-      }
-    />
+    <div className='flex h-full min-h-0 flex-col gap-6'>
+      <ListPageHeader
+        label='Resources'
+        title='资源检索'
+        description='外部资源站检索结果，可推送至 qBittorrent 下载'
+      />
+      <div className='animate-fade-up min-h-0 flex-1 [animation-delay:90ms]'>
+        <DataTable
+          data={data}
+          columns={columns}
+          loading={isLoading}
+          pagination={pagination}
+          paginationConfig={{ mode: 'hasMore', hasMore }}
+          onPaginationChange={setPagination}
+          sizes={sizes}
+          error={!!error}
+          toolbar={
+            <>
+              <DataTableSearch
+                onSearch={handleSearch}
+                disabled={isLoading}
+              />
+              <DataTableRefresh
+                onRefresh={refresh}
+                disabled={isLoading}
+              />
+            </>
+          }
+        />
+      </div>
+    </div>
   );
 };
 
