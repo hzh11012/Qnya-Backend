@@ -71,11 +71,12 @@ Qnya 番剧平台管理后台，仅限 `admin` 角色访问，支持移动端自
 | 框架     | React 19 + TypeScript                            |
 | 构建     | Vite 8 + React Compiler                          |
 | 路由     | React Router DOM v7（路由级懒加载）              |
-| 状态管理 | Zustand v5 + Immer                               |
+| 数据层   | TanStack Query v5（统一缓存、重试与骨架屏节奏）  |
+| 状态管理 | Zustand v5 + Immer（auth / 表格页状态工厂）      |
 | UI       | Radix UI + Tailwind CSS v4 + shadcn/ui           |
 | 表格     | TanStack Table v8（排序、过滤、分页、虚拟滚动）  |
 | 表单     | React Hook Form v7 + Zod v4                      |
-| 请求     | Axios + ahooks `useRequest`                      |
+| 请求     | Axios（统一响应解包与错误 toast）                |
 | Markdown | react-markdown v10 + remark-gfm                  |
 | 规范     | ESLint + Prettier + husky + Conventional Commits |
 
@@ -83,16 +84,34 @@ Qnya 番剧平台管理后台，仅限 `admin` 角色访问，支持移动端自
 
 ```
 src/
-├── apis/          # 接口定义
+├── apis/          # 接口定义（OpenAPI 类型源自 src/types/api.d.ts）
 ├── components/
-│   ├── custom/    # 业务组件（auth、data-table、form、sidebar）
+│   ├── custom/    # 业务组件（auth、data-table、overview 设计原语、sidebar）
 │   └── ui/        # shadcn/ui 基础组件
-├── hooks/         # 通用 hooks
+├── hooks/         # 通用 hooks（createTablePage 表格页工厂、useDeferredLoading 等）
 ├── lib/           # 工具函数、请求封装
 ├── pages/         # 页面（columns / row-actions / form 分离）
-├── store/         # Zustand store（按模块 + 共享 base slice）
+├── store/         # Zustand store（仅 auth 与共享 base slice）
 └── routes.tsx     # 路由配置
 ```
+
+### 新增列表页
+
+表格页由 `createTablePage` 工厂生成：一个 hook 内置 zustand 状态、查询请求与卸载清理，列筛选值从 `columnFilters` 即时派生，无需手写 store。
+
+```tsx
+const useAnimePage = createTablePage({
+  scope: 'anime',
+  api: fetchAnimes,
+  getParams: ({ page, pageSize, keyword, sort, order, columnFilters }) => ({
+    ...,
+    status: filterValues(columnFilters, 'status')
+  }),
+  getPageData: res => ({ items: res.items, total: res.total })
+});
+```
+
+页面结构固定为 `ListPageHeader`（信息头部）+ `DataTable`（工具栏写在 `toolbar` prop 内），骨架屏由 `useDeferredLoading` 控制节奏，快速加载时不闪骨架。
 
 ## 开发
 
