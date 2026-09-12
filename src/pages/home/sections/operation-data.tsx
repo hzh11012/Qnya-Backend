@@ -3,7 +3,7 @@ import {
   CardTitle,
   OverviewCard,
   SectionHeader
-} from '@/pages/home/components/card';
+} from '@/components/custom/overview/card';
 import { Timeline, TimelineItem } from '@/pages/home/components/timeline';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';

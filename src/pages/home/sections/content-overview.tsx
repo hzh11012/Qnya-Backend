@@ -3,10 +3,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   CardTitle,
   OverviewCard,
-  SectionHeader,
-  SkeletonCard
-} from '@/pages/home/components/card';
-import { StatCard } from '@/pages/home/components/stat-card';
+  SectionHeader
+} from '@/components/custom/overview/card';
+import { SkeletonCard, StatCard } from '@/pages/home/components/stat-card';
 import {
   DonutChart,
   Legend,

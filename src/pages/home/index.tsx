@@ -7,7 +7,12 @@ import OperationData from '@/pages/home/sections/operation-data';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 
 const Home = () => {
-  const { data: stats, isPending: loading, refetch } = useDashboardStats();
+  const {
+    data: stats,
+    isPending: loading,
+    showSkeleton,
+    refetch
+  } = useDashboardStats();
   const alertCount = !loading ? (stats?.pending.feedbacks ?? 0) : 0;
 
   return (
@@ -54,22 +59,27 @@ const Home = () => {
         </div>
       </header>
 
-      <ContentOverview
-        stats={stats}
-        loading={loading}
-      />
-      <InteractionOverview
-        stats={stats}
-        loading={loading}
-      />
-      <TaskSystemStatus
-        stats={stats}
-        loading={loading}
-      />
-      <OperationData
-        stats={stats}
-        loading={loading}
-      />
+      {/* showSkeleton：仅在加载超过 250ms 后展示骨架，快路径直接渲染内容 */}
+      {showSkeleton || stats ? (
+        <>
+          <ContentOverview
+            stats={stats}
+            loading={showSkeleton}
+          />
+          <InteractionOverview
+            stats={stats}
+            loading={showSkeleton}
+          />
+          <TaskSystemStatus
+            stats={stats}
+            loading={showSkeleton}
+          />
+          <OperationData
+            stats={stats}
+            loading={showSkeleton}
+          />
+        </>
+      ) : null}
     </div>
   );
 };

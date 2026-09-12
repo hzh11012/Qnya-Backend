@@ -1,7 +1,8 @@
 import { memo } from 'react';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
+import { CARD_BASE } from '@/components/custom/overview/card';
 import { useCountUp } from '@/hooks/use-count-up';
-import { CARD_BASE } from '@/pages/home/components/card';
 
 /** KPI 数字卡：count-up 滚动数字 + 图标色块 */
 export const StatCard = memo(function StatCard({
@@ -51,3 +52,17 @@ export const StatCard = memo(function StatCard({
     </div>
   );
 });
+
+/** KPI 卡骨架 */
+export const SkeletonCard = () => (
+  <div
+    aria-hidden
+    className={cn(CARD_BASE, 'flex flex-col gap-4 p-5')}
+  >
+    <div className='flex items-center justify-between'>
+      <Skeleton className='h-3.5 w-16' />
+      <Skeleton className='size-8 rounded-lg' />
+    </div>
+    <Skeleton className='h-9 w-24' />
+  </div>
+);

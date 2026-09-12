@@ -1,6 +1,6 @@
 import type { OverviewSectionProps } from '@/pages/home/types';
 import { cn } from '@/lib/utils';
-import { OverviewCard, SectionHeader } from '@/pages/home/components/card';
+import { OverviewCard, SectionHeader } from '@/components/custom/overview/card';
 import { RingProgress } from '@/pages/home/components/charts';
 import { StatusDot } from '@/pages/home/components/status-dot';
 import { Skeleton } from '@/components/ui/skeleton';

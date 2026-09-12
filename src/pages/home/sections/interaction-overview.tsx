@@ -1,6 +1,6 @@
 import type { OverviewSectionProps } from '@/pages/home/types';
 import { cn } from '@/lib/utils';
-import { SectionHeader } from '@/pages/home/components/card';
+import { SectionHeader } from '@/components/custom/overview/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Clock, Flame, MessageSquare, Star } from 'lucide-react';
 
