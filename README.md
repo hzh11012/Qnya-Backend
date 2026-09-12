@@ -4,11 +4,13 @@ Qnya 番剧平台管理后台，仅限 `admin` 角色访问，支持移动端自
 
 ## 预览
 
-![登录页](docs/preview-login.png)
+![登录](docs/preview-login.png)
 
-![概览页](docs/preview-home.png)
+![概览](docs/preview-home.png)
 
-![TMDB 搜索](docs/preview-tmdb.png)
+![MCP](docs/preview-mcp.png)
+
+![TMDB](docs/preview-tmdb.png)
 
 ## 功能模块
 
