@@ -57,6 +57,11 @@ function SheetContent({
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: 'top' | 'right' | 'bottom' | 'left';
 }) {
+  // 点击 toast（sonner 容器内）不应视为「点击外部」而关闭弹层；
+  // pointerdown 与 focus 都会触发 Radix 的 outside 关闭，需要一并拦截
+  const isInsideToaster = (target: EventTarget | null) =>
+    target instanceof Element && !!target.closest('[data-sonner-toaster]');
+
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -68,6 +73,16 @@ function SheetContent({
           className
         )}
         {...props}
+        onPointerDownOutside={e => {
+          if (isInsideToaster(e.detail.originalEvent.target)) {
+            e.preventDefault();
+          }
+        }}
+        onFocusOutside={e => {
+          if (isInsideToaster(e.detail.originalEvent.target)) {
+            e.preventDefault();
+          }
+        }}
       >
         {children}
       </SheetPrimitive.Content>

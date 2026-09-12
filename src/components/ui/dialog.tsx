@@ -72,6 +72,11 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
 }) {
+  // 点击 toast（sonner 容器内）不应视为「点击外部」而关闭弹窗；
+  // pointerdown 与 focus 都会触发 Radix 的 outside 关闭，需要一并拦截
+  const isInsideToaster = (target: EventTarget | null) =>
+    target instanceof Element && !!target.closest('[data-sonner-toaster]');
+
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -83,6 +88,16 @@ function DialogContent({
           className
         )}
         {...props}
+        onPointerDownOutside={e => {
+          if (isInsideToaster(e.detail.originalEvent.target)) {
+            e.preventDefault();
+          }
+        }}
+        onFocusOutside={e => {
+          if (isInsideToaster(e.detail.originalEvent.target)) {
+            e.preventDefault();
+          }
+        }}
       >
         {children}
         {showCloseButton && (
