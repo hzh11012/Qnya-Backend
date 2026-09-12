@@ -95,24 +95,6 @@ src/
 └── routes.tsx     # 路由配置
 ```
 
-### 新增列表页
-
-表格页由 `createTablePage` 工厂生成：一个 hook 内置 zustand 状态、查询请求与卸载清理，列筛选值从 `columnFilters` 即时派生，无需手写 store。
-
-```tsx
-const useAnimePage = createTablePage({
-  scope: 'anime',
-  api: fetchAnimes,
-  getParams: ({ page, pageSize, keyword, sort, order, columnFilters }) => ({
-    ...,
-    status: filterValues(columnFilters, 'status')
-  }),
-  getPageData: res => ({ items: res.items, total: res.total })
-});
-```
-
-页面结构固定为 `ListPageHeader`（信息头部）+ `DataTable`（工具栏写在 `toolbar` prop 内），骨架屏由 `useDeferredLoading` 控制节奏，快速加载时不闪骨架。
-
 ## 开发
 
 ```bash
