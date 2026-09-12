@@ -5,10 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Clock, Flame, MessageSquare, Star } from 'lucide-react';
 
 type InteractionKey =
-  | 'historyTotal'
-  | 'collectionTotal'
-  | 'scoreTotal'
-  | 'danmakuTotal';
+  'historyTotal' | 'collectionTotal' | 'scoreTotal' | 'danmakuTotal';
 
 interface InteractionItem {
   key: InteractionKey;

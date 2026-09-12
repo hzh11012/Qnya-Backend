@@ -7,11 +7,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 
 type QbitStatusType =
-  | 'success'
-  | 'warning'
-  | 'destructive'
-  | 'default'
-  | 'muted';
+  'success' | 'warning' | 'destructive' | 'default' | 'muted';
 
 interface QbitStatusConfig {
   label: string;
