@@ -71,15 +71,17 @@
   --radius: 0.625rem;
   --background: oklch(1 0 0); /** 整体背景颜色 */
   --foreground: oklch(0.213 0.008 264.406); /** 标题文字颜色 */
-  --secondary: oklch(0.681 0.012 256.816); /** 副标题颜色 */
+  --secondary: oklch(0.56 0.012 256.816); /** 副标题颜色（白底 4.65:1） */
   --border: oklch(0.92 0.004 237.296); /** 边框颜色、使用边框hover的背景颜色 */
   --button: oklch(1 0 0); /** 按钮颜色 */
   --button-foreground: oklch(0.508 0.013 256.809); /** 按钮文字颜色、icon颜色 */
   --card: oklch(0.976 0.002 246.668); /** 侧栏颜色、卡片颜色 */
   --popover: oklch(1 0 0); /** 弹出层背景颜色 */
-  --muted: oklch(0.578 0.012 256.81); /** 占位符颜色、描述文字颜色 */
+  --muted: oklch(
+    0.545 0.012 256.81
+  ); /** 占位符颜色、描述文字颜色（卡片上 4.62:1） */
   --primary: oklch(0.585 0.233 277.117); /** 主颜色 */
-  --destructive: oklch(0.671 0.213 24.709); /** 错误颜色 */
+  --destructive: oklch(0.585 0.213 24.709); /** 错误颜色（白底 4.67:1） */
 
   --svg-background: oklch(1 0 0);
   --svg-border: oklch(0.145 0 0);
@@ -91,15 +93,17 @@
 .dark {
   --background: oklch(0.209 0.004 264.334);
   --foreground: oklch(0.933 0.004 248.543);
-  --secondary: oklch(0.578 0.012 256.81);
+  --secondary: oklch(0.61 0.012 256.816); /** 副标题颜色（深底 4.69:1） */
   --border: oklch(0.312 0.006 258.435);
   --button: oklch(0.267 0.006 236.927);
   --button-foreground: oklch(0.727 0.012 256.819);
   --card: oklch(0.242 0.005 248.162);
   --popover: oklch(0.209 0.004 264.334);
   --muted: oklch(0.681 0.012 256.816);
-  --primary: oklch(0.673 0.182 276.935);
-  --destructive: oklch(0.397 0.141 25.699);
+  --primary: oklch(
+    0.62 0.182 276.935
+  ); /** 主颜色（兼顾白字 3.82:1 / 自身作文字 4.64:1） */
+  --destructive: oklch(0.63 0.141 25.699); /** 错误颜色（深底 4.75:1） */
 
   --svg-background: oklch(0 0 0);
   --svg-border: oklch(0.985 0 0);
