@@ -60,7 +60,7 @@ const CodeDialog: React.FC<CodeDialogProps> = ({
       open={open}
       onOpenChange={handleOpenChange}
     >
-      <DialogContent className='w-full max-w-[min(21.875rem,calc(100%-2rem))] rounded-2xl border-border/60 bg-background/80 p-4 shadow-lg backdrop-blur-xl sm:max-w-md sm:p-6'>
+      <DialogContent className='w-full max-w-[min(21.875rem,calc(100%-2rem))] p-4 sm:p-6'>
         <DialogHeader>
           <DialogTitle className='text-lg'>请输入验证码</DialogTitle>
           <DialogDescription className='text-sm text-muted'>
