@@ -1,11 +1,22 @@
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import columns from '@/pages/torrents/columns';
-import { useTorrentsStore } from '@/store/torrents';
 import { fetchTorrents, type TorrentsListParams } from '@/apis/torrents';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/torrents/add-dialog';
-import { useDataTablePage } from '@/hooks/use-data-table-page';
+import { createTablePage } from '@/hooks/create-table-page';
+
+const useTorrentsPage = createTablePage({
+  scope: 'torrents',
+  api: fetchTorrents,
+  getParams: ({ page, pageSize, sort, order }): TorrentsListParams => ({
+    page,
+    pageSize,
+    sort: sort as TorrentsListParams['sort'],
+    order: order as TorrentsListParams['order']
+  }),
+  getPageData: res => ({ items: res.items, total: res.total })
+});
 
 const Index: React.FC = () => {
   const {
@@ -20,18 +31,7 @@ const Index: React.FC = () => {
     refresh,
     error,
     isLoading
-  } = useDataTablePage({
-    store: useTorrentsStore,
-    scope: 'torrents',
-    api: fetchTorrents,
-    getParams: ({ page, pageSize, sort, order }): TorrentsListParams => ({
-      page,
-      pageSize,
-      sort: sort as TorrentsListParams['sort'],
-      order: order as TorrentsListParams['order']
-    }),
-    getPageData: res => ({ items: res.items, total: res.total })
-  });
+  } = useTorrentsPage();
 
   return (
     <div className='flex h-full min-h-0 flex-col gap-6'>

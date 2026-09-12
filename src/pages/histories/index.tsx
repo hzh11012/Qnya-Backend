@@ -2,11 +2,23 @@ import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/histories/columns';
-import { useHistoryStore } from '@/store/histories';
 import { fetchHistories, type HistoryListParams } from '@/apis/histories';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
-import { useDataTablePage } from '@/hooks/use-data-table-page';
+import { createTablePage } from '@/hooks/create-table-page';
+
+const useHistoryPage = createTablePage({
+  scope: 'histories',
+  api: fetchHistories,
+  getParams: ({ page, pageSize, keyword, sort, order }): HistoryListParams => ({
+    page,
+    pageSize,
+    keyword,
+    sort: sort as HistoryListParams['sort'],
+    order: order as HistoryListParams['order']
+  }),
+  getPageData: res => ({ items: res.items, total: res.total })
+});
 
 const Index: React.FC = () => {
   const {
@@ -21,25 +33,7 @@ const Index: React.FC = () => {
     error,
     isLoading,
     handleSearch
-  } = useDataTablePage({
-    store: useHistoryStore,
-    scope: 'histories',
-    api: fetchHistories,
-    getParams: ({
-      page,
-      pageSize,
-      keyword,
-      sort,
-      order
-    }): HistoryListParams => ({
-      page,
-      pageSize,
-      keyword,
-      sort: sort as HistoryListParams['sort'],
-      order: order as HistoryListParams['order']
-    }),
-    getPageData: res => ({ items: res.items, total: res.total })
-  });
+  } = useHistoryPage();
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
 
@@ -63,18 +57,16 @@ const Index: React.FC = () => {
           sizes={sizes}
           error={!!error}
           toolbar={
-            <div className='flex flex-1 gap-6'>
-              <div className='flex flex-1 items-center gap-6'>
-                <DataTableSearch
-                  onSearch={handleSearch}
-                  disabled={isLoading}
-                />
-              </div>
+            <>
+              <DataTableSearch
+                onSearch={handleSearch}
+                disabled={isLoading}
+              />
               <DataTableRefresh
                 onRefresh={refresh}
                 disabled={isLoading}
               />
-            </div>
+            </>
           }
         />
       </div>

@@ -17,7 +17,6 @@ import type { StateCreator } from 'zustand';
 interface BaseTableState {
   sizes: number[];
   sorting: SortingState;
-  type: string;
   keyword?: string;
   order?: string;
   sort?: string;
@@ -26,10 +25,10 @@ interface BaseTableState {
 
 interface BaseTableActions {
   setSorting: OnChangeFn<SortingState>;
-  setType: (type: string) => void;
   setKeyword: (keyword?: string) => void;
   setOrder: (order?: string) => void;
   setSort: (sort?: string) => void;
+  setColumnFilters: OnChangeFn<ColumnFiltersState>;
 }
 
 type BaseTableSlice = BaseTableState & BaseTableActions;
@@ -50,7 +49,6 @@ type BasePaginationSlice = BasePaginationState & BasePaginationActions;
 const DEFAULT_TABLE_STATE = {
   sizes: [10, 20, 50],
   sorting: [],
-  type: 'name',
   keyword: undefined,
   order: undefined,
   sort: undefined,
@@ -96,10 +94,17 @@ const createTableSlice = <TStore extends BaseTableSlice = BaseTableSlice>(
       });
     },
 
-    setType: type => set({ type } as Partial<TStore>),
     setKeyword: keyword => set({ keyword } as Partial<TStore>),
     setOrder: order => set({ order } as Partial<TStore>),
-    setSort: sort => set({ sort } as Partial<TStore>)
+    setSort: sort => set({ sort } as Partial<TStore>),
+    setColumnFilters: updater => {
+      set(
+        state =>
+          ({
+            columnFilters: resolveUpdater(updater, state.columnFilters)
+          }) as Partial<TStore>
+      );
+    }
   });
 };
 

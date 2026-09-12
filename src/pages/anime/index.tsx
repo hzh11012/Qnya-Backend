@@ -1,44 +1,43 @@
-import { useCallback, useMemo } from 'react';
-import { useShallow } from 'zustand/react/shallow';
+import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/anime/columns';
-import { useAnimeStore } from '@/store/anime';
 import { fetchAnimes, type AnimeListParams } from '@/apis/anime';
 import { useSeriesOptions, useTagsOptions } from '@/hooks/use-options';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/anime/add-dialog';
-import { useDataTablePage } from '@/hooks/use-data-table-page';
+import { createTablePage, filterValues } from '@/hooks/create-table-page';
+
+const useAnimePage = createTablePage({
+  scope: 'anime',
+  api: fetchAnimes,
+  getParams: ({
+    page,
+    pageSize,
+    keyword,
+    sort,
+    order,
+    columnFilters
+  }): AnimeListParams => ({
+    page,
+    pageSize,
+    keyword,
+    sort: sort as AnimeListParams['sort'],
+    order: order as AnimeListParams['order'],
+    status: filterValues(columnFilters, 'status') as AnimeListParams['status'],
+    types: filterValues(columnFilters, 'type') as AnimeListParams['types'],
+    months: filterValues(columnFilters, 'month') as AnimeListParams['months'],
+    years: filterValues(columnFilters, 'year') as AnimeListParams['years'],
+    tags: filterValues(columnFilters, 'tags').map(Number)
+  }),
+  getPageData: res => ({ items: res.items, total: res.total })
+});
 
 const Index: React.FC = () => {
-  const {
-    status,
-    types,
-    months,
-    years,
-    tags,
-    columnFilters,
-    setColumnFilters
-  } = useAnimeStore(
-    useShallow(state => ({
-      status: state.status,
-      types: state.types,
-      months: state.months,
-      years: state.years,
-      tags: state.tags,
-      columnFilters: state.columnFilters,
-      setColumnFilters: state.setColumnFilters
-    }))
-  );
-
   // 选项走 Query 缓存，跨页面共享、5 分钟内不重复请求
   const tagsOption = useTagsOptions();
   const seriesOption = useSeriesOptions();
-
-  const cleanupExtra = useCallback(() => {
-    setColumnFilters([]);
-  }, [setColumnFilters]);
 
   const {
     data,
@@ -52,26 +51,10 @@ const Index: React.FC = () => {
     refresh,
     error,
     isLoading,
-    handleSearch
-  } = useDataTablePage({
-    store: useAnimeStore,
-    scope: 'anime',
-    api: fetchAnimes,
-    getParams: ({ page, pageSize, keyword, sort, order }): AnimeListParams => ({
-      page,
-      pageSize,
-      keyword,
-      sort: sort as AnimeListParams['sort'],
-      order: order as AnimeListParams['order'],
-      status: status as AnimeListParams['status'],
-      types: types as AnimeListParams['types'],
-      months: months as AnimeListParams['months'],
-      years: years as AnimeListParams['years'],
-      tags: tags.map(Number)
-    }),
-    getPageData: res => ({ items: res.items, total: res.total }),
-    cleanupExtra
-  });
+    handleSearch,
+    columnFilters,
+    setColumnFilters
+  } = useAnimePage();
 
   const columns = useMemo(
     () => getColumns(refresh, tagsOption, seriesOption),
@@ -100,7 +83,7 @@ const Index: React.FC = () => {
           columnFilters={columnFilters}
           onColumnFiltersChange={setColumnFilters}
           toolbar={
-            <div className='flex flex-1 gap-6'>
+            <>
               <div className='flex flex-1 items-center gap-6'>
                 <AddDialog
                   disabled={loading}
@@ -117,7 +100,7 @@ const Index: React.FC = () => {
                 onRefresh={refresh}
                 disabled={isLoading}
               />
-            </div>
+            </>
           }
         />
       </div>

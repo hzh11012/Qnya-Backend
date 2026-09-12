@@ -1,11 +1,17 @@
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import columns from '@/pages/resources/columns';
-import { useResourcesStore } from '@/store/resources';
 import { fetchResources } from '@/apis/resources';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
-import { useDataTablePage } from '@/hooks/use-data-table-page';
+import { createTablePage } from '@/hooks/create-table-page';
+
+const useResourcesPage = createTablePage({
+  scope: 'resources',
+  api: fetchResources,
+  getParams: ({ page, pageSize, keyword }) => ({ page, pageSize, keyword }),
+  getPageData: res => ({ items: res.items, hasMore: res.hasMore })
+});
 
 const Index: React.FC = () => {
   const {
@@ -18,17 +24,7 @@ const Index: React.FC = () => {
     error,
     isLoading,
     handleSearch
-  } = useDataTablePage({
-    store: useResourcesStore,
-    scope: 'resources',
-    api: fetchResources,
-    getParams: ({ page, pageSize, keyword }) => ({
-      page,
-      pageSize,
-      keyword
-    }),
-    getPageData: res => ({ items: res.items, hasMore: res.hasMore })
-  });
+  } = useResourcesPage();
 
   return (
     <div className='flex h-full min-h-0 flex-col gap-6'>

@@ -2,12 +2,24 @@ import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/series/columns';
-import { useSeriesStore } from '@/store/series';
 import { fetchSeries, type SeriesListParams } from '@/apis/series';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/series/add-dialog';
-import { useDataTablePage } from '@/hooks/use-data-table-page';
+import { createTablePage } from '@/hooks/create-table-page';
+
+const useSeriesPage = createTablePage({
+  scope: 'series',
+  api: fetchSeries,
+  getParams: ({ page, pageSize, keyword, sort, order }): SeriesListParams => ({
+    page,
+    pageSize,
+    keyword,
+    sort: sort as SeriesListParams['sort'],
+    order: order as SeriesListParams['order']
+  }),
+  getPageData: res => ({ items: res.items, total: res.total })
+});
 
 const Index: React.FC = () => {
   const {
@@ -23,25 +35,7 @@ const Index: React.FC = () => {
     error,
     isLoading,
     handleSearch
-  } = useDataTablePage({
-    store: useSeriesStore,
-    scope: 'series',
-    api: fetchSeries,
-    getParams: ({
-      page,
-      pageSize,
-      keyword,
-      sort,
-      order
-    }): SeriesListParams => ({
-      page,
-      pageSize,
-      keyword,
-      sort: sort as SeriesListParams['sort'],
-      order: order as SeriesListParams['order']
-    }),
-    getPageData: res => ({ items: res.items, total: res.total })
-  });
+  } = useSeriesPage();
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
 

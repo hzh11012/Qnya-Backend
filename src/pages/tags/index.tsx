@@ -1,11 +1,23 @@
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import columns from '@/pages/tags/columns';
-import { useTagsStore } from '@/store/tags';
 import { fetchTags, type TagsListParams } from '@/apis/tags';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
-import { useDataTablePage } from '@/hooks/use-data-table-page';
+import { createTablePage } from '@/hooks/create-table-page';
+
+const useTagsPage = createTablePage({
+  scope: 'tags',
+  api: fetchTags,
+  getParams: ({ page, pageSize, keyword, sort, order }): TagsListParams => ({
+    page,
+    pageSize,
+    keyword,
+    sort: sort as TagsListParams['sort'],
+    order: order as TagsListParams['order']
+  }),
+  getPageData: res => ({ items: res.items, total: res.total })
+});
 
 const Index: React.FC = () => {
   const {
@@ -20,19 +32,7 @@ const Index: React.FC = () => {
     error,
     isLoading,
     handleSearch
-  } = useDataTablePage({
-    store: useTagsStore,
-    scope: 'tags',
-    api: fetchTags,
-    getParams: ({ page, pageSize, keyword, sort, order }): TagsListParams => ({
-      page,
-      pageSize,
-      keyword,
-      sort: sort as TagsListParams['sort'],
-      order: order as TagsListParams['order']
-    }),
-    getPageData: res => ({ items: res.items, total: res.total })
-  });
+  } = useTagsPage();
 
   return (
     <div className='flex h-full min-h-0 flex-col gap-6'>

@@ -1,27 +1,36 @@
-import { useCallback, useMemo } from 'react';
-import { useShallow } from 'zustand/react/shallow';
+import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/scores/columns';
-import { useScoreStore } from '@/store/scores';
 import { fetchScores, type ScoreListParams } from '@/apis/scores';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
-import { useDataTablePage } from '@/hooks/use-data-table-page';
+import { createTablePage, filterValues } from '@/hooks/create-table-page';
+
+const useScorePage = createTablePage({
+  scope: 'scores',
+  api: fetchScores,
+  getParams: ({
+    page,
+    pageSize,
+    keyword,
+    sort,
+    order,
+    columnFilters
+  }): ScoreListParams => ({
+    page,
+    pageSize,
+    keyword,
+    sort: sort as ScoreListParams['sort'],
+    order: order as ScoreListParams['order'],
+    status: filterValues<boolean>(columnFilters, 'status').map(s =>
+      s ? 'true' : 'false'
+    )
+  }),
+  getPageData: res => ({ items: res.items, total: res.total })
+});
 
 const Index: React.FC = () => {
-  const { status, columnFilters, setColumnFilters } = useScoreStore(
-    useShallow(state => ({
-      status: state.status,
-      columnFilters: state.columnFilters,
-      setColumnFilters: state.setColumnFilters
-    }))
-  );
-
-  const cleanupExtra = useCallback(() => {
-    setColumnFilters([]);
-  }, [setColumnFilters]);
-
   const {
     data,
     total,
@@ -33,22 +42,10 @@ const Index: React.FC = () => {
     refresh,
     error,
     isLoading,
-    handleSearch
-  } = useDataTablePage({
-    store: useScoreStore,
-    scope: 'scores',
-    api: fetchScores,
-    getParams: ({ page, pageSize, keyword, sort, order }): ScoreListParams => ({
-      page,
-      pageSize,
-      keyword,
-      sort: sort as ScoreListParams['sort'],
-      order: order as ScoreListParams['order'],
-      status: status.map(s => (s ? 'true' : 'false'))
-    }),
-    getPageData: res => ({ items: res.items, total: res.total }),
-    cleanupExtra
-  });
+    handleSearch,
+    columnFilters,
+    setColumnFilters
+  } = useScorePage();
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
 
@@ -74,18 +71,16 @@ const Index: React.FC = () => {
           columnFilters={columnFilters}
           onColumnFiltersChange={setColumnFilters}
           toolbar={
-            <div className='flex flex-1 gap-6'>
-              <div className='flex flex-1 items-center gap-6'>
-                <DataTableSearch
-                  onSearch={handleSearch}
-                  disabled={isLoading}
-                />
-              </div>
+            <>
+              <DataTableSearch
+                onSearch={handleSearch}
+                disabled={isLoading}
+              />
               <DataTableRefresh
                 onRefresh={refresh}
                 disabled={isLoading}
               />
-            </div>
+            </>
           }
         />
       </div>

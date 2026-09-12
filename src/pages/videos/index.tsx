@@ -2,13 +2,25 @@ import { useMemo } from 'react';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/videos/columns';
-import { useVideoStore } from '@/store/videos';
 import { fetchVideos, type VideoListParams } from '@/apis/videos';
 import { useAnimeOptions } from '@/hooks/use-options';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/videos/add-dialog';
-import { useDataTablePage } from '@/hooks/use-data-table-page';
+import { createTablePage } from '@/hooks/create-table-page';
+
+const useVideoPage = createTablePage({
+  scope: 'videos',
+  api: fetchVideos,
+  getParams: ({ page, pageSize, keyword, sort, order }): VideoListParams => ({
+    page,
+    pageSize,
+    keyword,
+    sort: sort as VideoListParams['sort'],
+    order: order as VideoListParams['order']
+  }),
+  getPageData: res => ({ items: res.items, total: res.total })
+});
 
 const Index: React.FC = () => {
   // 选项走 Query 缓存，与 topics 页共享同一份，5 分钟内不重复请求
@@ -27,19 +39,7 @@ const Index: React.FC = () => {
     error,
     isLoading,
     handleSearch
-  } = useDataTablePage({
-    store: useVideoStore,
-    scope: 'videos',
-    api: fetchVideos,
-    getParams: ({ page, pageSize, keyword, sort, order }): VideoListParams => ({
-      page,
-      pageSize,
-      keyword,
-      sort: sort as VideoListParams['sort'],
-      order: order as VideoListParams['order']
-    }),
-    getPageData: res => ({ items: res.items, total: res.total })
-  });
+  } = useVideoPage();
 
   const columns = useMemo(
     () => getColumns(refresh, animeOptions),
@@ -66,7 +66,7 @@ const Index: React.FC = () => {
           sizes={sizes}
           error={!!error}
           toolbar={
-            <div className='flex flex-1 gap-6'>
+            <>
               <div className='flex flex-1 items-center gap-6'>
                 <AddDialog
                   disabled={loading}
@@ -82,7 +82,7 @@ const Index: React.FC = () => {
                 onRefresh={refresh}
                 disabled={isLoading}
               />
-            </div>
+            </>
           }
         />
       </div>
