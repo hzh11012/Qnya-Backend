@@ -1,4 +1,5 @@
 import { DataTable } from '@/components/custom/data-table/data-table';
+import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import columns from '@/pages/tags/columns';
 import { useTagsStore } from '@/store/tags';
 import { fetchTags, type TagsListParams } from '@/apis/tags';
@@ -34,30 +35,39 @@ const Index: React.FC = () => {
   });
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      loading={isLoading}
-      pagination={pagination}
-      paginationConfig={{ mode: 'total', total }}
-      onPaginationChange={setPagination}
-      sorting={sorting}
-      onSortingChange={setSorting}
-      sizes={sizes}
-      error={!!error}
-      toolbar={
-        <>
-          <DataTableSearch
-            onSearch={handleSearch}
-            disabled={isLoading}
-          />
-          <DataTableRefresh
-            onRefresh={refresh}
-            disabled={isLoading}
-          />
-        </>
-      }
-    />
+    <div className='flex h-full min-h-0 flex-col gap-6'>
+      <ListPageHeader
+        label='Tags'
+        title='标签管理'
+        description='标签的增删改查，用于番剧内容归类与筛选'
+      />
+      <div className='animate-fade-up min-h-0 flex-1 [animation-delay:90ms]'>
+        <DataTable
+          data={data}
+          columns={columns}
+          loading={isLoading}
+          pagination={pagination}
+          paginationConfig={{ mode: 'total', total }}
+          onPaginationChange={setPagination}
+          sorting={sorting}
+          onSortingChange={setSorting}
+          sizes={sizes}
+          error={!!error}
+          toolbar={
+            <>
+              <DataTableSearch
+                onSearch={handleSearch}
+                disabled={isLoading}
+              />
+              <DataTableRefresh
+                onRefresh={refresh}
+                disabled={isLoading}
+              />
+            </>
+          }
+        />
+      </div>
+    </div>
   );
 };
 
