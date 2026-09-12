@@ -1,5 +1,7 @@
 # Qnya Backend
 
+[![Release](https://github.com/hzh11012/Qnya-Backend/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/hzh11012/Qnya-Backend/actions/workflows/release.yml)
+
 Qnya 番剧平台管理后台，仅限 `admin` 角色访问，支持移动端自适应。
 
 ## 预览
