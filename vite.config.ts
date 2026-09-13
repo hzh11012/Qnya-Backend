@@ -1,4 +1,4 @@
-import path from 'path';
+import { resolve } from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import babel from '@rolldown/plugin-babel';
@@ -22,7 +22,7 @@ export default defineConfig(() => ({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': resolve(import.meta.dirname, 'src')
     }
   },
   server: {
