@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { SectionHeader } from '@/components/custom/overview/card';
 import { SkeletonInfoCard } from '@/components/custom/overview/skeleton';
 import { useSettingsInfo } from './use-settings-info';
+import ReindexButton from './reindex-button';
 import {
   DatabaseCard,
   QbitCard,
@@ -75,6 +76,7 @@ const Settings = () => {
             </p>
           </div>
           <div className='flex items-center gap-2'>
+            <ReindexButton />
             <Button
               variant='outline'
               disabled={clearCache.isPending}
