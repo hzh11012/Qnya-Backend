@@ -49,7 +49,12 @@ const AnimeEditDialog: React.FC<EditDialogProps> = ({
       director: row.director,
       cv: row.cv
     }}
-    transformSubmit={values => ({ ...values, id: row.id })}
+    transformSubmit={values => ({
+      ...values,
+      id: row.id,
+      // 空串已由 schema 转为 undefined；显式传 null 表示清空该字段
+      seasonName: values.seasonName ?? null
+    })}
     formProps={{ seriesOption, tagsOption }}
   />
 );

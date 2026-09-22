@@ -74,6 +74,7 @@ const AnimeForm: React.FC<AnimeFormProps> = ({
             control={form.control}
             maxLength={25}
             name='seasonName'
+            placeholder='不填时展示为「第N季」'
           />
         </div>
         <FormInput

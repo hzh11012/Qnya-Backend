@@ -2,6 +2,7 @@ import type { AnimeListItem } from '@/apis/anime';
 import type { SeriesOptionRes } from '@/apis/series';
 import type { TagsOptionRes } from '@/apis/tags';
 import { createMap, formatDate } from '@/lib/utils';
+import { formatSeason } from '@/lib/season';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 import RowActions from '@/pages/anime/row-actions';
@@ -190,10 +191,8 @@ const getColumns = (
     {
       accessorKey: 'season',
       header: '所属季',
-      cell: ({ row }) => {
-        const season = row.original.seasonName || `第${row.original.season}季`;
-        return season;
-      }
+      cell: ({ row }) =>
+        formatSeason(row.original.season, row.original.seasonName)
     },
     {
       accessorKey: 'avgScore',

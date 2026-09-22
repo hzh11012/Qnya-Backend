@@ -7,7 +7,9 @@ const baseSchema = z.object({
   seasonName: z
     .string('所属季名称不能为空')
     .trim()
-    .min(1, '所属季名称不能为空'),
+    .max(25, '所属季名称不能超过25个字符')
+    .transform(val => (val === '' ? undefined : val))
+    .optional(),
   remark: z.string().trim().min(1, '番剧简评不能为空'),
   description: z.string().trim().min(1, '番剧简介不能为空'),
   cover: z.string().trim().min(1, '番剧封面不能为空'),

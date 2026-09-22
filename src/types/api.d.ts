@@ -143,7 +143,7 @@ export interface paths {
             director: string;
             cv: string;
             season: number;
-            seasonName?: string;
+            seasonName?: string | null;
             tags: number[];
           };
         };
@@ -249,7 +249,7 @@ export interface paths {
             director?: string;
             cv?: string;
             season?: number;
-            seasonName?: string;
+            seasonName?: string | null;
             tags?: number[];
           };
         };
@@ -1265,6 +1265,45 @@ export interface paths {
     };
     put?: never;
     post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/admin/search/reindex': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
     delete?: never;
     options?: never;
     head?: never;
@@ -2598,6 +2637,7 @@ export interface paths {
               code: 200;
               message: string;
               data: {
+                id: number;
                 name: string;
                 highlightName: string;
               }[];
