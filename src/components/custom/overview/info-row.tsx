@@ -24,7 +24,7 @@ export const InfoRow = memo(function InfoRow({
   highlight?: Highlight;
 }) {
   return (
-    <div className='flex items-center justify-between gap-3 border-b border-border/50 py-2.5 transition-colors last:border-0 hover:bg-background/40'>
+    <div className='flex items-center justify-between gap-3 border-b border-border/50 py-2.5 last:border-0'>
       <div className='flex items-center gap-2 text-sm'>
         {Icon && <Icon className='size-3.5 shrink-0 text-muted' />}
         <span className='text-muted'>{label}</span>
