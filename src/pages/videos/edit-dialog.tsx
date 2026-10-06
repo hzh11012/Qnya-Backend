@@ -35,7 +35,7 @@ const VideoEditDialog: React.FC<EditDialogProps> = ({
     }}
     transformSubmit={values => ({
       ...values,
-      animeId: Number(values.animeId),
+      // animeId 为 UUID 字符串，不能转数字（转出 NaN 会被序列化成 null）
       id: row.id
     })}
     formProps={{ animeOptions }}

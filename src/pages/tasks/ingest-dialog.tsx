@@ -19,7 +19,7 @@ import {
 import { Folder, FolderPlus, X } from 'lucide-react';
 
 interface IngestDialogProps {
-  id: number;
+  id: string;
   onRefresh: () => void;
 }
 

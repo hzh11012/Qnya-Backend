@@ -29,7 +29,7 @@ const useAnimePage = createTablePage({
     types: filterValues(columnFilters, 'type') as AnimeListParams['types'],
     months: filterValues(columnFilters, 'month') as AnimeListParams['months'],
     years: filterValues(columnFilters, 'year') as AnimeListParams['years'],
-    tags: filterValues(columnFilters, 'tags').map(Number)
+    tags: filterValues(columnFilters, 'tags')
   }),
   getPageData: res => ({ items: res.items, total: res.total })
 });

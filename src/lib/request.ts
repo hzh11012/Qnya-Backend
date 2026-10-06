@@ -28,6 +28,9 @@ class AxiosRequest {
       withCredentials: true,
       xsrfCookieName: 'XSRF-TOKEN',
       xsrfHeaderName: 'X-XSRF-TOKEN',
+      // 数组参数序列化为重复 key（a=1&a=2），
+      // axios 默认的 a[]=1 格式 Fastify 无法识别为数组
+      paramsSerializer: { indexes: null },
       ...config
     });
 

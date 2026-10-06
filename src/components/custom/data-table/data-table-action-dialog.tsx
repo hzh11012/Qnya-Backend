@@ -12,7 +12,7 @@ import {
 import { Info } from 'lucide-react';
 
 interface ActionDialogProps {
-  id: number;
+  id: string;
   onRefresh: () => void;
 }
 

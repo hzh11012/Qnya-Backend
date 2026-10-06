@@ -6,7 +6,7 @@ import {
 } from '@/components/custom/data-table/data-table-action-dialog';
 
 interface UseActionDialogOptions {
-  api: (params: { id: number }) => Promise<void>;
+  api: (params: { id: string }) => Promise<void>;
   text: string;
   title: string;
   description: string;

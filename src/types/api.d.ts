@@ -13,16 +13,16 @@ export interface paths {
     };
     get: {
       parameters: {
-        query?: {
+        query: {
           page?: number;
           pageSize?: number;
           keyword?: string;
           sort?: 'createdAt';
           order?: 'asc' | 'desc';
-          status?: ('draft' | 'upcoming' | 'airing' | 'completed')[];
-          types?: ('movie' | 'japanese' | 'american' | 'chinese' | 'adult')[];
-          tags?: number[];
-          years?: (
+          status: ('draft' | 'upcoming' | 'airing' | 'completed')[];
+          types: ('movie' | 'japanese' | 'american' | 'chinese' | 'adult')[];
+          tags: string[];
+          years: (
             | '1990'
             | '1991'
             | '1992'
@@ -62,7 +62,7 @@ export interface paths {
             | '2026'
             | '2027'
           )[];
-          months?: ('january' | 'april' | 'july' | 'october')[];
+          months: ('january' | 'april' | 'july' | 'october')[];
         };
         header?: never;
         path?: never;
@@ -82,8 +82,10 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
-                  seriesId: number;
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  seriesId: string;
                   name: string;
                   description: string;
                   remark: string;
@@ -103,7 +105,8 @@ export interface paths {
                   avgScore: number;
                   scoreCount: number;
                   tags: {
-                    id: number;
+                    /** Format: uuid */
+                    id: string;
                     name: string;
                   }[];
                   /** Format: date-time */
@@ -127,7 +130,8 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
-            seriesId: number;
+            /** Format: uuid */
+            seriesId: string;
             name: string;
             description: string;
             remark: string;
@@ -144,7 +148,7 @@ export interface paths {
             cv: string;
             season: number;
             seasonName?: string | null;
-            tags: number[];
+            tags: string[];
           };
         };
       };
@@ -226,14 +230,15 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
       requestBody: {
         content: {
           'application/json': {
-            seriesId?: number;
+            /** Format: uuid */
+            seriesId?: string;
             name?: string;
             description?: string;
             remark?: string;
@@ -250,7 +255,7 @@ export interface paths {
             cv?: string;
             season?: number;
             seasonName?: string | null;
-            tags?: number[];
+            tags?: string[];
           };
         };
       };
@@ -276,7 +281,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -336,9 +341,12 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
-                  userId: number;
-                  animeId: number;
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  userId: string;
+                  /** Format: uuid */
+                  animeId: string;
                   user: {
                     name: string;
                   };
@@ -379,7 +387,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -440,7 +448,8 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   user: {
                     name: string;
                   };
@@ -486,7 +495,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -582,13 +591,15 @@ export interface paths {
                   feedbacks: number;
                 };
                 topCollections: {
-                  animeId: number;
+                  /** Format: uuid */
+                  animeId: string;
                   animeName: string;
                   cover: string;
                   count: number;
                 }[];
                 recentFeedbacks: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   animeName: string;
                   type: string;
                   content: string;
@@ -596,7 +607,8 @@ export interface paths {
                   createdAt: string;
                 }[];
                 recentScores: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   userName: string;
                   animeName: string;
                   score: number;
@@ -639,12 +651,12 @@ export interface paths {
     };
     get: {
       parameters: {
-        query?: {
+        query: {
           page?: number;
           pageSize?: number;
           keyword?: string;
-          type?: ('consultation' | 'suggestion' | 'complaint' | 'other')[];
-          status?: ('pending' | 'processing' | 'done')[];
+          type: ('consultation' | 'suggestion' | 'complaint' | 'other')[];
+          status: ('pending' | 'processing' | 'done')[];
           sort?: 'createdAt';
           order?: 'asc' | 'desc';
         };
@@ -666,9 +678,12 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
-                  userId: number;
-                  animeId: number;
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  userId: string;
+                  /** Format: uuid */
+                  animeId: string;
                   anime: {
                     name: string;
                     cover: string;
@@ -712,7 +727,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -749,7 +764,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -855,7 +870,8 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   user: {
                     name: string;
                   };
@@ -897,7 +913,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -1059,9 +1075,12 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
-                  userId: number;
-                  animeId: number;
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  userId: string;
+                  /** Format: uuid */
+                  animeId: string;
                   score: number;
                   content: string;
                   status: boolean;
@@ -1103,7 +1122,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -1136,7 +1155,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -1344,10 +1363,12 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   name: string;
                   anime: {
-                    id: number;
+                    /** Format: uuid */
+                    id: string;
                     name: string;
                     season: number;
                   }[];
@@ -1413,7 +1434,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -1635,7 +1656,8 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   name: string;
                   /** Format: date-time */
                   createdAt: string;
@@ -1733,7 +1755,8 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   filename: string;
                   fileSize: number;
                   /** @enum {string} */
@@ -1771,7 +1794,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -1816,7 +1839,8 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
-            id: number;
+            /** Format: uuid */
+            id: string;
             path: string;
           };
         };
@@ -1878,13 +1902,15 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   name: string;
                   description: string;
                   status: boolean;
                   cover: string;
                   anime: {
-                    id: number;
+                    /** Format: uuid */
+                    id: string;
                     name: string;
                   }[];
                   /** Format: date-time */
@@ -1912,7 +1938,7 @@ export interface paths {
             description: string;
             status: boolean;
             cover: string;
-            animeIds?: number[];
+            animeIds?: string[];
           };
         };
       };
@@ -1951,7 +1977,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -1962,7 +1988,7 @@ export interface paths {
             description?: string;
             status?: boolean;
             cover?: string;
-            animeIds?: number[];
+            animeIds?: string[];
           };
         };
       };
@@ -1988,7 +2014,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -2174,7 +2200,8 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   name: string;
                   email: string;
                   /** @enum {string} */
@@ -2212,7 +2239,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -2284,8 +2311,10 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
-                  animeId: number;
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  animeId: string;
                   anime: {
                     name: string;
                     cover: string;
@@ -2315,7 +2344,8 @@ export interface paths {
       requestBody: {
         content: {
           'application/json': {
-            animeId: number;
+            /** Format: uuid */
+            animeId: string;
             title: string;
             episode: number;
             url: string;
@@ -2357,14 +2387,15 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
       requestBody: {
         content: {
           'application/json': {
-            animeId?: number;
+            /** Format: uuid */
+            animeId?: string;
             title?: string;
             episode?: number;
             url?: string;
@@ -2393,7 +2424,7 @@ export interface paths {
         query?: never;
         header?: never;
         path: {
-          id: number;
+          id: string;
         };
         cookie?: never;
       };
@@ -2446,7 +2477,8 @@ export interface paths {
               code: 200;
               message: string;
               data: {
-                id: number;
+                /** Format: uuid */
+                id: string;
                 /** Format: email */
                 email: string;
                 name: string;
@@ -2550,7 +2582,8 @@ export interface paths {
               code: 200;
               message: string;
               data: {
-                id: number;
+                /** Format: uuid */
+                id: string;
                 /** Format: email */
                 email: string;
                 name: string;
@@ -2637,7 +2670,8 @@ export interface paths {
               code: 200;
               message: string;
               data: {
-                id: number;
+                /** Format: uuid */
+                id: string;
                 name: string;
                 highlightName: string;
               }[];
@@ -2686,7 +2720,8 @@ export interface paths {
               message: string;
               data: {
                 items: {
-                  id: number;
+                  /** Format: uuid */
+                  id: string;
                   name: string;
                   description: string;
                   cover: string;
@@ -2700,14 +2735,141 @@ export interface paths {
                   avgScore: number;
                   scoreCount: number;
                   videoCount: number;
-                  videoId: number | null;
+                  /** Format: uuid */
+                  videoId: string | null;
                   highlightName: string;
                   videos: {
-                    id: number;
+                    /** Format: uuid */
+                    id: string;
                     episode: number;
                   }[];
                 }[];
                 total: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/topics/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          pageSize?: number;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                items: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                  description: string;
+                  cover: string;
+                  animeCount: number;
+                }[];
+                total: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/topics/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                description: string;
+                cover: string;
+                anime: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                  description: string;
+                  cover: string;
+                  status: string;
+                  type: string;
+                  director: string;
+                  cv: string;
+                  year: number;
+                  month: string;
+                  tags: string[];
+                  avgScore: number;
+                  scoreCount: number;
+                  videoCount: number;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  videos: {
+                    /** Format: uuid */
+                    id: string;
+                    episode: number;
+                  }[];
+                }[];
               };
             };
           };

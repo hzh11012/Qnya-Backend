@@ -32,7 +32,6 @@ const VideoAddDialog: React.FC<AddDialogProps> = ({
       episode: 1,
       url: ''
     }}
-    transformSubmit={values => ({ ...values, animeId: Number(values.animeId) })}
     formProps={{ animeOptions }}
   />
 );

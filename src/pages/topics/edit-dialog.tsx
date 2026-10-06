@@ -42,7 +42,7 @@ const TopicEditDialog: React.FC<EditDialogProps> = ({
       description: values.description,
       status: values.status === 'true',
       cover: values.cover,
-      animeIds: values.animeIds?.map(Number)
+      animeIds: values.animeIds
     })}
     formProps={{ animeOption }}
   />
