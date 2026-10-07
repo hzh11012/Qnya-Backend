@@ -159,7 +159,11 @@ const RecentScores = ({ stats, loading }: OverviewSectionProps) => (
         {(stats?.recentScores ?? []).slice(0, 10).map(item => (
           <TimelineItem
             key={item.id}
-            dot='bg-yellow-400/80 ring-yellow-400/10'
+            dot={
+              item.status
+                ? 'bg-yellow-400/80 ring-yellow-400/10'
+                : 'bg-muted ring-border'
+            }
           >
             <div className='flex items-center gap-2'>
               <div className='flex items-center gap-0.5'>
@@ -168,8 +172,7 @@ const RecentScores = ({ stats, loading }: OverviewSectionProps) => (
                     key={i}
                     className={cn(
                       'size-3',
-                      i < Math.round(item.score / 2) &&
-                        'fill-yellow-400 text-yellow-400'
+                      i < item.score && 'fill-yellow-400 text-yellow-400'
                     )}
                   />
                 ))}
@@ -177,6 +180,11 @@ const RecentScores = ({ stats, loading }: OverviewSectionProps) => (
               <span className='font-display text-[10px] tabular-nums text-muted'>
                 {item.score}
               </span>
+              {!item.status && (
+                <span className='rounded-sm bg-yellow-400/15 px-1 text-[10px] leading-4 text-yellow-500 dark:text-yellow-400'>
+                  待审核
+                </span>
+              )}
               <span className='ml-auto truncate text-xs font-medium'>
                 {item.animeName}
               </span>

@@ -613,6 +613,7 @@ export interface paths {
                   animeName: string;
                   score: number;
                   content: string;
+                  status: boolean;
                   /** Format: date-time */
                   createdAt: string;
                 }[];
@@ -2641,6 +2642,449 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/client/anime/hot': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          pageSize?: number;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                items: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                  description: string;
+                  cover: string;
+                  status: string;
+                  type: string;
+                  director: string;
+                  cv: string;
+                  year: number;
+                  month: string;
+                  tags: string[];
+                  avgScore: number;
+                  scoreCount: number;
+                  videoCount: number;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  videos: {
+                    /** Format: uuid */
+                    id: string;
+                    episode: number;
+                  }[];
+                }[];
+                total: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/play/{videoId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          videoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                /** Format: uuid */
+                animeId: string;
+                /** Format: uuid */
+                videoId: string;
+                name: string;
+                description: string;
+                cover: string;
+                /** @enum {string} */
+                status: 'upcoming' | 'airing' | 'completed';
+                avgScore: number;
+                scoreCount: number;
+                playCount: number;
+                collectionCount: number;
+                videoCount: number;
+                video: {
+                  /** Format: uuid */
+                  id: string;
+                  url: string;
+                  episode: number;
+                };
+                videos: {
+                  /** Format: uuid */
+                  id: string;
+                  episode: number;
+                  title: string;
+                }[];
+                time: number;
+                isCollected: boolean;
+                isRating: boolean;
+                series: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                  season: number;
+                  seasonName: string | null;
+                  cover: string;
+                  banner: string;
+                  /** @enum {string} */
+                  status: 'upcoming' | 'airing' | 'completed';
+                  videoCount: number;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  playCount: number;
+                  collectionCount: number;
+                  avgScore: number;
+                }[];
+                recommendations: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                  season: number;
+                  seasonName: string | null;
+                  cover: string;
+                  banner: string;
+                  /** @enum {string} */
+                  status: 'upcoming' | 'airing' | 'completed';
+                  videoCount: number;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  playCount: number;
+                  collectionCount: number;
+                  avgScore: number;
+                }[];
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/play/{videoId}/views': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          videoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/play/{videoId}/danmakus': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          videoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                items: {
+                  text: string;
+                  color: string;
+                  /** @enum {string} */
+                  mode: 'scroll' | 'top' | 'bottom';
+                  time: number;
+                }[];
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          videoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            text: string;
+            color: string;
+            /**
+             * @default scroll
+             * @enum {string}
+             */
+            mode?: 'scroll' | 'top' | 'bottom';
+            time: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/play/{videoId}/history': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          videoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            time: number;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/play/{videoId}/collection': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          videoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                collected: boolean;
+              };
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/play/{videoId}/rating': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          videoId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            score: number;
+            content: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/client/search/suggestions': {
     parameters: {
       query?: never;
@@ -2737,12 +3181,12 @@ export interface paths {
                   videoCount: number;
                   /** Format: uuid */
                   videoId: string | null;
-                  highlightName: string;
                   videos: {
                     /** Format: uuid */
                     id: string;
                     episode: number;
                   }[];
+                  highlightName: string;
                 }[];
                 total: number;
               };
