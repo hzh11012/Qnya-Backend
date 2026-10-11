@@ -161,8 +161,8 @@ const RecentScores = ({ stats, loading }: OverviewSectionProps) => (
             key={item.id}
             dot={
               item.status
-                ? 'bg-yellow-400/80 ring-yellow-400/10'
-                : 'bg-muted ring-border'
+                ? 'bg-emerald-500/80 ring-emerald-500/10'
+                : 'bg-yellow-400/80 ring-yellow-400/10'
             }
           >
             <div className='flex items-center gap-2'>

@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
 import getColumns from '@/pages/scores/columns';
@@ -47,7 +48,19 @@ const Index: React.FC = () => {
     setColumnFilters
   } = useScorePage();
 
-  const columns = useMemo(() => getColumns(refresh), [refresh]);
+  const queryClient = useQueryClient();
+
+  // 表刷新时同步失效概览统计：审核/删除评分后，概览的
+  // “最新评分”“待处理反馈”不再等到 30s 缓存过期才更新
+  const refreshAndInvalidateOverview = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    refresh();
+  }, [queryClient, refresh]);
+
+  const columns = useMemo(
+    () => getColumns(refreshAndInvalidateOverview),
+    [refreshAndInvalidateOverview]
+  );
 
   return (
     <div className='flex h-full min-h-0 flex-col gap-6'>
