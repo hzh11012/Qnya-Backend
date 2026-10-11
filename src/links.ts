@@ -16,6 +16,7 @@ import {
   Star,
   Store,
   Tags,
+  ThumbsUp,
   Timer,
   Tv,
   UserCircle,
@@ -96,6 +97,12 @@ const links: NavItem[] = [
         icon: Sparkles,
         url: '/topics',
         lazy: createLazyComponent(() => import('@/pages/topics/index'))
+      },
+      {
+        title: '猜你喜欢',
+        icon: ThumbsUp,
+        url: '/recommend',
+        lazy: createLazyComponent(() => import('@/pages/recommend/index'))
       }
     ]
   },
