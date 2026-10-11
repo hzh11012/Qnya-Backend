@@ -9,6 +9,7 @@ import { useSettingsInfo } from './use-settings-info';
 import ReindexButton from './reindex-button';
 import {
   DatabaseCard,
+  MeiliCard,
   QbitCard,
   ResourceCard,
   SecurityCard,
@@ -32,10 +33,11 @@ const CARDS: {
   { key: 'session', Component: SessionCard },
   { key: 'security', Component: SecurityCard },
   { key: 'resource', Component: ResourceCard },
-  { key: 'tmdb', Component: TmdbCard }
+  { key: 'tmdb', Component: TmdbCard },
+  { key: 'meilisearch', Component: MeiliCard }
 ];
 
-const SKELETON_ROWS = [5, 3, 4, 3, 3, 2, 1, 2];
+const SKELETON_ROWS = [5, 3, 4, 3, 3, 2, 1, 2, 4];
 
 const Settings = () => {
   const queryClient = useQueryClient();

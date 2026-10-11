@@ -628,6 +628,14 @@ export interface paths {
                     status: 'ok' | 'error';
                     latency?: number;
                   };
+                  meilisearch: {
+                    /** @enum {string} */
+                    status: 'ok' | 'error';
+                    latency?: number;
+                    documents?: number;
+                    indexing?: boolean;
+                    inSync?: boolean;
+                  };
                 };
               };
             };
@@ -1050,11 +1058,11 @@ export interface paths {
     };
     get: {
       parameters: {
-        query?: {
+        query: {
           page?: number;
           pageSize?: number;
           keyword?: string;
-          status?: ('true' | 'false')[];
+          status: ('true' | 'false')[];
           sort?: 'createdAt';
           order?: 'asc' | 'desc';
         };
@@ -1570,6 +1578,13 @@ export interface paths {
                   imageDomain: string;
                   apiDomain: string;
                 };
+                meilisearch: {
+                  host: string;
+                  /** @enum {string} */
+                  status: 'ok' | 'error';
+                  documents: number;
+                  inSync: boolean;
+                };
               };
             };
           };
@@ -1730,11 +1745,11 @@ export interface paths {
     };
     get: {
       parameters: {
-        query?: {
+        query: {
           page?: number;
           pageSize?: number;
           keyword?: string;
-          status?: ('pending' | 'completed')[];
+          status: ('pending' | 'completed')[];
           sort?: 'createdAt' | 'fileSize';
           order?: 'asc' | 'desc';
         };
@@ -1877,11 +1892,11 @@ export interface paths {
     };
     get: {
       parameters: {
-        query?: {
+        query: {
           page?: number;
           pageSize?: number;
           keyword?: string;
-          status?: ('true' | 'false')[];
+          status: ('true' | 'false')[];
           sort?: 'createdAt';
           order?: 'asc' | 'desc';
         };
@@ -2174,12 +2189,12 @@ export interface paths {
     };
     get: {
       parameters: {
-        query?: {
+        query: {
           page?: number;
           pageSize?: number;
           keyword?: string;
-          role?: ('admin' | 'premium' | 'user' | 'guest')[];
-          status?: ('true' | 'false')[];
+          role: ('admin' | 'premium' | 'user' | 'guest')[];
+          status: ('true' | 'false')[];
           sort?: 'createdAt';
           order?: 'asc' | 'desc';
         };
@@ -2486,6 +2501,7 @@ export interface paths {
                 /** @enum {string} */
                 role: 'admin' | 'premium' | 'user' | 'guest';
                 avatar: string | null;
+                r18: boolean;
               };
             };
           };
@@ -2497,7 +2513,48 @@ export interface paths {
     delete?: never;
     options?: never;
     head?: never;
-    patch?: never;
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            name?: string;
+            avatar?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                /** Format: uuid */
+                id: string;
+                /** Format: email */
+                email: string;
+                name: string;
+                /** @enum {string} */
+                role: 'admin' | 'premium' | 'user' | 'guest';
+                avatar: string | null;
+                r18: boolean;
+              };
+            };
+          };
+        };
+      };
+    };
     trace?: never;
   };
   '/api/auth/send-code': {
@@ -2591,6 +2648,7 @@ export interface paths {
                 /** @enum {string} */
                 role: 'admin' | 'premium' | 'user' | 'guest';
                 avatar: string | null;
+                r18: boolean;
               };
             };
           };
@@ -2677,6 +2735,7 @@ export interface paths {
                   id: string;
                   name: string;
                   description: string;
+                  remark: string;
                   cover: string;
                   status: string;
                   type: string;
@@ -2695,6 +2754,244 @@ export interface paths {
                     id: string;
                     episode: number;
                   }[];
+                }[];
+                total: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/feedback/{animeId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          animeId: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            type: 'consultation' | 'suggestion' | 'complaint' | 'other';
+            content: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/home/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                collections: {
+                  /** Format: uuid */
+                  animeId: string;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  name: string;
+                  cover: string | null;
+                  remark: string | null;
+                  /** @enum {string} */
+                  status: 'upcoming' | 'airing' | 'completed';
+                  videoCount: number;
+                  episode: number | null;
+                  time: number | null;
+                }[];
+                animeTypes: {
+                  /** @enum {string} */
+                  type: 'movie' | 'japanese' | 'american' | 'chinese' | 'adult';
+                  items: {
+                    /** Format: uuid */
+                    animeId: string;
+                    /** Format: uuid */
+                    videoId: string | null;
+                    name: string;
+                    cover: string | null;
+                    remark: string | null;
+                    /** @enum {string} */
+                    status: 'upcoming' | 'airing' | 'completed';
+                    videoCount: number;
+                  }[];
+                }[];
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/mine/collections': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          pageSize?: number;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                items: {
+                  /** Format: uuid */
+                  animeId: string;
+                  name: string;
+                  cover: string;
+                  remark: string;
+                  /** @enum {string} */
+                  status: 'upcoming' | 'airing' | 'completed';
+                  videoCount: number;
+                  avgScore: number;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  /** Format: date-time */
+                  collectedAt: string;
+                }[];
+                total: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/mine/histories': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          pageSize?: number;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                items: {
+                  /** Format: uuid */
+                  animeId: string;
+                  name: string;
+                  banner: string;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  episode: number | null;
+                  videoTitle: string | null;
+                  time: number;
+                  /** Format: date-time */
+                  watchedAt: string;
                 }[];
                 total: number;
               };
@@ -2766,6 +3063,11 @@ export interface paths {
                   episode: number;
                   title: string;
                 }[];
+                history: {
+                  /** Format: uuid */
+                  videoId: string;
+                  time: number;
+                } | null;
                 time: number;
                 isCollected: boolean;
                 isRating: boolean;
@@ -3168,6 +3470,7 @@ export interface paths {
                   id: string;
                   name: string;
                   description: string;
+                  remark: string;
                   cover: string;
                   status: string;
                   type: string;

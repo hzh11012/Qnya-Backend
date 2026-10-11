@@ -14,9 +14,11 @@ import {
   Image,
   KeyRound,
   Link,
+  ListChecks,
   Lock,
   Mail,
   PlugZap,
+  Search,
   Server,
   ShieldAlert,
   ShieldCheck,
@@ -234,6 +236,40 @@ export const TmdbCard = ({ data }: { data: SettingsInfoResponse['tmdb'] }) => (
         icon={Globe}
         label='API 域名'
         value={<TruncatedValue value={data.apiDomain} />}
+      />
+    </InfoList>
+  </OverviewCard>
+);
+
+export const MeiliCard = ({
+  data
+}: {
+  data: SettingsInfoResponse['meilisearch'];
+}) => (
+  <OverviewCard className='h-full'>
+    <CardTitle icon={Search}>Meilisearch 搜索</CardTitle>
+    <InfoList>
+      <InfoRow
+        icon={PlugZap}
+        label='连接地址'
+        value={<TruncatedValue value={data.host} />}
+      />
+      <InfoRow
+        icon={ShieldCheck}
+        label='服务状态'
+        value={data.status === 'ok' ? '正常' : '异常'}
+        highlight={data.status === 'ok' ? 'success' : 'danger'}
+      />
+      <InfoRow
+        icon={Database}
+        label='索引文档数'
+        value={data.documents.toLocaleString()}
+      />
+      <InfoRow
+        icon={ListChecks}
+        label='索引同步'
+        value={data.inSync ? '已同步' : '不同步'}
+        highlight={data.inSync ? 'success' : 'warning'}
       />
     </InfoList>
   </OverviewCard>

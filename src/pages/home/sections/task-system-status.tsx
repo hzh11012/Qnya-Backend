@@ -4,7 +4,17 @@ import { OverviewCard, SectionHeader } from '@/components/custom/overview/card';
 import { RingProgress } from '@/pages/home/components/charts';
 import { StatusDot } from '@/pages/home/components/status-dot';
 import { Skeleton } from '@/components/ui/skeleton';
-import { CheckCircle2, Circle, Database, Server, Shield } from 'lucide-react';
+import { reindexSearchIndex } from '@/apis/search';
+import { useMutation } from '@tanstack/react-query';
+import {
+  CheckCircle2,
+  Circle,
+  Database,
+  RefreshCw,
+  Search,
+  Server,
+  Shield
+} from 'lucide-react';
 
 interface TaskBadge {
   key: 'pending' | 'completed';
@@ -30,7 +40,8 @@ const TASK_BADGES: TaskBadge[] = [
 
 const SYSTEM_SERVICES = [
   { key: 'database', label: '数据库', icon: Database },
-  { key: 'redis', label: 'Redis 缓存', icon: Server }
+  { key: 'redis', label: 'Redis 缓存', icon: Server },
+  { key: 'meilisearch', label: 'Meilisearch', icon: Search }
 ] as const;
 
 /** 任务状态：环形进度 + 计数块 */
@@ -97,7 +108,26 @@ const TaskStatus = ({ stats, loading }: OverviewSectionProps) => {
   );
 };
 
-/** 系统状态：脉冲点 + 延迟芯片 */
+/** 索引重建按钮：小图标，请求期间旋转，防止重复触发 */
+const ReindexIconButton = () => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: reindexSearchIndex
+  });
+
+  return (
+    <button
+      type='button'
+      title='重建搜索索引'
+      disabled={isPending}
+      onClick={() => mutate()}
+      className='flex size-6 shrink-0 items-center justify-center rounded-md text-muted transition-colors hover:bg-background/60 hover:text-primary disabled:opacity-50'
+    >
+      <RefreshCw className={`size-3 ${isPending ? 'animate-spin' : ''}`} />
+    </button>
+  );
+};
+
+/** 系统状态：脉冲点 + 延迟芯片（Meilisearch 额外展示文档数/同步状态/重建入口） */
 const SystemStatus = ({ stats, loading }: OverviewSectionProps) => (
   <OverviewCard className='h-full'>
     <div className='flex items-center justify-between'>
@@ -121,9 +151,11 @@ const SystemStatus = ({ stats, loading }: OverviewSectionProps) => (
         ))}
       </div>
     ) : (
-      <div className='grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2'>
+      <div className='grid flex-1 grid-cols-1 gap-3 sm:grid-cols-3'>
         {SYSTEM_SERVICES.map(({ key, label, icon: Icon }) => {
           const sys = stats?.system[key];
+          const meili =
+            key === 'meilisearch' ? stats?.system.meilisearch : undefined;
           return (
             <div
               key={key}
@@ -143,7 +175,32 @@ const SystemStatus = ({ stats, loading }: OverviewSectionProps) => (
                 <span className='font-display rounded-md bg-background/60 px-1.5 py-0.5 text-xs tabular-nums'>
                   {sys?.latency !== undefined ? `${sys.latency}ms` : '—'}
                 </span>
+                {meili?.indexing && (
+                  <span className='rounded-md bg-blue-100 px-1.5 py-0.5 text-[10px] font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300'>
+                    索引中
+                  </span>
+                )}
               </div>
+              {meili && (
+                <div className='flex items-center gap-2'>
+                  <span className='font-display text-[10px] uppercase tracking-[0.2em] text-muted'>
+                    docs
+                  </span>
+                  <span className='font-display rounded-md bg-background/60 px-1.5 py-0.5 text-xs tabular-nums'>
+                    {meili.documents !== undefined
+                      ? meili.documents.toLocaleString()
+                      : '—'}
+                  </span>
+                  {meili.status === 'ok' && meili.inSync === false && (
+                    <span className='rounded-md bg-yellow-100 px-1.5 py-0.5 text-[10px] font-medium text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300'>
+                      索引不同步
+                    </span>
+                  )}
+                  <div className='ml-auto'>
+                    <ReindexIconButton />
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
