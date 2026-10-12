@@ -2585,7 +2585,6 @@ export interface paths {
                 /** @enum {string} */
                 role: 'admin' | 'premium' | 'user' | 'guest';
                 avatar: string | null;
-                r18: boolean;
               };
             };
           };
@@ -2632,7 +2631,6 @@ export interface paths {
                 /** @enum {string} */
                 role: 'admin' | 'premium' | 'user' | 'guest';
                 avatar: string | null;
-                r18: boolean;
               };
             };
           };
@@ -2732,7 +2730,6 @@ export interface paths {
                 /** @enum {string} */
                 role: 'admin' | 'premium' | 'user' | 'guest';
                 avatar: string | null;
-                r18: boolean;
               };
             };
           };
