@@ -6,8 +6,6 @@ Qnya 番剧平台管理后台，仅限 `admin` 角色访问，支持移动端自
 
 ## 界面预览
 
-截图位于 [`docs/screenshots/`](docs/screenshots/)，由前台仓库的 `pnpm screenshot`（Qnya-Frontend `scripts/screenshot.cjs`）统一生成。
-
 |                                             |                                             |
 | ------------------------------------------- | ------------------------------------------- |
 | ![登录](docs/screenshots/login.png)         | ![概览](docs/screenshots/dashboard.png)     |
