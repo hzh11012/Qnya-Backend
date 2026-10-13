@@ -4,15 +4,16 @@
 
 Qnya 番剧平台管理后台，仅限 `admin` 角色访问，支持移动端自适应。
 
-## 预览
+## 界面预览
 
-![登录](docs/preview-login.png)
+截图位于 [`docs/screenshots/`](docs/screenshots/)，由前台仓库的 `pnpm screenshot`（Qnya-Frontend `scripts/screenshot.cjs`）统一生成。
 
-![概览](docs/preview-home.png)
-
-![MCP](docs/preview-mcp.png)
-
-![TMDB](docs/preview-tmdb.png)
+|                                             |                                             |
+| ------------------------------------------- | ------------------------------------------- |
+| ![登录](docs/screenshots/login.png)         | ![概览](docs/screenshots/dashboard.png)     |
+| ![番剧管理](docs/screenshots/anime.png)     | ![账户管理](docs/screenshots/users.png)     |
+| ![评分管理](docs/screenshots/scores.png)    | ![专题推荐](docs/screenshots/topics.png)    |
+| ![猜你喜欢](docs/screenshots/recommend.png) | ![问题反馈](docs/screenshots/feedbacks.png) |
 
 ## 功能模块
 
