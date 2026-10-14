@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   DataTableActionDialog,
   type ActionDialogProps
@@ -29,11 +29,14 @@ function createActionDialog({
     onRefresh
   }) => {
     const [open, setOpen] = useState(false);
+    const queryClient = useQueryClient();
 
     const { mutate, isPending } = useMutation({
       mutationFn: api,
       onSuccess() {
         setOpen(false);
+        // 删除等操作可能影响下拉选项数据源，统一失效 options 缓存
+        void queryClient.invalidateQueries({ queryKey: ['options'] });
         onRefresh();
         onSuccessExtra?.();
       }

@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import {
   useForm,
@@ -63,6 +63,7 @@ function createFormDialog<TValues extends FieldValues>({
     formProps
   }) => {
     const [open, setOpen] = useState(false);
+    const queryClient = useQueryClient();
 
     const form = useForm<TValues>({
       resolver: zodResolver(schema) as Resolver<TValues>,
@@ -78,6 +79,9 @@ function createFormDialog<TValues extends FieldValues>({
         if (defaultValues) {
           form.reset();
         }
+        // 新增/编辑可能改变下拉选项数据源（如新增系列后番剧表单的系列下拉），
+        // 统一失效 options 缓存，避免共享缓存（staleTime 5min）导致选项过期
+        void queryClient.invalidateQueries({ queryKey: ['options'] });
         if (onSuccessDelay) {
           setTimeout(onRefresh, onSuccessDelay);
         } else {

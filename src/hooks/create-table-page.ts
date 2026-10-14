@@ -94,13 +94,15 @@ function createTablePage<TParams extends Record<string, any>, TRes>({
       setColumnFilters
     } = state;
 
-    // 卸载时重置 UI 状态，避免下次进入残留
+    // 卸载时重置 UI 状态，避免下次进入残留（keyword 也要清，
+    // 否则搜索框重新挂载后为空但数据仍按旧关键词筛选，表里不一致）
     useEffect(
       () => () => {
         resetPagination();
         setColumnFilters([]);
+        setKeyword('');
       },
-      [resetPagination, setColumnFilters]
+      [resetPagination, setColumnFilters, setKeyword]
     );
 
     // 参数由 zustand UI 状态派生，变化即自动重新请求
