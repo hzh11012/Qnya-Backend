@@ -166,7 +166,7 @@ const IngestDialog: React.FC<IngestDialogProps> = ({ id, onRefresh }) => {
             <Input
               placeholder='目录名'
               value={newFolderName}
-              maxLength={25}
+              maxLength={50}
               onChange={e => setNewFolderName(e.target.value)}
               onKeyDown={e => {
                 if (e.key === 'Enter') handleConfirmNewFolder();

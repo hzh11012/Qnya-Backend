@@ -30,7 +30,8 @@ const columns: ColumnDef<ResourcesListItem>[] = [
     header: '资源大小',
     cell: ({ row }) => {
       const size = row.original.size;
-      return formatFileSize(size, 'kb');
+      // 上游 api.animes.garden 的 size 为字节数，直接格式化
+      return formatFileSize(size);
     }
   },
   {
