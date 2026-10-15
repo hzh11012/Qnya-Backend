@@ -137,6 +137,21 @@ function createTablePage<TParams extends Record<string, any>, TRes>({
       setKeyword(kw);
     };
 
+    // 删除等操作导致当前页数据被清空时，自动回退到上一页
+    // （连续删会逐页回退，直到遇到非空页或回到第一页；第一页为空属正常空态，不处理）
+    useEffect(() => {
+      if (
+        !isFetching &&
+        !error &&
+        res &&
+        pageData &&
+        !pageData.items.length &&
+        state.page > 1
+      ) {
+        setPagination(prev => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
+      }
+    }, [isFetching, error, res, pageData, state.page, setPagination]);
+
     return {
       data: pageData?.items ?? [],
       total: pageData?.total ?? 0,
