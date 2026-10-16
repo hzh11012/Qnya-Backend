@@ -169,6 +169,7 @@ const DataTable = <TData, TValue>({
     onPaginationChange,
     onSortingChange,
     getCoreRowModel: getCoreRowModel(),
+    getRowId: row => String(row.original.id),
     initialState: {
       columnPinning: {
         right: ['actions']
