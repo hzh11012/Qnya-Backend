@@ -51,7 +51,7 @@ interface HasMorePaginationConfig {
 type PaginationConfig = TotalPaginationConfig | HasMorePaginationConfig;
 
 /** 基础表格参数 */
-interface DataTableBaseProps<TData, TValue> {
+interface DataTableBaseProps<TData extends { id: string | number }, TValue> {
   /** 列定义 */
   columns: ColumnDef<TData, TValue>[];
   /** 表格数据 */
@@ -98,7 +98,10 @@ interface DataTableSlotProps {
   toolbar?: ReactNode;
 }
 
-type DataTableProps<TData, TValue> = DataTableBaseProps<TData, TValue> &
+type DataTableProps<
+  TData extends { id: string | number },
+  TValue
+> = DataTableBaseProps<TData, TValue> &
   DataTableOptionalProps &
   DataTableStyleProps &
   DataTableSlotProps;
@@ -132,7 +135,7 @@ const getPaginationInfo = (
   };
 };
 
-const DataTable = <TData, TValue>({
+const DataTable = <TData extends { id: string | number }, TValue>({
   columns,
   data,
   loading,
@@ -169,7 +172,7 @@ const DataTable = <TData, TValue>({
     onPaginationChange,
     onSortingChange,
     getCoreRowModel: getCoreRowModel(),
-    getRowId: row => String(row.original.id),
+    getRowId: row => String(row.id),
     initialState: {
       columnPinning: {
         right: ['actions']
