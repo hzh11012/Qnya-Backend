@@ -54,10 +54,13 @@ const FormCombobox = <TFieldValues extends FieldValues>({
                 <Button
                   variant='ghost'
                   role='combobox'
-                  className='w-full justify-between font-normal border-border bg-transparent text-foreground py-2 pr-2 pl-2.5 active:translate-y-0'
+                  className='w-full min-w-0 justify-between font-normal border-border bg-transparent text-foreground py-2 pr-2 pl-2.5 active:translate-y-0'
                 >
                   <span
-                    className={cn('truncate', !selectedLabel && 'text-muted')}
+                    className={cn(
+                      'min-w-0 truncate text-left',
+                      !selectedLabel && 'text-muted'
+                    )}
                   >
                     {selectedLabel ?? placeholder}
                   </span>

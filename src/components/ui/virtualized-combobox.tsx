@@ -155,7 +155,12 @@ export const VirtualizedCommand = ({
                   onMouseLeave={() => onMouse(-1)}
                   onSelect={onChange}
                 >
-                  {opt.label}
+                  <span
+                    className='truncate'
+                    title={opt.label}
+                  >
+                    {opt.label}
+                  </span>
                 </CommandItem>
               );
             })}
