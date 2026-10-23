@@ -5,7 +5,10 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 import RowActions from '@/pages/resources/row-actions';
 
-const columns: ColumnDef<ResourcesListItem>[] = [
+/** 外部资源站结果无 id，index 层以 magnet 补 id 作为行 key */
+export type ResourceRow = ResourcesListItem & { id: string };
+
+const columns: ColumnDef<ResourceRow>[] = [
   {
     accessorKey: 'fansub',
     header: '来源',

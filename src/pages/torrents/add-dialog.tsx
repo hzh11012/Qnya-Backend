@@ -1,12 +1,9 @@
 import { createTorrent } from '@/apis/torrents';
 import AddForm from '@/pages/torrents/add-form';
-import {
-  torrentsSchema,
-  type TorrentsFormValues
-} from '@/pages/torrents/form-schema';
+import { torrentsSchema } from '@/pages/torrents/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
 
-const AddDialog = createFormDialog<TorrentsFormValues>({
+const AddDialog = createFormDialog({
   schema: torrentsSchema,
   api: createTorrent,
   FormComponent: AddForm,

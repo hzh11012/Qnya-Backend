@@ -1,6 +1,6 @@
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
-import columns from '@/pages/torrents/columns';
+import columns, { type TorrentRow } from '@/pages/torrents/columns';
 import { fetchTorrents, type TorrentsListParams } from '@/apis/torrents';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AddDialog from '@/pages/torrents/add-dialog';
@@ -15,7 +15,13 @@ const useTorrentsPage = createTablePage({
     sort: sort as TorrentsListParams['sort'],
     order: order as TorrentsListParams['order']
   }),
-  getPageData: res => ({ items: res.items, total: res.total })
+  getPageData: res => ({
+    items: res.items.map((item): TorrentRow => ({
+      ...item,
+      id: `${item.name}-${item.createdAt}`
+    })),
+    total: res.total
+  })
 });
 
 const Index: React.FC = () => {

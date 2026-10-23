@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { UseFormReturn } from 'react-hook-form';
 import {
   Dialog,
   DialogClose,
@@ -20,10 +21,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { ZodType } from 'zod';
 
-interface CreateFormDialogOptions<TValues extends FieldValues> {
+/**
+ * FormComponent 的公共 props：由本工厂注入；业务表单的 props 需包含这
+ * 两项，额外的 props 经 formProps 传入（TFormProps 推断自表单组件类型）
+ */
+interface InjectedFormProps<TValues extends FieldValues> {
+  form: UseFormReturn<TValues>;
+  onSubmit: (values: TValues) => void;
+}
+
+interface CreateFormDialogOptions<
+  TValues extends FieldValues,
+  TApiParams = TValues,
+  TFormProps extends InjectedFormProps<TValues> = InjectedFormProps<TValues>
+> {
   schema: ZodType<TValues, FieldValues>;
-  api: (params: any) => Promise<any>;
-  FormComponent: React.ComponentType<any>;
+  api: (params: TApiParams) => Promise<unknown>;
+  FormComponent: React.ComponentType<TFormProps>;
   title: string;
   triggerText: string;
   triggerVariant?: 'default' | 'link';
@@ -33,16 +47,26 @@ interface CreateFormDialogOptions<TValues extends FieldValues> {
   onSuccessDelay?: number;
 }
 
-interface FormDialogProps<TValues extends FieldValues> {
+interface FormDialogProps<
+  TValues extends FieldValues,
+  TApiParams = TValues,
+  TFormProps extends InjectedFormProps<TValues> = InjectedFormProps<TValues>
+> {
   disabled?: boolean;
   defaultValues?: DefaultValues<TValues>;
   values?: TValues;
   onRefresh: () => void;
-  transformSubmit?: (values: TValues) => any;
-  formProps?: Record<string, any>;
+  /** 提交前把表单值转换为 api 入参（编辑场景附加 id 等） */
+  transformSubmit?: (values: TValues) => NoInfer<TApiParams>;
+  /** 传给 FormComponent 的额外 props（form/onSubmit 由工厂注入） */
+  formProps?: Omit<TFormProps, keyof InjectedFormProps<TValues>>;
 }
 
-function createFormDialog<TValues extends FieldValues>({
+function createFormDialog<
+  TValues extends FieldValues,
+  TApiParams,
+  TFormProps extends InjectedFormProps<TValues>
+>({
   schema,
   api,
   FormComponent,
@@ -53,8 +77,10 @@ function createFormDialog<TValues extends FieldValues>({
   scrollable = false,
   contentClassName,
   onSuccessDelay
-}: CreateFormDialogOptions<TValues>) {
-  const FormDialog: React.FC<FormDialogProps<TValues>> = ({
+}: CreateFormDialogOptions<TValues, TApiParams, TFormProps>) {
+  const FormDialog: React.FC<
+    FormDialogProps<TValues, TApiParams, TFormProps>
+  > = ({
     disabled,
     defaultValues,
     values,
@@ -73,7 +99,7 @@ function createFormDialog<TValues extends FieldValues>({
     });
 
     const { mutate, isPending } = useMutation({
-      mutationFn: api,
+      mutationFn: (params: TApiParams) => api(params),
       onSuccess() {
         setOpen(false);
         if (defaultValues) {
@@ -92,14 +118,17 @@ function createFormDialog<TValues extends FieldValues>({
 
     const handleSubmit = (formValues: TValues) => {
       if (isPending) return;
-      mutate(transformSubmit ? transformSubmit(formValues) : { ...formValues });
+      // 无 transformSubmit 时表单值即 api 入参；TApiParams 由 api 推断，
+      // 新增场景下与表单值结构一致，此处仅需跨泛型桥接
+      const payload = transformSubmit
+        ? transformSubmit(formValues)
+        : ({ ...formValues } as unknown as TApiParams);
+      mutate(payload);
     };
 
     const formContent = (
       <FormComponent
-        form={form}
-        onSubmit={handleSubmit}
-        {...formProps}
+        {...({ form, onSubmit: handleSubmit, ...formProps } as TFormProps)}
       />
     );
 

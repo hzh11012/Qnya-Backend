@@ -1,16 +1,19 @@
 import { DataTable } from '@/components/custom/data-table/data-table';
 import ListPageHeader from '@/components/custom/data-table/list-page-header';
-import columns from '@/pages/resources/columns';
 import { fetchResources } from '@/apis/resources';
 import DataTableSearch from '@/components/custom/data-table/data-table-search';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
+import columns, { type ResourceRow } from '@/pages/resources/columns';
 import { createTablePage } from '@/hooks/create-table-page';
 
 const useResourcesPage = createTablePage({
   scope: 'resources',
   api: fetchResources,
   getParams: ({ page, pageSize, keyword }) => ({ page, pageSize, keyword }),
-  getPageData: res => ({ items: res.items, hasMore: res.hasMore })
+  getPageData: res => ({
+    items: res.items.map((item): ResourceRow => ({ ...item, id: item.magnet })),
+    hasMore: res.hasMore
+  })
 });
 
 const Index: React.FC = () => {

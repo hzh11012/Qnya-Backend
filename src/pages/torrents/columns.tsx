@@ -9,6 +9,9 @@ import { Search } from 'lucide-react';
 type QbitStatusType =
   'success' | 'warning' | 'destructive' | 'default' | 'muted';
 
+/** 种子记录无 id，index 层以 name+createdAt 补 id 作为行 key */
+export type TorrentRow = TorrentsListItem & { id: string };
+
 interface QbitStatusConfig {
   label: string;
   type: QbitStatusType;
@@ -48,7 +51,7 @@ export const qbitStatusMap: Record<string, QbitStatusConfig> = {
   'unknown': { label: '未知', type: 'muted' }
 };
 
-const columns: ColumnDef<TorrentsListItem>[] = [
+const columns: ColumnDef<TorrentRow>[] = [
   {
     accessorKey: 'name',
     header: () => {

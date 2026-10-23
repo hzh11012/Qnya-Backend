@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { createTorrent } from '@/apis/torrents';
-import type { ResourcesListItem } from '@/apis/resources';
+import type { ResourceRow } from '@/pages/resources/columns';
 import { DataTableActionDialog } from '@/components/custom/data-table/data-table-action-dialog';
 import type { RowActionsProps } from '@/components/custom/data-table/create-form-dialog';
 
@@ -37,7 +37,7 @@ const DownloadDialog: React.FC<DownloadDialogProps> = ({ url }) => {
   );
 };
 
-const RowActions: React.FC<Pick<RowActionsProps<ResourcesListItem>, 'row'>> = ({
+const RowActions: React.FC<Pick<RowActionsProps<ResourceRow>, 'row'>> = ({
   row
 }) => {
   const { magnet } = row;

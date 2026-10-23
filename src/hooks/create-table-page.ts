@@ -16,7 +16,11 @@ interface TablePageParamsSource {
   columnFilters: ColumnFiltersState;
 }
 
-interface CreateTablePageOptions<TParams extends Record<string, any>, TRes> {
+interface CreateTablePageOptions<
+  TParams extends Record<string, unknown>,
+  TRes,
+  TItem
+> {
   /** 查询缓存作用域（queryKey 前缀），同时用作 devtools store 名称 */
   scope: string;
   api: (params: TParams) => Promise<TRes>;
@@ -24,7 +28,7 @@ interface CreateTablePageOptions<TParams extends Record<string, any>, TRes> {
   getParams: (state: TablePageParamsSource) => TParams;
   /** 从响应中提取列表数据与分页信息 */
   getPageData: (res: TRes) => {
-    items: any[];
+    items: TItem[];
     total?: number;
     hasMore?: boolean;
   };
@@ -54,12 +58,12 @@ const filterValues = <T = string>(
  *   getPageData: res => ({ items: res.items, total: res.total })
  * });
  */
-function createTablePage<TParams extends Record<string, any>, TRes>({
+function createTablePage<TParams extends Record<string, unknown>, TRes, TItem>({
   scope,
   api,
   getParams,
   getPageData
-}: CreateTablePageOptions<TParams, TRes>) {
+}: CreateTablePageOptions<TParams, TRes, TItem>) {
   const useStore = createTableStore(`${scope}-store`);
 
   const useTablePage = () => {

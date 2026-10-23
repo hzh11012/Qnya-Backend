@@ -1,9 +1,9 @@
 import { updateUser, type UserListItem } from '@/apis/users';
 import UserForm from '@/pages/users/user-form';
-import { userSchema, type UserFormValues } from '@/pages/users/form-schema';
+import { userSchema } from '@/pages/users/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
 
-const EditDialog = createFormDialog<UserFormValues>({
+const EditDialog = createFormDialog({
   schema: userSchema,
   api: updateUser,
   FormComponent: UserForm,

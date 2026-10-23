@@ -2,10 +2,10 @@ import { createAnime } from '@/apis/anime';
 import type { SeriesOptionRes } from '@/apis/series';
 import type { TagsOptionRes } from '@/apis/tags';
 import AnimeForm from '@/pages/anime/anime-form';
-import { animeSchema, type AnimeFormValues } from '@/pages/anime/form-schema';
+import { animeSchema } from '@/pages/anime/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
 
-const AddDialog = createFormDialog<AnimeFormValues>({
+const AddDialog = createFormDialog({
   schema: animeSchema,
   api: createAnime,
   FormComponent: AnimeForm,

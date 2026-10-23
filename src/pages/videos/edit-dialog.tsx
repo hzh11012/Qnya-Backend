@@ -1,10 +1,10 @@
 import { updateVideo, type VideoListItem } from '@/apis/videos';
 import type { AnimeOptionRes } from '@/apis/anime';
 import VideoForm from '@/pages/videos/video-form';
-import { videoSchema, type VideoFormValues } from '@/pages/videos/form-schema';
+import { videoSchema } from '@/pages/videos/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
 
-const EditDialog = createFormDialog<VideoFormValues>({
+const EditDialog = createFormDialog({
   schema: videoSchema,
   api: updateVideo,
   FormComponent: VideoForm,

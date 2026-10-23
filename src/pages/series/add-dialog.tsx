@@ -1,12 +1,9 @@
 import { createSeries } from '@/apis/series';
 import AddForm from '@/pages/series/add-form';
-import {
-  seriesSchema,
-  type SeriesFormValues
-} from '@/pages/series/form-schema';
+import { seriesSchema } from '@/pages/series/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
 
-const AddDialog = createFormDialog<SeriesFormValues>({
+const AddDialog = createFormDialog({
   schema: seriesSchema,
   api: createSeries,
   FormComponent: AddForm,

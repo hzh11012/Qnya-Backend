@@ -1,12 +1,9 @@
 import { updateFeedback, type FeedbackListItem } from '@/apis/feedbacks';
 import FeedbackForm from '@/pages/feedbacks/feedback-form';
-import {
-  feedbackSchema,
-  type FeedbackFormValues
-} from '@/pages/feedbacks/form-schema';
+import { feedbackSchema } from '@/pages/feedbacks/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
 
-const EditDialog = createFormDialog<FeedbackFormValues>({
+const EditDialog = createFormDialog({
   schema: feedbackSchema,
   api: updateFeedback,
   FormComponent: FeedbackForm,

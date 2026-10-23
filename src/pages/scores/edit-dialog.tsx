@@ -1,9 +1,9 @@
 import { updateScore, type ScoreListItem } from '@/apis/scores';
 import ScoreForm from '@/pages/scores/score-form';
-import { scoreSchema, type ScoreFormValues } from '@/pages/scores/form-schema';
+import { scoreSchema } from '@/pages/scores/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
 
-const EditDialog = createFormDialog<ScoreFormValues>({
+const EditDialog = createFormDialog({
   schema: scoreSchema,
   api: updateScore,
   FormComponent: ScoreForm,

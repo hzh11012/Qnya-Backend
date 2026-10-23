@@ -1,10 +1,10 @@
 import { createTopic } from '@/apis/topics';
 import type { AnimeOptionRes } from '@/apis/anime';
 import TopicForm from '@/pages/topics/topic-form';
-import { topicSchema, type TopicFormValues } from '@/pages/topics/form-schema';
+import { topicSchema } from '@/pages/topics/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
 
-const AddDialog = createFormDialog<TopicFormValues>({
+const AddDialog = createFormDialog({
   schema: topicSchema,
   api: createTopic,
   FormComponent: TopicForm,
