@@ -60,4 +60,4 @@ src/
 
 ## Git
 
-- 远端 `github.com/hzh11012/Qnya-Backend.git`（master 直推）；此仓库不打版本 tag（版本号以用户端为准）
+- 远端 `github.com/hzh11012/Qnya-Backend.git`（master 直推）；发版在本仓库独立打 `v1.1.x` tag
