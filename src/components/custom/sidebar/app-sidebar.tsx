@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/sidebar';
 import { links } from '@/links';
 import { useAuthStore } from '@/store/auth';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { logout } from '@/apis/auth';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -24,12 +24,15 @@ const AppSideBar: React.FC<React.ComponentProps<typeof Sidebar>> = ({
       setUser: state.setUser
     }))
   );
+  const queryClient = useQueryClient();
 
   // 登出后无论成败都清除本地用户态（401 会由请求层统一跳登录页）
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSettled: () => {
       setUser(null);
+      // 同步清空查询缓存，避免换账号登录后残留上一会话的数据
+      queryClient.clear();
     }
   });
   const onLogout = () => logoutMutation.mutate();

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Exception from '@/components/custom/exception';
 import useDeferredLoading from '@/hooks/use-deferred-loading';
@@ -16,15 +16,23 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { isInitialized, setUser } = useAuthInit();
   const showLoading = useDeferredLoading(!isInitialized);
 
+  // 用 ref 持有最新 location，事件监听器只注册一次，
+  // 避免随路由切换反复卸载/重挂监听
+  const locationRef = useRef(location);
+
+  useEffect(() => {
+    locationRef.current = location;
+  }, [location]);
+
   useEffect(() => {
     const handleUnauthorized = () => {
       // 清除用户状态
       setUser(null);
 
       // 如果不在登录页，则重定向到登录页
-      if (location.pathname !== '/login') {
-        const redirectPath = location.pathname + location.search;
-        navigate(`/login?redirect=${encodeURIComponent(redirectPath)}`, {
+      const { pathname, search } = locationRef.current;
+      if (pathname !== '/login') {
+        navigate(`/login?redirect=${encodeURIComponent(pathname + search)}`, {
           replace: true
         });
       }
@@ -33,7 +41,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return () => {
       window.removeEventListener('auth:unauthorized', handleUnauthorized);
     };
-  }, [navigate, location, setUser]);
+  }, [navigate, setUser]);
 
   if (!isInitialized) {
     return showLoading ? <Exception type='loading' /> : null;
