@@ -99,7 +99,11 @@ function createFormDialog<
     });
 
     const { mutate, isPending } = useMutation({
-      mutationFn: (params: TApiParams) => api(params),
+      // 注意：不能写成箭头包装（params) => api(params)——React Compiler 会把
+      // “仅引用外层工厂参数”的纯闭包错误提升到模块顶层，运行时 api 不在作用域，
+      // 抛 ReferenceError 被 React Query 静默吞掉（弹窗点确认无任何反应）。
+      // 直接传引用既避开该问题，也与 createActionDialog 写法一致。
+      mutationFn: api,
       onSuccess() {
         setOpen(false);
         if (defaultValues) {
