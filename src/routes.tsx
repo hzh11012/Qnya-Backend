@@ -4,6 +4,7 @@ import {
   type RouteObject
 } from 'react-router-dom';
 import Exception from '@/components/custom/exception';
+import Loading from '@/components/custom/loading';
 import Layout from '@/layout';
 import {
   RequireAuth,
@@ -39,6 +40,8 @@ const pageRoutes: RouteObject[] = links.flatMap((link): RouteObject[] => {
 
 const staticRoutes: RouteObject[] = [
   {
+    // 路由模块 lazy 加载期间的全屏兜底（同时消除 HydrateFallback 警告）
+    hydrateFallbackElement: <Loading />,
     element: (
       <AuthProvider>
         <Outlet />
