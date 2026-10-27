@@ -9,7 +9,7 @@ import FormNumber from '@/components/custom/form/form-number';
 import FormTextarea from '@/components/custom/form/form-textarea';
 import FormSelect from '@/components/custom/form/form-select';
 import FormMultiSelect from '@/components/custom/form/form-multiple-select';
-import { months, status, types } from '@/pages/anime/columns';
+import { currentYear, months, status, types } from '@/pages/anime/columns';
 import TmdbSearchDialog from '@/pages/anime/tmdb-search-dialog';
 import type { ScrapeDetailResult } from '@/apis/anime';
 
@@ -120,7 +120,7 @@ const AnimeForm: React.FC<AnimeFormProps> = ({
             label='发行年份'
             control={form.control}
             name='year'
-            maxValue={new Date().getFullYear() + 1}
+            maxValue={currentYear + 1}
           />
           <FormSelect
             label='发行月份'

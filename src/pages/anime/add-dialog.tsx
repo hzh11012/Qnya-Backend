@@ -4,6 +4,7 @@ import type { TagsOptionRes } from '@/apis/tags';
 import AnimeForm from '@/pages/anime/anime-form';
 import { animeSchema } from '@/pages/anime/form-schema';
 import { createFormDialog } from '@/components/custom/data-table/create-form-dialog';
+import { currentYear } from '@/pages/anime/columns';
 
 const AddDialog = createFormDialog({
   schema: animeSchema,
@@ -42,7 +43,7 @@ const AnimeAddDialog: React.FC<AddDialogProps> = ({
       banner: '',
       status: 'draft',
       type: 'movie',
-      year: new Date().getFullYear(),
+      year: currentYear,
       month: 'january',
       tags: [],
       director: '',

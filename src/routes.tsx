@@ -4,7 +4,6 @@ import {
   type RouteObject
 } from 'react-router-dom';
 import Exception from '@/components/custom/exception';
-import Fallback from '@/components/custom/fallback';
 import Layout from '@/layout';
 import {
   RequireAuth,
@@ -53,7 +52,6 @@ const staticRoutes: RouteObject[] = [
             <Outlet />
           </RedirectIfAuthenticated>
         ),
-        hydrateFallbackElement: <Fallback />,
         errorElement: <Exception type='error' />,
         children: [
           {
@@ -72,7 +70,6 @@ const staticRoutes: RouteObject[] = [
             <Layout />
           </RequireAuth>
         ),
-        hydrateFallbackElement: <Fallback />,
         errorElement: <Exception type='error' />,
         children: [
           ...pageRoutes,

@@ -27,6 +27,9 @@ export const status = [
   { label: '已完结', value: 'completed' }
 ];
 
+/** 当前年份模块级快照（模块加载时取一次，避免渲染期调用 new Date()） */
+export const currentYear = new Date().getFullYear();
+
 export const years = Array.from(
   { length: new Date().getFullYear() - 1988 },
   (_, i) => {
