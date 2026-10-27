@@ -42,6 +42,7 @@ const VideoForm: React.FC<VideoFormProps> = ({
             label='集数编号'
             minValue={1}
             maxValue={9999}
+            step={0.5}
           />
         </div>
         <FormInput
