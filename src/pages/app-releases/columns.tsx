@@ -1,0 +1,71 @@
+import type { AppReleaseListItem } from '@/apis/app-releases';
+import { formatDate } from '@/lib/utils';
+import type { ColumnDef } from '@tanstack/react-table';
+import RowActions from '@/pages/app-releases/row-actions';
+import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
+import { DataTableTextTooltip } from '@/components/custom/data-table/data-table-text-tooltip';
+import { Badge } from '@/components/ui/badge';
+
+const getColumns = (onRefresh: () => void) => {
+  const columns: ColumnDef<AppReleaseListItem>[] = [
+    {
+      accessorKey: 'versionName',
+      header: '版本',
+      cell: ({ row }) => (
+        <span className='font-medium'>{row.original.versionName}</span>
+      )
+    },
+    {
+      accessorKey: 'url',
+      header: '下载地址',
+      cell: ({ row }) => <DataTableTextTooltip text={row.original.url} />
+    },
+    {
+      accessorKey: 'changelog',
+      header: '更新日志',
+      cell: ({ row }) =>
+        row.original.changelog ? (
+          <DataTableTextTooltip text={row.original.changelog} />
+        ) : (
+          <span className='text-muted-foreground'>-</span>
+        )
+    },
+    {
+      accessorKey: 'force',
+      header: '更新方式',
+      cell: ({ row }) =>
+        row.original.force ? (
+          <Badge variant='destructive'>强制</Badge>
+        ) : (
+          <Badge variant='success'>普通</Badge>
+        )
+    },
+    {
+      accessorKey: 'createdAt',
+      header: ({ column }) => (
+        <div className='flex items-center gap-1'>
+          <span>发布时间</span>
+          <DataTableColumnSort
+            sortDirection={column.getIsSorted()}
+            onSort={desc => column.toggleSorting(desc)}
+            onClearSort={() => column.clearSorting()}
+          />
+        </div>
+      ),
+      cell: ({ row }) => formatDate(row.original.createdAt)
+    },
+    {
+      id: 'actions',
+      header: '操作',
+      cell: ({ row }) => (
+        <RowActions
+          row={row.original}
+          onRefresh={onRefresh}
+        />
+      )
+    }
+  ];
+  return columns;
+};
+
+export default getColumns;

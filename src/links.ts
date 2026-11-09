@@ -11,6 +11,7 @@ import {
   Network,
   ScanSearch,
   Settings,
+  Smartphone,
   Sparkles,
   Sprout,
   Star,
@@ -103,6 +104,12 @@ const links: NavItem[] = [
         icon: ThumbsUp,
         url: '/recommend',
         lazy: createLazyComponent(() => import('@/pages/recommend/index'))
+      },
+      {
+        title: 'APP 版本',
+        icon: Smartphone,
+        url: '/app-releases',
+        lazy: createLazyComponent(() => import('@/pages/app-releases/index'))
       }
     ]
   },

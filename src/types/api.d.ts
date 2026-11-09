@@ -307,6 +307,139 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/admin/app-releases/': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          pageSize?: number;
+          sort?: 'createdAt';
+          order?: 'asc' | 'desc';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                items: {
+                  /** Format: uuid */
+                  id: string;
+                  versionCode: number | null;
+                  versionName: string;
+                  url: string;
+                  changelog: string;
+                  force: boolean;
+                  /** Format: date-time */
+                  createdAt: string;
+                }[];
+                total: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            versionName: string;
+            url: string;
+            /** @default  */
+            changelog?: string;
+            /** @default false */
+            force?: boolean;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/admin/app-releases/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/admin/collections/': {
     parameters: {
       query?: never;
@@ -2550,6 +2683,52 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/app/latest': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                versionCode: number | null;
+                versionName: string;
+                url: string;
+                changelog: string;
+                force: boolean;
+              } | null;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/auth/me': {
     parameters: {
       query?: never;
@@ -2585,6 +2764,8 @@ export interface paths {
                 /** @enum {string} */
                 role: 'admin' | 'premium' | 'user' | 'guest';
                 avatar: string | null;
+                /** Format: date-time */
+                createdAt: string;
               };
             };
           };
@@ -2631,6 +2812,8 @@ export interface paths {
                 /** @enum {string} */
                 role: 'admin' | 'premium' | 'user' | 'guest';
                 avatar: string | null;
+                /** Format: date-time */
+                createdAt: string;
               };
             };
           };
@@ -2730,6 +2913,8 @@ export interface paths {
                 /** @enum {string} */
                 role: 'admin' | 'premium' | 'user' | 'guest';
                 avatar: string | null;
+                /** Format: date-time */
+                createdAt: string;
               };
             };
           };
@@ -2775,76 +2960,6 @@ export interface paths {
         };
       };
     };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/client/anime/hot': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: {
-      parameters: {
-        query?: {
-          page?: number;
-          pageSize?: number;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Default Response */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': {
-              /** @enum {number} */
-              code: 200;
-              message: string;
-              data: {
-                items: {
-                  /** Format: uuid */
-                  id: string;
-                  name: string;
-                  description: string;
-                  remark: string;
-                  cover: string;
-                  status: string;
-                  type: string;
-                  director: string;
-                  cv: string;
-                  year: number;
-                  month: string;
-                  tags: string[];
-                  avgScore: number;
-                  scoreCount: number;
-                  videoCount: number;
-                  /** Format: uuid */
-                  videoId: string | null;
-                  videos: {
-                    /** Format: uuid */
-                    id: string;
-                    episode: number;
-                  }[];
-                }[];
-                total: number;
-              };
-            };
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -2906,6 +3021,129 @@ export interface paths {
                     id: string;
                     episode: number;
                   }[];
+                }[];
+                total: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/anime/list': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          pageSize?: number;
+          type?: number;
+          status?: number;
+          year?: string;
+          month?: number;
+          tag?: string;
+          sort?: number;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                items: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                  description: string;
+                  remark: string;
+                  cover: string;
+                  status: string;
+                  type: string;
+                  director: string;
+                  cv: string;
+                  year: number;
+                  month: string;
+                  tags: string[];
+                  avgScore: number;
+                  scoreCount: number;
+                  videoCount: number;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  videos: {
+                    /** Format: uuid */
+                    id: string;
+                    episode: number;
+                  }[];
+                }[];
+                total: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/anime/tags': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                items: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
                 }[];
                 total: number;
               };
@@ -2998,7 +3236,20 @@ export interface paths {
               code: 200;
               message: string;
               data: {
-                collections: {
+                banners: {
+                  /** Format: uuid */
+                  animeId: string;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  name: string;
+                  banner: string | null;
+                  description: string;
+                  remark: string | null;
+                  /** @enum {string} */
+                  status: 'upcoming' | 'airing' | 'completed';
+                  videoCount: number;
+                }[];
+                picks: {
                   /** Format: uuid */
                   animeId: string;
                   /** Format: uuid */
@@ -3009,6 +3260,22 @@ export interface paths {
                   /** @enum {string} */
                   status: 'upcoming' | 'airing' | 'completed';
                   videoCount: number;
+                  score: number;
+                  scoreCount: number;
+                }[];
+                collections: {
+                  /** Format: uuid */
+                  animeId: string;
+                  /** Format: uuid */
+                  videoId: string | null;
+                  name: string;
+                  remark: string | null;
+                  /** @enum {string} */
+                  status: 'upcoming' | 'airing' | 'completed';
+                  videoCount: number;
+                  score: number;
+                  scoreCount: number;
+                  banner: string | null;
                   episode: number | null;
                   time: number | null;
                 }[];
@@ -3026,8 +3293,53 @@ export interface paths {
                     /** @enum {string} */
                     status: 'upcoming' | 'airing' | 'completed';
                     videoCount: number;
+                    score: number;
+                    scoreCount: number;
                   }[];
                 }[];
+              };
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/mine/stats': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                collections: number;
+                histories: number;
               };
             };
           };
@@ -3054,6 +3366,7 @@ export interface paths {
         query?: {
           page?: number;
           pageSize?: number;
+          keyword?: string;
         };
         header?: never;
         path?: never;
@@ -3114,6 +3427,7 @@ export interface paths {
         query?: {
           page?: number;
           pageSize?: number;
+          keyword?: string;
         };
         header?: never;
         path?: never;
@@ -3154,7 +3468,77 @@ export interface paths {
     };
     put?: never;
     post?: never;
-    delete?: never;
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                cleared: number;
+              };
+            };
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/client/mine/histories/{animeId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          animeId: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+              data: {
+                deleted: boolean;
+              };
+            };
+          };
+        };
+      };
+    };
     options?: never;
     head?: never;
     patch?: never;
@@ -3222,6 +3606,7 @@ export interface paths {
                 } | null;
                 time: number;
                 isCollected: boolean;
+                seriesName: string;
                 isRating: boolean;
                 series: {
                   /** Format: uuid */
