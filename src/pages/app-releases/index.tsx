@@ -8,16 +8,26 @@ import {
 } from '@/apis/app-releases';
 import DataTableRefresh from '@/components/custom/data-table/data-table-refresh';
 import AppReleasePublishDialog from '@/pages/app-releases/publish-dialog';
-import { createTablePage } from '@/hooks/create-table-page';
+import { createTablePage, filterValues } from '@/hooks/create-table-page';
 
 const useAppReleasePage = createTablePage({
   scope: 'app-releases',
   api: fetchAppReleases,
-  getParams: ({ page, pageSize, sort, order }): AppReleaseListParams => ({
+  getParams: ({
+    page,
+    pageSize,
+    sort,
+    order,
+    columnFilters
+  }): AppReleaseListParams => ({
     page,
     pageSize,
     sort: sort as AppReleaseListParams['sort'],
-    order: order as AppReleaseListParams['order']
+    order: order as AppReleaseListParams['order'],
+    // 列筛选收敛为单平台（columns 里同步收敛为单选）
+    platform: filterValues(columnFilters, 'platform').at(
+      -1
+    ) as AppReleaseListParams['platform']
   }),
   getPageData: res => ({ items: res.items, total: res.total })
 });
@@ -33,7 +43,9 @@ const Index: React.FC = () => {
     sizes,
     refresh,
     error,
-    isLoading
+    isLoading,
+    columnFilters,
+    setColumnFilters
   } = useAppReleasePage();
 
   const columns = useMemo(() => getColumns(refresh), [refresh]);
@@ -43,7 +55,7 @@ const Index: React.FC = () => {
       <ListPageHeader
         label='App Releases'
         title='APP 版本发布'
-        description='移动端应用内自更新的版本发布管理'
+        description='多平台客户端（Android / Windows / iOS / macOS）应用内自更新的版本发布管理'
       />
       <div className='animate-fade-up min-h-0 flex-1 [animation-delay:90ms]'>
         <DataTable
@@ -57,6 +69,8 @@ const Index: React.FC = () => {
           onSortingChange={setSorting}
           sizes={sizes}
           error={!!error}
+          columnFilters={columnFilters}
+          onColumnFiltersChange={setColumnFilters}
           toolbar={
             <>
               <AppReleasePublishDialog onRefresh={refresh} />

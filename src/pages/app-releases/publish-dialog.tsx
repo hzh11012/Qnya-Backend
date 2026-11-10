@@ -4,8 +4,7 @@ import PublishForm from '@/pages/app-releases/publish-form';
 import { appReleaseSchema } from '@/pages/app-releases/form-schema';
 
 /**
- * 发布新版本弹窗。
- * force 表单值为字符串枚举，提交前转回 boolean（后端 zod 要求 boolean）
+ * 发布新版本弹窗。所有版本均为强制更新，客户端更新弹窗不可跳过
  */
 const PublishDialog = createFormDialog({
   schema: appReleaseSchema,
@@ -23,15 +22,15 @@ const AppReleasePublishDialog: React.FC<{ onRefresh: () => void }> = ({
     onRefresh={onRefresh}
     defaultValues={{
       versionName: '',
+      platform: 'android',
       url: '',
-      changelog: '',
-      force: 'false'
+      changelog: ''
     }}
     transformSubmit={values => ({
       versionName: values.versionName,
+      platform: values.platform,
       url: values.url,
-      changelog: values.changelog ?? '',
-      force: values.force === 'true'
+      changelog: values.changelog ?? ''
     })}
   />
 );

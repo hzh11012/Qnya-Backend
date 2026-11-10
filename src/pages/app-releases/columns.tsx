@@ -4,6 +4,11 @@ import type { ColumnDef } from '@tanstack/react-table';
 import RowActions from '@/pages/app-releases/row-actions';
 import DataTableColumnSort from '@/components/custom/data-table/data-table-column-sort';
 import { DataTableTextTooltip } from '@/components/custom/data-table/data-table-text-tooltip';
+import { DataTableColumnFilter } from '@/components/custom/data-table/data-table-column-filter';
+import {
+  APP_PLATFORM_LABELS,
+  APP_PLATFORM_OPTIONS
+} from '@/pages/app-releases/form-schema';
 import { Badge } from '@/components/ui/badge';
 
 const getColumns = (onRefresh: () => void) => {
@@ -13,6 +18,32 @@ const getColumns = (onRefresh: () => void) => {
       header: '版本',
       cell: ({ row }) => (
         <span className='font-medium'>{row.original.versionName}</span>
+      )
+    },
+    {
+      accessorKey: 'platform',
+      header: ({ column }) => {
+        const facets = column.getFacetedUniqueValues();
+        const filterValue = (column.getFilterValue() as string[]) ?? [];
+        return (
+          <div className='flex items-center gap-1'>
+            <span>平台</span>
+            <DataTableColumnFilter
+              facets={facets}
+              filterValue={filterValue}
+              options={[...APP_PLATFORM_OPTIONS]}
+              onFilterChange={val =>
+                // 后端列表接口仅接受单个平台，收敛为单选（保留最后点选项）
+                column.setFilterValue(
+                  val?.length ? [val[val.length - 1]!] : undefined
+                )
+              }
+            />
+          </div>
+        );
+      },
+      cell: ({ row }) => (
+        <Badge>{APP_PLATFORM_LABELS[row.original.platform]}</Badge>
       )
     },
     {
@@ -28,16 +59,6 @@ const getColumns = (onRefresh: () => void) => {
           <DataTableTextTooltip text={row.original.changelog} />
         ) : (
           <span className='text-muted-foreground'>-</span>
-        )
-    },
-    {
-      accessorKey: 'force',
-      header: '更新方式',
-      cell: ({ row }) =>
-        row.original.force ? (
-          <Badge variant='destructive'>强制</Badge>
-        ) : (
-          <Badge variant='success'>普通</Badge>
         )
     },
     {

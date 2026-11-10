@@ -3,12 +3,10 @@ import FormTextarea from '@/components/custom/form/form-textarea';
 import FormSelect from '@/components/custom/form/form-select';
 import { Form } from '@/components/ui/form';
 import type { UseFormReturn } from 'react-hook-form';
-import type { AppReleaseFormValues } from '@/pages/app-releases/form-schema';
-
-const forceOptions = [
-  { label: '普通更新（可跳过）', value: 'false' },
-  { label: '强制更新（不可跳过）', value: 'true' }
-];
+import {
+  APP_PLATFORM_OPTIONS,
+  type AppReleaseFormValues
+} from '@/pages/app-releases/form-schema';
 
 interface PublishFormProps {
   form: UseFormReturn<AppReleaseFormValues>;
@@ -30,14 +28,14 @@ const PublishForm: React.FC<PublishFormProps> = ({ form, onSubmit }) => {
             maxLength={32}
           />
           <FormSelect
-            label='更新方式'
+            label='目标平台'
             control={form.control}
-            name='force'
-            options={forceOptions}
+            name='platform'
+            options={[...APP_PLATFORM_OPTIONS]}
           />
         </div>
         <FormInput
-          label='APK 下载地址'
+          label='下载地址'
           control={form.control}
           name='url'
           maxLength={500}

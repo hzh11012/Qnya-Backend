@@ -1,6 +1,7 @@
 import { deleteAppRelease, type AppReleaseListItem } from '@/apis/app-releases';
 import { createActionDialog } from '@/components/custom/data-table/create-action-dialog';
 import type { RowActionsProps } from '@/components/custom/data-table/create-form-dialog';
+import AppReleaseEditDialog from '@/pages/app-releases/edit-dialog';
 
 const DeleteDialog = createActionDialog({
   api: deleteAppRelease,
@@ -17,6 +18,10 @@ const RowActions: React.FC<RowActionsProps<AppReleaseListItem>> = ({
 }) => {
   return (
     <div className='flex items-center gap-2'>
+      <AppReleaseEditDialog
+        row={row}
+        onRefresh={onRefresh}
+      />
       <DeleteDialog
         id={row.id}
         onRefresh={onRefresh}

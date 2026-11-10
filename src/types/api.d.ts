@@ -319,6 +319,7 @@ export interface paths {
         query?: {
           page?: number;
           pageSize?: number;
+          platform?: 'android' | 'windows' | 'ios' | 'macos';
           sort?: 'createdAt';
           order?: 'asc' | 'desc';
         };
@@ -344,9 +345,10 @@ export interface paths {
                   id: string;
                   versionCode: number | null;
                   versionName: string;
+                  /** @enum {string} */
+                  platform: 'android' | 'windows' | 'ios' | 'macos';
                   url: string;
                   changelog: string;
-                  force: boolean;
                   /** Format: date-time */
                   createdAt: string;
                 }[];
@@ -369,11 +371,14 @@ export interface paths {
         content: {
           'application/json': {
             versionName: string;
+            /**
+             * @default android
+             * @enum {string}
+             */
+            platform?: 'android' | 'windows' | 'ios' | 'macos';
             url: string;
             /** @default  */
             changelog?: string;
-            /** @default false */
-            force?: boolean;
           };
         };
       };
@@ -407,7 +412,43 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    put?: never;
+    put: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            versionName: string;
+            /** @enum {string} */
+            platform: 'android' | 'windows' | 'ios' | 'macos';
+            url: string;
+            /** @default  */
+            changelog?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              /** @enum {number} */
+              code: 200;
+              message: string;
+            };
+          };
+        };
+      };
+    };
     post?: never;
     delete: {
       parameters: {
@@ -2692,7 +2733,9 @@ export interface paths {
     };
     get: {
       parameters: {
-        query?: never;
+        query?: {
+          platform?: 'android' | 'windows' | 'ios' | 'macos';
+        };
         header?: never;
         path?: never;
         cookie?: never;
@@ -2714,7 +2757,6 @@ export interface paths {
                 versionName: string;
                 url: string;
                 changelog: string;
-                force: boolean;
               } | null;
             };
           };
@@ -3582,6 +3624,14 @@ export interface paths {
                 cover: string;
                 /** @enum {string} */
                 status: 'upcoming' | 'airing' | 'completed';
+                /** @enum {string} */
+                type: 'movie' | 'japanese' | 'american' | 'chinese' | 'adult';
+                year: number;
+                /** @enum {string} */
+                month: 'january' | 'april' | 'july' | 'october';
+                director: string;
+                cv: string;
+                tags: string[];
                 avgScore: number;
                 scoreCount: number;
                 playCount: number;
