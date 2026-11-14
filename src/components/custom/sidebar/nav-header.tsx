@@ -16,7 +16,7 @@ const NavHeader = () => {
           asChild
         >
           <div className='select-none'>
-            <div className='flex size-8 items-center justify-center'>
+            <div className='flex size-10 items-center justify-center'>
               <Logo type='favicon' />
             </div>
             <div className='flex flex-col gap-1 leading-none'>
