@@ -1,6 +1,7 @@
 import {
   Bookmark,
   Bot,
+  Clapperboard,
   Film,
   Gauge,
   History,
@@ -178,6 +179,12 @@ const links: NavItem[] = [
         icon: History,
         url: '/histories',
         lazy: createLazyComponent(() => import('@/pages/histories/index'))
+      },
+      {
+        title: '放映室',
+        icon: Clapperboard,
+        url: '/watch-rooms',
+        lazy: createLazyComponent(() => import('@/pages/watch-rooms/index'))
       },
       {
         title: '问题反馈',

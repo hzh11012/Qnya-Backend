@@ -90,6 +90,17 @@ function SheetContent({
   );
 }
 
+function SheetClose({
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Close>) {
+  return (
+    <SheetPrimitive.Close
+      data-slot='sheet-close'
+      {...props}
+    />
+  );
+}
+
 function SheetHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -113,4 +124,11 @@ function SheetTitle({
   );
 }
 
-export { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle };
+export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle
+};

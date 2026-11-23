@@ -52,6 +52,7 @@ src/
 6. **认证**：前端角色判断只是 UX（登录时校验 `role === 'admin'`），权限权威在后端 RBAC；401 由 `request.ts` 统一派发事件，**不要在业务代码里自行处理 401**
 7. **登出必须清缓存**：`app-sidebar.tsx` 登出 mutation 的 `onSettled` 里 `setUser(null)` + `queryClient.clear()`（换账号不残留上一会话数据）
 8. **路由**：页面路径加进 `src/links.ts` 并挂 lazy，路由树自动生成；`redirect` 参数已有开放重定向防护（仅站内相对路径），勿绕过
+9. **放映室页按当前契约写，别照旧版 schema 想象**：房间「存在即开放」，解散是硬删除，所以列表**没有** `status`（open/closed）、`closedAt`、`onlineCount` 这些字段——成员表是单会话模型（在房即连接中），`memberCount` 就是在线人数，展示成「当前/上限」；筛选只有 `visibility`（后端只收单值，列筛选要收敛为单选），`keyword` 同时匹配房间名与房主昵称；列表固定 `createdAt desc` 且**不接受排序参数**，别给列挂排序按钮（点了没反应）。`api.d.ts` 一旦和后端脱节，`pnpm gen:api` 重新生成就能暴露这类字段漂移。治理用的成员 / 黑名单 / 消息记录在行操作的「详情」抽屉（`pages/watch-rooms/detail-sheet.tsx`）：三段按需请求、打开才拉，消息单独分页与 `chat|system` 筛选；解除拉黑走 `DELETE /admin/watch-room/:roomId/bans/:userId`（后端幂等）。**抽屉宽度必须用 `data-[side=right]:` 前缀覆盖**（`SheetContent` 内置 `data-[side=right]:sm:max-w-sm`，直接写 `sm:max-w-xl` 会被内置规则压住）
 
 ## 与后端的契约
 
