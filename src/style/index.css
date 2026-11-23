@@ -46,6 +46,9 @@
   --color-card: var(--card);
   --color-popover: var(--popover);
   --color-muted: var(--muted);
+  /* 代码里大量使用 text-muted-foreground，但主题一直没有这个 token，
+     生成不出工具类 = 静默失效、文字回落成前景色。统一指到 secondary 灰。 */
+  --color-muted-foreground: var(--secondary);
   --color-primary: var(--primary);
   --color-destructive: var(--destructive);
   --color-ring: var(--primary);

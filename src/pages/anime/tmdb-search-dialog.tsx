@@ -133,7 +133,7 @@ const TmdbSearchDialog: React.FC<TmdbSearchDialogProps> = ({ onSelect }) => {
                       className='w-16 h-22 object-cover rounded shrink-0'
                     />
                   ) : (
-                    <div className='w-16 h-22 bg-muted rounded shrink-0 flex items-center justify-center text-xs text-muted-foreground'>
+                    <div className='w-16 h-22 bg-muted/15 rounded shrink-0 flex items-center justify-center text-xs text-muted-foreground'>
                       无图
                     </div>
                   )}
